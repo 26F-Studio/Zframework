@@ -514,10 +514,10 @@ local sliderShowFunc={
         return S.disp()
     end,
     float=function(S)
-        return int(S.disp()*100)*.01
+        return int(S.disp()*100+.5)*.01
     end,
     percent=function(S)
-        return int(S.disp()*100).."%"
+        return int(S.disp()*100+.5).."%"
     end,
 }
 function slider:reset()
