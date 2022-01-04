@@ -150,6 +150,11 @@ function BGM.play(name,args)
         return true
     end
 end
+function BGM.setPitch(t)
+    if BGM.playing then
+        BGM.playing:setPitch(t)
+    end
+end
 function BGM.seek(t)
     if BGM.playing then
         BGM.playing:seek(t)
