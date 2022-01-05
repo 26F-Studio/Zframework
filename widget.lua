@@ -608,7 +608,7 @@ function slider:drag(x)
         newVal=(1-newPos)*self.rangeL+newPos*self.rangeR
     else
         newVal=newPos*(self.rangeR-self.rangeL)
-        newVal=self.rangeL+newVal-newVal%self.unit
+        newVal=self.rangeL+int(newVal/self.unit+.5)*self.unit
     end
     if newVal~=self.disp()then
         self.code(newVal)
