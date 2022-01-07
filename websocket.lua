@@ -1,9 +1,6 @@
-local host=
-    -- '127.0.0.1'
-    -- '192.168.114.102'
-    'game.techmino.org'
-local port='10026'
-local path='/tech/socket/v1'
+local host='127.0.0.1'
+local port='80'
+local path=''
 
 -- lua + LÖVE threading websocket client
 -- Original pure lua ver. by flaribbit and Particle_G
