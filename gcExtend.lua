@@ -31,7 +31,7 @@ function GC.shadedPrint(str,x,y,mode,d,clr1,clr2)
     setColor(clr2 or COLOR.Z)
     printf(str,x,y,w,mode)
 end
-function GC.drawPolygon(mode,x,y,R,segments,phase)
+function GC.regPolygon(mode,x,y,R,segments,phase)
     local l={}
     local ang=phase or 0
     local angStep=6.283185307179586/segments
@@ -42,7 +42,7 @@ function GC.drawPolygon(mode,x,y,R,segments,phase)
     end
     gc.polygon(mode,l)
 end
-function GC.regularPolygon(mode,x,y,R,segments,r,phase)
+function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     local X,Y={},{}
     local ang=phase or 0
     local angStep=6.283185307179586/segments
