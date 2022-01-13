@@ -133,8 +133,10 @@ do--function GC.DO(L)
         fArc=function(...)gc.arc('fill','open',...)end,
         fBow=function(...)gc.arc('fill','closed',...)end,
 
-        fRPol=function(...)GC.regularPolygon('fill',...)end,
-        dRPol=function(...)GC.regularPolygon('line',...)end,
+        fRPol=function(...)GC.regPolygon('fill',...)end,
+        dRPol=function(...)GC.regPolygon('line',...)end,
+        fRRPol=function(...)GC.regRoundPolygon('fill',...)end,
+        dRRPol=function(...)GC.regRoundPolygon('line',...)end,
     }
     local sizeLimit=gc.getSystemLimits().texturesize
     function GC.DO(L)
