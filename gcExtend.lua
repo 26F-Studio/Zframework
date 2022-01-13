@@ -1,5 +1,6 @@
 local gc=love.graphics
 local setColor,printf,draw=gc.setColor,gc.printf,gc.draw
+local sin,cos=math.sin,math.cos
 local GC={}
 function GC.mStr(obj,x,y)printf(obj,x-626,y,1252,'center')end--Printf a string with 'center'
 function GC.simpX(obj,x,y)draw(obj,x-obj:getWidth()*.5,y)end--Simply draw an obj with x=obj:getWidth()/2
@@ -30,17 +31,28 @@ function GC.shadedPrint(str,x,y,mode,d,clr1,clr2)
     setColor(clr2 or COLOR.Z)
     printf(str,x,y,w,mode)
 end
+function GC.drawPolygon(mode,x,y,R,segments,phase)
+    local l={}
+    local ang=phase or 0
+    local angStep=6.283185307179586/segments
+    for i=1,segments do
+        l[2*i-1]=x+R*cos(ang)
+        l[2*i]=y+R*sin(ang)
+        ang=ang+angStep
+    end
+    gc.polygon(mode,l)
+end
 function GC.regularPolygon(mode,x,y,R,segments,r,phase)
     local X,Y={},{}
     local ang=phase or 0
     local angStep=6.283185307179586/segments
     for i=1,segments do
-        X[i]=x+R*math.cos(ang)
-        Y[i]=y+R*math.sin(ang)
+        X[i]=x+R*cos(ang)
+        Y[i]=y+R*sin(ang)
         ang=ang+angStep
     end
-    X[segments+1]=x+R*math.cos(ang)
-    Y[segments+1]=y+R*math.sin(ang)
+    X[segments+1]=x+R*cos(ang)
+    Y[segments+1]=y+R*sin(ang)
     local halfAng=6.283185307179586/segments/2
     local erasedLen=r*math.tan(halfAng)
     if mode=='line'then
@@ -49,12 +61,12 @@ function GC.regularPolygon(mode,x,y,R,segments,r,phase)
             --Line
             local x1,y1,x2,y2=X[i],Y[i],X[i+1],Y[i+1]
             local dir=math.atan2(y2-y1,x2-x1)
-            gc.line(x1+erasedLen*math.cos(dir),y1+erasedLen*math.sin(dir),x2-erasedLen*math.cos(dir),y2-erasedLen*math.sin(dir))
+            gc.line(x1+erasedLen*cos(dir),y1+erasedLen*sin(dir),x2-erasedLen*cos(dir),y2-erasedLen*sin(dir))
 
             --Arc
             ang=ang+angStep
-            local R2=R-r/math.cos(halfAng)
-            local arcCX,arcCY=x+R2*math.cos(ang),y+R2*math.sin(ang)
+            local R2=R-r/cos(halfAng)
+            local arcCX,arcCY=x+R2*cos(ang),y+R2*sin(ang)
             gc.arc('line','open',arcCX,arcCY,r,ang-halfAng,ang+halfAng)
         end
     elseif mode=='fill'then
@@ -63,15 +75,15 @@ function GC.regularPolygon(mode,x,y,R,segments,r,phase)
             --Line
             local x1,y1,x2,y2=X[i],Y[i],X[i+1],Y[i+1]
             local dir=math.atan2(y2-y1,x2-x1)
-            table.insert(L,x1+erasedLen*math.cos(dir))
-            table.insert(L,y1+erasedLen*math.sin(dir))
-            table.insert(L,x2-erasedLen*math.cos(dir))
-            table.insert(L,y2-erasedLen*math.sin(dir))
+            L[4*i-3]=x1+erasedLen*cos(dir)
+            L[4*i-2]=y1+erasedLen*sin(dir)
+            L[4*i-1]=x2-erasedLen*cos(dir)
+            L[4*i]=y2-erasedLen*sin(dir)
 
             --Arc
             ang=ang+angStep
-            local R2=R-r/math.cos(halfAng)
-            local arcCX,arcCY=x+R2*math.cos(ang),y+R2*math.sin(ang)
+            local R2=R-r/cos(halfAng)
+            local arcCX,arcCY=x+R2*cos(ang),y+R2*sin(ang)
             gc.arc('fill','open',arcCX,arcCY,r,ang-halfAng,ang+halfAng)
         end
         gc.polygon('fill',L)
