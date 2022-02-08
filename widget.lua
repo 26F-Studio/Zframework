@@ -1375,7 +1375,7 @@ function WIDGET.isFocus(W)
     end
 end
 function WIDGET.focus(W)
-    if WIDGET.sel==W then return end
+    if WIDGET.sel==W or (W and W.hide) then return end
     if WIDGET.sel and WIDGET.sel.type=='inputBox'then
         kb.setTextInput(false)
         EDITING=""
