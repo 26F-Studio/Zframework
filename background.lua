@@ -35,7 +35,7 @@ end
 function BG.setDefault(bg)
     BG.default=bg
 end
-function BG.set(name)
+function BG.set(name,...)
     name=name or BG.default
     if not BGs[name]or BG.locked then return end
     if name~=BG.cur then
@@ -50,6 +50,7 @@ function BG.set(name)
         BG.event=  bg.event or NULL
         BG.discard=bg.discard or NULL
         BG.init()
+        if ... then BG.send(...)end
     end
     return true
 end
