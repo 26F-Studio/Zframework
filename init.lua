@@ -43,7 +43,6 @@ FILE=       require'Zframework.file'
 WHEELMOV=   require'Zframework.wheelScroll'
 SCR=        require'Zframework.screen'
 SCN=        require'Zframework.scene'
-LIGHT=      require'Zframework.light'
 
 --Love-based modules (complex)
 GC=         require'Zframework.gcExtend'
