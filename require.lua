@@ -2,6 +2,7 @@ package.cpath=package.cpath..';'..SAVEDIR..'/lib/lib?.so;'..'?.dylib'
 local loaded={}
 return function(libName)
     local require=require
+    local arch='unknown'
     if love.system.getOS()=='OS X'then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
         libname=nil
@@ -9,9 +10,9 @@ return function(libName)
         if not loaded[libName]then
             local platform=(function()
                 local p=io.popen('uname -m')
-                local arch=p:read('*a'):lower()
+                arch=p:read('*a'):lower()
                 p:close()
-                if arch:find('v8')or arch:find('64')then
+                if arch:find('v8') and not arch:find('v8l') or arch:find('64')then
                     return'arm64-v8a'
                 else
                     return'armeabi-v7a'
@@ -29,5 +30,6 @@ return function(libName)
         return res
     else
         MES.new('error',"Cannot load "..libName..": "..res)
+        MES.new('info',"Architecture: "..arch)
     end
 end
