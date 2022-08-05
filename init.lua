@@ -247,6 +247,7 @@ function love.touchpressed(id,x,y)
     x,y=ITP(xOy,x,y)
     lastX,lastY=x,y
     WIDGET.cursorMove(x,y)
+    WIDGET.press(x,y,1)
     if SCN.touchDown then SCN.touchDown(x,y,id)end
     if kb.hasTextInput()then kb.setTextInput(false)end
 end
@@ -260,7 +261,6 @@ function love.touchreleased(id,x,y)
     if SCN.swapping then return end
     x,y=ITP(xOy,x,y)
     if id==SCN.mainTouchID then
-        WIDGET.press(x,y,1)
         WIDGET.release(x,y)
         WIDGET.cursorMove(x,y)
         WIDGET.unFocus()

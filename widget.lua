@@ -225,6 +225,13 @@ function button:getInfo()
     return("x=%d,y=%d,w=%d,h=%d,font=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h,self.font,self.fType)
 end
 function button:press(_,_,k)
+end
+function button:drag(x,y)
+    if not self:isAbove(x,y) and self==WIDGET.sel then
+        WIDGET.unFocus()
+    end
+end
+function button:release(_,_,k)
     self.code(k)
     local ATV=self.ATV
     SYSFX.newRectRipple(
@@ -360,7 +367,14 @@ end
 function key:getInfo()
     return("x=%d,y=%d,w=%d,h=%d,font=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h,self.font,self.fType)
 end
-function key:press(_,_,k)
+function key:press()
+end
+function key:drag(x,y)
+    if not self:isAbove(x,y) and self==WIDGET.sel then
+        WIDGET.unFocus()
+    end
+end
+function key:release(_,_,k)
     self.code(k)
     if self.sound then
         SFX.play(self.sound)
