@@ -116,11 +116,6 @@ function BGM.play(name,args)
     name=name or BGM.default
     args=args or""
     if not _tryLoad(name)or args:sArg('-preLoad')then return end
-    if volume==0 then
-        BGM.nowPlay=name
-        BGM.playing=SourceObjList[name].source
-        return true
-    end
     if name and SourceObjList[name].source then
         if BGM.nowPlay~=name then
             if BGM.nowPlay then
@@ -142,10 +137,12 @@ function BGM.play(name,args)
                 BGM.playing:setVolume(volume)
                 BGM.playing:play()
             end
-            SourceObjList[name].source:setLooping(not args:sArg('-noloop'))
             BGM.lastPlayed=BGM.nowPlay
-            BGM.playing:play()
-            BGM.onChange(name)
+            BGM.playing:setLooping(not args:sArg('-noloop'))
+            if volume>0 then
+                BGM.playing:play()
+                BGM.onChange(name)
+            end
         end
         return true
     end
