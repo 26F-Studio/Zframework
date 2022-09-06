@@ -219,7 +219,7 @@ function love.mousereleased(x,y,k,touch)
     mx,my=ITP(xOy,x,y)
     if SCN.mouseUp then SCN.mouseUp(mx,my,k)end
     if WIDGET.sel then
-        WIDGET.release(mx,my)
+        WIDGET.release(mx,my,k)
     else
         if lastX and SCN.mouseClick and(mx-lastX)^2+(my-lastY)^2<62 then
             SCN.mouseClick(mx,my,k)
@@ -261,7 +261,7 @@ function love.touchreleased(id,x,y)
     if SCN.swapping then return end
     x,y=ITP(xOy,x,y)
     if id==SCN.mainTouchID then
-        WIDGET.release(x,y)
+        WIDGET.release(x,y,1)
         WIDGET.cursorMove(x,y)
         WIDGET.unFocus()
         SCN.mainTouchID=false

@@ -1439,10 +1439,10 @@ function WIDGET.drag(x,y,dx,dy)
         WIDGET.scrollPos=max(min(WIDGET.scrollPos-dy,WIDGET.scrollHeight),0)
     end
 end
-function WIDGET.release(x,y)
+function WIDGET.release(x,y,k)
     local W=WIDGET.sel
     if W and W.release then
-        W:release(x,y+WIDGET.scrollPos)
+        W:release(x,y+WIDGET.scrollPos,k)
     end
 end
 function WIDGET.textinput(texts)
