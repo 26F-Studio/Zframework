@@ -148,21 +148,6 @@ local function _updateMousePos(x,y,dx,dy)
         WIDGET.cursorMove(x,y)
     end
 end
-local function _triggerMouseDown(x,y,k)
-    if devMode==1 then
-        print(("(%d,%d)<-%d,%d ~~(%d,%d)<-%d,%d"):format(
-            x,y,
-            x-lastX,y-lastY,
-            math.floor(x/10)*10,math.floor(y/10)*10,
-            math.floor((x-lastX)/10)*10,math.floor((y-lastY)/10)*10
-        ))
-    end
-    if SCN.swapping then return end
-    if SCN.mouseDown then SCN.mouseDown(x,y,k)end
-    WIDGET.press(x,y,k)
-    lastX,lastY=x,y
-    if showClickFX then SYSFX.newTap(3,x,y)end
-end
 local function mouse_update(dt)
     if not KBisDown('lctrl','rctrl')and KBisDown('up','down','left','right')then
         local dx,dy=0,0
@@ -206,7 +191,19 @@ function love.mousepressed(x,y,k,touch)
     if touch then return end
     mouseShow=true
     mx,my=ITP(xOy,x,y)
-    _triggerMouseDown(mx,my,k)
+    if devMode==1 then
+        print(("(%d,%d)<-%d,%d ~~(%d,%d)<-%d,%d"):format(
+            mx,my,
+            mx-lastX,my-lastY,
+            math.floor(mx/10)*10,math.floor(my/10)*10,
+            math.floor((mx-lastX)/10)*10,math.floor((my-lastY)/10)*10
+        ))
+    end
+    if SCN.swapping then return end
+    if SCN.mouseDown then SCN.mouseDown(mx,my,k)end
+    WIDGET.press(mx,my,k)
+    lastX,lastY=mx,my
+    if showClickFX then SYSFX.newTap(3,mx,my)end
 end
 function love.mousemoved(x,y,dx,dy,touch)
     if touch then return end
@@ -334,7 +331,8 @@ function love.keypressed(key,_,isRep)
                 mouseShow=true
                 if not isRep then
                     if showClickFX then SYSFX.newTap(3,mx,my)end
-                    _triggerMouseDown(mx,my,1)
+                    love.mousepressed(mx,my,1)
+                    love.mousereleased(mx,my,1)
                 end
             else
                 if W and W.keypress then
@@ -462,7 +460,8 @@ function love.gamepadpressed(_,key)
             elseif key=='return'then
                 mouseShow=true
                 if showClickFX then SYSFX.newTap(3,mx,my)end
-                _triggerMouseDown(mx,my,1)
+                love.mousepressed(mx,my,1)
+                love.mousereleased(mx,my,1)
             else
                 if W and W.keypress then
                     W:keypress(key)
