@@ -1,6 +1,3 @@
-local gc=love.graphics
-local abs=math.abs
-
 local scenes={}
 
 local SCN={
@@ -114,57 +111,57 @@ local swap={
     },
     flash={
         duration=.16,changeTime=.08,
-        draw=function()gc.clear(1,1,1)end
+        draw=function()GC.clear(1,1,1)end
     },
     fade={
         duration=.5,changeTime=.25,
         draw=function(t)
             t=t>.25 and 2-t*4 or t*4
-            gc.setColor(0,0,0,t)
-            gc.rectangle('fill',0,0,SCR.w,SCR.h)
+            GC.setColor(0,0,0,t)
+            GC.rectangle('fill',0,0,SCR.w,SCR.h)
         end
     },
     fade_togame={
         duration=2,changeTime=.5,
         draw=function(t)
             t=t>.5 and(2-t)/1.5 or t*.5
-            gc.setColor(0,0,0,t)
-            gc.rectangle('fill',0,0,SCR.w,SCR.h)
+            GC.setColor(0,0,0,t)
+            GC.rectangle('fill',0,0,SCR.w,SCR.h)
         end
     },
     slowFade={
         duration=3,changeTime=1.5,
         draw=function(t)
             t=t>1.5 and (3-t)/1.5 or t/1.5
-            gc.setColor(0,0,0,t)
-            gc.rectangle('fill',0,0,SCR.w,SCR.h)
+            GC.setColor(0,0,0,t)
+            GC.rectangle('fill',0,0,SCR.w,SCR.h)
         end
     },
     swipeL={
         duration=.5,changeTime=.25,
         draw=function(t)
         t=t*2
-            gc.setColor(.1,.1,.1,1-abs(t-.5))
+            GC.setColor(.1,.1,.1,1-math.abs(t-.5))
             t=t*t*(3-2*t)*2-1
-            gc.rectangle('fill',t*SCR.w,0,SCR.w,SCR.h)
+            GC.rectangle('fill',t*SCR.w,0,SCR.w,SCR.h)
         end
     },
     swipeR={
         duration=.5,changeTime=.25,
         draw=function(t)
             t=t*2
-            gc.setColor(.1,.1,.1,1-abs(t-.5))
+            GC.setColor(.1,.1,.1,1-math.abs(t-.5))
             t=t*t*(2*t-3)*2+1
-            gc.rectangle('fill',t*SCR.w,0,SCR.w,SCR.h)
+            GC.rectangle('fill',t*SCR.w,0,SCR.w,SCR.h)
         end
     },
     swipeD={
         duration=.5,changeTime=.25,
         draw=function(t)
             t=t*2
-            gc.setColor(.1,.1,.1,1-abs(t-.5))
+            GC.setColor(.1,.1,.1,1-math.abs(t-.5))
             t=t*t*(2*t-3)*2+1
-            gc.rectangle('fill',0,t*SCR.h,SCR.w,SCR.h)
+            GC.rectangle('fill',0,t*SCR.h,SCR.w,SCR.h)
         end
     },
 }--Scene swapping animations

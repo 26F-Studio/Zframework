@@ -737,7 +737,7 @@ function love.run()
                     --Draw Version string
                     gc_setColor(.9,.9,.9,.42)
                     FONT.set(20)
-                    mStr(VERSION.string,0,-30)
+                    GC.mStr(VERSION.string,0,-30)
                 gc_replaceTransform(SCR.xOy_dl)
                     local safeX=SCR.safeX/SCR.k
 

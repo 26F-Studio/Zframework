@@ -1,9 +1,8 @@
-local gc=love.graphics
-local getColor,setColor=gc.getColor,gc.setColor
+local getColor,setColor=GC.getColor,GC.setColor
 
 local int,rnd=math.floor,math.random
 local ins,rem=table.insert,table.remove
-local draw=gc.draw
+local draw=GC.draw
 
 local texts={}
 
@@ -103,7 +102,7 @@ end
 function TEXT.show(text,x,y,font,style,spd,stop)
     ins(texts,{
         c=0,                                                         --Timer
-        text=gc.newText(FONT.get(int(font/5)*5 or 40),text),         --String
+        text=GC.newText(FONT.get(int(font/5)*5 or 40),text),         --String
         x=x or 0,                                                    --X
         y=y or 0,                                                    --Y
         spd=(spd or 1),                                              --Timing speed(1=last 1 sec)
@@ -114,7 +113,7 @@ end
 function TEXT.getText(text,x,y,font,style,spd,stop)--Another version of TEXT.show(), but only return text object, need manual management
     return{
         c=0,
-        text=gc.newText(FONT.get(int(font/5)*5 or 40),text),
+        text=GC.newText(FONT.get(int(font/5)*5 or 40),text),
         x=x or 0,
         y=y or 0,
         spd=(spd or 1),

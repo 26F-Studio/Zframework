@@ -1,5 +1,4 @@
-local gc=love.graphics
-local set=gc.setFont
+local set=GC.setFont
 local fontFiles,fontCache={},{}
 local defaultFont,defaultFallBack
 local curFont=false--Current using font object
@@ -9,7 +8,7 @@ function FONT.setDefault(name)defaultFont=name end
 function FONT.setFallback(name)defaultFallBack=name end
 function FONT.rawget(s)
     if not fontCache[s]then
-        fontCache[s]=gc.setNewFont(s,'light',gc.getDPIScale()*SCR.k*2)
+        fontCache[s]=GC.setNewFont(s,'light',GC.getDPIScale()*SCR.k*2)
     end
     return fontCache[s]
 end
@@ -28,7 +27,7 @@ function FONT.get(size,name)
     if not name then name=defaultFont end
     local f=fontCache[name][size]
     if not f then
-        f=gc.setNewFont(fontFiles[name],size,'light',gc.getDPIScale()*SCR.k*2)
+        f=GC.setNewFont(fontFiles[name],size,'light',GC.getDPIScale()*SCR.k*2)
         if defaultFallBack and name~=defaultFallBack then
             f:setFallbacks(FONT.get(size,defaultFallBack))
         end
