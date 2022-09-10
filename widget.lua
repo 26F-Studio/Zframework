@@ -952,12 +952,6 @@ end
 function inputBox:getInfo()
     return("x=%d,y=%d,w=%d,h=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h)
 end
-function inputBox:press()
-    if MOBILE then
-        local _,y1=xOy:transformPoint(0,self.y+self.h)
-        kb.setTextInput(true,0,y1,1,1)
-    end
-end
 function inputBox:keypress(k)
     local t=self.value
     if #t>0 and EDITING==""then
@@ -1425,7 +1419,9 @@ end
 function WIDGET.press(x,y,k)
     local W=WIDGET.sel
     if W then
-        W:press(x,y and y+WIDGET.scrollPos,k)
+        if W.press then
+            W:press(x,y and y+WIDGET.scrollPos,k)
+        end
         if W.hide then WIDGET.unFocus()end
     end
 end

@@ -243,10 +243,10 @@ function love.touchpressed(id,x,y)
     end
     x,y=ITP(xOy,x,y)
     lastX,lastY=x,y
-    WIDGET.cursorMove(x,y)
-    WIDGET.press(x,y,1)
     if SCN.touchDown then SCN.touchDown(x,y,id)end
     if kb.hasTextInput()then kb.setTextInput(false)end
+    WIDGET.cursorMove(x,y)
+    WIDGET.press(x,y,1)
 end
 function love.touchmoved(id,x,y,dx,dy)
     if SCN.swapping then return end
@@ -269,6 +269,9 @@ function love.touchreleased(id,x,y)
         if showClickFX then SYSFX.newTap(3,x,y)end
     end
 end
+-- function love.mousepressed(x,y,k) love.touchpressed(1,x,y) end
+-- function love.mousemoved(x,y,dx,dy,touch) love.touchmoved(1,x,y,dx,dy) end
+-- function love.mousereleased(x,y,k) love.touchreleased(1,x,y) end
 
 local fnKey={NULL,NULL,NULL,NULL,NULL,NULL,NULL}
 local function noDevkeyPressed(key)
