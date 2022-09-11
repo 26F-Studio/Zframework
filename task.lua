@@ -12,10 +12,10 @@ function TASK.update(dt)
     while trigFrame>=1 do
         for i=#tasks,1,-1 do
             local T=tasks[i]
-            if status(T.thread)=='dead'then
+            if status(T.thread)=='dead' then
                 rem(tasks,i)
             else
-                assert(resume(T.thread))
+                assert(resume(T.thread,dt))
             end
         end
         trigFrame=trigFrame-1
@@ -24,7 +24,7 @@ end
 function TASK.new(code,...)
     local thread=coroutine.create(code)
     assert(resume(thread,...))
-    if status(thread)~='dead'then
+    if status(thread)~='dead' then
         tasks[#tasks+1]={
             thread=thread,
             code=code,
@@ -41,16 +41,12 @@ function TASK.removeTask_code(code)
 end
 function TASK.removeTask_iterate(func,...)
     for i=#tasks,1,-1 do
-        if func(tasks[i],...)then
+        if func(tasks[i],...) then
             rem(tasks,i)
         end
     end
 end
 function TASK.clear()
-    local i=#tasks
-    while i>0 do
-        tasks[i]=nil
-        i=i-1
-    end
+    TABLE.cut(tasks)
 end
 return TASK

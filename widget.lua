@@ -616,7 +616,7 @@ end
 function slider:drag(x)
     if not x then return end
     x=x-self.x
-    local newPos=MATH.interval(x/self.w,0,1)
+    local newPos=MATH.clamp(x/self.w,0,1)
     local newVal
     if not self.unit then
         newVal=(1-newPos)*self.rangeL+newPos*self.rangeR
@@ -639,7 +639,7 @@ end
 function slider:scroll(n)
     local p=self.disp()
     local u=self.unit or .01
-    local P=MATH.interval(p+u*n,self.rangeL,self.rangeR)
+    local P=MATH.clamp(p+u*n,self.rangeL,self.rangeR)
     if p==P or not P then return end
     self.code(P)
     if self.change and timer()-self.lastTime>.18 then
