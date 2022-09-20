@@ -35,6 +35,7 @@ end
 LOG=        require'Zframework.log'
 REQUIRE=    require'Zframework.require'
 TASK=       require'Zframework.task'
+HTTP=       require'Zframework.http'
 WS=         require'Zframework.websocket'
 LANG=       require'Zframework.languages'
 
@@ -649,7 +650,7 @@ function love.run()
     local BG=BG
     local TEXT_update,TEXT_draw=TEXT.update,TEXT.draw
     local MES_update,MES_draw=MES.update,MES.draw
-    local WS_update=WS.update
+    local HTTP_update,WS_update=HTTP.update,WS.update
     local TASK_update=TASK.update
     local SYSFX_update,SYSFX_draw=SYSFX.update,SYSFX.draw
     local WIDGET_update,WIDGET_draw=WIDGET.update,WIDGET.draw
@@ -697,6 +698,7 @@ function love.run()
         BG.update(dt)
         TEXT_update(dt)
         MES_update(dt)
+        HTTP_update(dt)
         WS_update(dt)
         TASK_update(dt)
         SYSFX_update(dt)
