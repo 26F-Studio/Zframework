@@ -35,11 +35,12 @@ end
 LOG=        require'Zframework.log'
 REQUIRE=    require'Zframework.require'
 TASK=       require'Zframework.task'
-HTTP=       require'Zframework.http'
-WS=         require'Zframework.websocket'
 LANG=       require'Zframework.languages'
+HASH=       require'Zframework.sha2'
 
 --Love-based modules (basic)
+HTTP=       require'Zframework.http'
+WS=         require'Zframework.websocket'
 FILE=       require'Zframework.file'
 WHEELMOV=   require'Zframework.wheelScroll'
 SCR=        require'Zframework.screen'
