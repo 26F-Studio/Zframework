@@ -37,6 +37,28 @@ REQUIRE=    require'Zframework.require'
 TASK=       require'Zframework.task'
 LANG=       require'Zframework.languages'
 HASH=       require'Zframework.sha2'
+do
+    local bxor=require'bit'.bxor
+    local char=string.char
+    local function sxor(s1, s2)
+        local b3=""
+        for i=1,#s1 do
+            b3=b3..char(bxor(s1:byte(i),s2:byte(i)))
+        end
+        return b3
+    end
+    function HASH.pbkdf2(hashFunc, pw, salt, n)
+        local u=HASH.hex2bin(HASH.hmac(hashFunc, pw, salt.."\0\0\0\1"))
+        local t=u
+
+        for _=2,n do
+            u=HASH.hex2bin(HASH.hmac(hashFunc, pw, u))
+            t=sxor(t, u)
+        end
+
+        return HASH.bin2hex(t):upper()
+    end
+end
 
 --Love-based modules (basic)
 HTTP=       require'Zframework.http'
@@ -896,5 +918,10 @@ end
 function Z.setOnQuit(func)
     onQuit=assert(type(func)=='function'and func,"Z.setOnQuit(func): func must be a function")
 end
+
+print(
+    HASH.pbkdf2(HASH.sha256,"password","salt",26)
+)
+
 
 return Z
