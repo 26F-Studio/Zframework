@@ -10,7 +10,7 @@ do--Connect
     local host=CHN_demand(sendCHN)
     local port=CHN_demand(sendCHN)
     local path=CHN_demand(sendCHN)
-    local body=CHN_demand(sendCHN)
+    local head=CHN_demand(sendCHN)
     local timeout=CHN_demand(sendCHN)
 
     SOCK:settimeout(timeout)
@@ -18,17 +18,15 @@ do--Connect
     assert(res,err)
 
     --WebSocket handshake
-    if not body then body=''end
     SOCK:send(
         'GET '..path..' HTTP/1.1\r\n'..
         'Host: '..host..':'..port..'\r\n'..
         'Connection: Upgrade\r\n'..
         'Upgrade: websocket\r\n'..
-        'Content-Type: application/json\r\n'..
-        'Content-Length: '..#body..'\r\n'..
         'Sec-WebSocket-Version: 13\r\n'..
-        'Sec-WebSocket-Key: osT3F7mvlojIvf3/8uIsJQ==\r\n\r\n'..--secKey
-        body
+        'Sec-WebSocket-Key: osT3F7mvlojIvf3/8uIsJQ==\r\n'..--secKey
+        head..
+        '\r\n'
     )
 
     --First line of HTTP

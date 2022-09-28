@@ -38,7 +38,16 @@ function WS.switchHost(_1,_2,_3)
     path=_3 or path
 end
 
-function WS.connect(name,subPath,body,timeout)
+function WS.connect(name,subPath,head,timeout)
+    if head then
+        local l=""
+        for k,v in next,head do
+            l=l..(k..": "..v..'\r\n')
+        end
+        head=l
+    else
+        head=""
+    end
     if wsList[name]and wsList[name].thread then
         wsList[name].thread:release()
     end
@@ -61,7 +70,7 @@ function WS.connect(name,subPath,body,timeout)
     CHN_push(ws.sendCHN,host)
     CHN_push(ws.sendCHN,port)
     CHN_push(ws.sendCHN,path..subPath)
-    CHN_push(ws.sendCHN,body or"")
+    CHN_push(ws.sendCHN,head)
     CHN_push(ws.sendCHN,timeout or 2.6)
 end
 
@@ -176,8 +185,7 @@ function WS.update(dt)
                 ws.status='dead'
                 local err=ws.thread:getError()
                 if err then
-                    err=err:sub((err:find(":",(err:find(":")or 0)+1)or 0)+1,(err:find("\n")or 0)-1)
-                    MES.new('warn',text.wsClose..err)
+                    MES.new('warn',text.wsClose..err:match(":.-:(.-)\n"))
                     WS.alert(name)
                 end
             end

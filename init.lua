@@ -92,7 +92,7 @@ local gc_replaceTransform,gc_present=gc.replaceTransform,gc.present
 local gc_setColor,gc_setLineWidth=gc.setColor,gc.setLineWidth
 local gc_draw,gc_line,gc_circle,gc_print=gc.draw,gc.line,gc.circle,gc.print
 
-local WIDGET,SCR,SCN,WAIT=WIDGET,SCR,SCN,WAIT
+local BG,WIDGET,SCR,SCN,WAIT=BG,WIDGET,SCR,SCN,WAIT
 local xOy=SCR.xOy
 local ITP=xOy.inverseTransformPoint
 
@@ -114,6 +114,7 @@ local discardCanvas=false
 local frameMul=100
 local sleepInterval=1/60
 local onQuit=NULL
+local versionText=""
 
 local batteryImg=GC.DO{31,20,
     {'fRect',1,0,26,2},
@@ -642,35 +643,6 @@ local devColor={
     COLOR.lG,
     COLOR.lB,
 }
-local WS=WS
-local WSnames={'app','user','play','stream','chat','manage'}
-local wsImg={}do
-    local L={78,18,
-        {'clear',1,1,1,0},
-        {'setCL',1,1,1,.3},
-        {'fRect',60,0,18,18},
-    }
-    for i=0,59 do
-        table.insert(L,{'setCL',1,1,1,i*.005})
-        table.insert(L,{'fRect',i,0,1,18})
-    end
-    wsImg.bottom=GC.DO(L)
-    wsImg.dead=GC.DO{20,20,
-        {'rawFT',20},
-        {'setCL',1,.3,.3},
-        {'mText',"X",11,-1},
-    }
-    wsImg.connecting=GC.DO{20,20,
-        {'rawFT',20},
-        {'setLW',3},
-        {'mText',"C",11,-1},
-    }
-    wsImg.running=GC.DO{20,20,
-        {'rawFT',20},
-        {'setCL',.5,1,0},
-        {'mText',"R",11,-1},
-    }
-end
 
 local debugInfos={
     {"Cache",gcinfo},
@@ -678,7 +650,6 @@ local debugInfos={
 function love.run()
     local love=love
 
-    local BG,WAIT=BG,WAIT
     local TEXT_update,TEXT_draw=TEXT.update,TEXT.draw
     local MES_update,MES_draw=MES.update,MES.draw
     local HTTP_update,WS_update=HTTP.update,WS.update
@@ -689,7 +660,7 @@ function love.run()
     local FPS,MINI=love.timer.getFPS,love.window.isMinimized
     local PUMP,POLL=love.event.pump,love.event.poll
 
-    local timer,VERSION=love.timer.getTime,VERSION
+    local timer=love.timer.getTime
 
     local frameTimeList={}
     local lastFrame=timer()
@@ -774,7 +745,7 @@ function love.run()
                     --Draw Version string
                     gc_setColor(.9,.9,.9,.42)
                     FONT.set(20)
-                    GC.mStr(VERSION.string,0,-30)
+                    GC.mStr(versionText,0,-30)
                 gc_replaceTransform(SCR.xOy_dl)
                     local safeX=SCR.safeX/SCR.k
 
@@ -817,23 +788,19 @@ function love.run()
 
                         gc_replaceTransform(SCR.xOy_dr)
                             --Websocket status
-                            for i=1,6 do
-                                local status=WS.status(WSnames[i])
-                                gc_setColor(1,1,1)
-                                gc.draw(wsImg.bottom,-79,20*i-139)
-                                if status=='dead'then
-                                    gc_draw(wsImg.dead,-20,20*i-140)
-                                elseif status=='connecting'then
-                                    gc_setColor(1,1,1,.5+.3*math.sin(time*6.26))
-                                    gc_draw(wsImg.connecting,-20,20*i-140)
-                                elseif status=='running'then
-                                    gc_draw(wsImg.running,-20,20*i-140)
-                                end
-                                local t1,t2,t3=WS.getTimers(WSnames[i])
-                                gc_setColor(.9,.9,.9,t1)gc.rectangle('fill',-60,20*i-122,-16,-16)
-                                gc_setColor(.3,1,.3,t2)gc.rectangle('fill',-42,20*i-122,-16,-16)
-                                gc_setColor(1,.2,.2,t3)gc.rectangle('fill',-24,20*i-122,-16,-16)
+                            local status=WS.status('game')
+                            if status=='dead'then
+                                gc_setColor(COLOR.R)
+                            elseif status=='connecting'then
+                                gc_setColor(1,1,1,.5+.3*math.sin(time*6.26))
+                            elseif status=='running'then
+                                gc_setColor(COLOR.lG)
                             end
+                            gc.rectangle('fill',-16,-16,12,12)
+                            local t1,t2,t3=WS.getTimers('game')
+                            if t1>0 then gc_setColor(.9,.9,.9,t1)gc.rectangle('fill',-60,-2,-16,-16) end
+                            if t2>0 then gc_setColor(.3,1,.3,t2)gc.rectangle('fill',-42,-2,-16,-16) end
+                            if t3>0 then gc_setColor(1,.2,.2,t3)gc.rectangle('fill',-24,-2,-16,-16) end
                     end
                 gc_replaceTransform(SCR.origin)
                     WAIT.draw()
@@ -892,11 +859,7 @@ function Z.setClickFX(bool)showClickFX=bool end
 --[Warning] Color and line width is uncertain value, set it in the function.
 function Z.setCursor(func)drawCursor=func end
 
---Change F1~F7 events of devmode (F8 mode)
-function Z.setOnFnKeys(list)
-    assert(type(list)=='table',"Z.setOnFnKeys(list): list must be a table")
-    for i=1,7 do fnKey[i]=assert(type(list[i])=='function'and list[i])end
-end
+function Z.setVersionText(str)versionText=str end
 
 function Z.setDebugInfo(list)
     assert(type(list)=='table',"Z.setDebugInfo(list): list must be a table")
@@ -905,6 +868,12 @@ function Z.setDebugInfo(list)
         assert(type(list[i][2])=='function',"Z.setDebugInfo(list): list[i][2] must be a function")
     end
     debugInfos=list
+end
+
+--Change F1~F7 events of devmode (F8 mode)
+function Z.setOnFnKeys(list)
+    assert(type(list)=='table',"Z.setOnFnKeys(list): list must be a table")
+    for i=1,7 do fnKey[i]=assert(type(list[i])=='function'and list[i])end
 end
 
 function Z.setOnFocus(func)
