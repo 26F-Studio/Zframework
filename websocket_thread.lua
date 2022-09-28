@@ -60,7 +60,7 @@ do--Connect
     SOCK:settimeout(0)
 end
 
-local YIELD=coroutine.yield
+local yield=coroutine.yield
 local byte,char=string.byte,string.char
 local band,bor,bxor=bit.band,bit.bor,bit.bxor
 local shl,shr=bit.lshift,bit.rshift
@@ -96,7 +96,7 @@ local sendThread=coroutine.wrap(function()
         while CHN_getCount(sendCHN)>=2 do
             _send(CHN_pop(sendCHN),CHN_pop(sendCHN))
         end
-        YIELD()
+        yield()
     end
 end)
 
@@ -116,7 +116,7 @@ local function _receive(sock,len)
         if len==0 then
             return buffer
         end
-        YIELD()
+        yield()
     end
 end
 local readThread=coroutine.wrap(function()
@@ -171,7 +171,7 @@ local readThread=coroutine.wrap(function()
                 lBuffer=res
             end
         end
-        YIELD()
+        yield()
     end
 end)
 

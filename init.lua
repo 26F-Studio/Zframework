@@ -919,9 +919,4 @@ function Z.setOnQuit(func)
     onQuit=assert(type(func)=='function'and func,"Z.setOnQuit(func): func must be a function")
 end
 
-print(
-    HASH.pbkdf2(HASH.sha256,"password","salt",26)
-)
-
-
 return Z
