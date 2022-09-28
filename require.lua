@@ -1,4 +1,4 @@
-package.cpath=package.cpath..';'..SAVEDIR..'/lib/lib?.so;'..'?.dylib'
+package.cpath=package.cpath..';'..love.filesystem.getSaveDirectory()..'/lib/lib?.so;'..'?.dylib'
 local loaded={}
 return function(libName)
     local require=require

@@ -1,20 +1,23 @@
 local fs=love.filesystem
 local FILE={}
+function FILE.isSafe(file)
+    return fs.getRealDirectory(file)~=fs.getSaveDirectory()
+end
 function FILE.load(name,args)
-    if not args then args=''end
-    if fs.getInfo(name)then
+    if not args then args='' end
+    if fs.getInfo(name) then
         local F=fs.newFile(name)
         assert(F:open'r','open error')
-        local s=F:read()F:close()
+        local s=F:read() F:close()
         local mode=
-            STRING.sArg(args,'-luaon')and'luaon'or
-            STRING.sArg(args,'-lua')and'lua'or
-            STRING.sArg(args,'-json')and'json'or
-            STRING.sArg(args,'-string')and'string'or
-            s:sub(1,6)=='return{'and'luaon'or
-            (s:sub(1,1)=='['and s:sub(-1)==']'or s:sub(1,1)=='{'and s:sub(-1)=='}')and'json'or
+            STRING.sArg(args,'-luaon') and 'luaon' or
+            STRING.sArg(args,'-lua') and 'lua' or
+            STRING.sArg(args,'-json') and 'json' or
+            STRING.sArg(args,'-string') and 'string' or
+            s:sub(1,6)=='return{' and 'luaon' or
+            (s:sub(1,1)=='[' and s:sub(-1)==']' or s:sub(1,1)=='{' and s:sub(-1)=='}') and 'json' or
             'string'
-        if mode=='luaon'then
+        if mode=='luaon' then
             local func,err_mes=loadstring(s)
             if func then
                 setfenv(func,{})
@@ -23,7 +26,7 @@ function FILE.load(name,args)
             else
                 error('decode error: '..err_mes)
             end
-        elseif mode=='lua'then
+        elseif mode=='lua' then
             local func,err_mes=loadstring(s)
             if func then
                 local res=func()
@@ -31,30 +34,34 @@ function FILE.load(name,args)
             else
                 error('compile error: '..err_mes)
             end
-        elseif mode=='json'then
+        elseif mode=='json' then
             local res=JSON.decode(s)
             if res then
                 return res
             end
             error('decode error')
-        elseif mode=='string'then
+        elseif mode=='string' then
             return s
         else
             error('unknown mode')
         end
-    else
+    elseif not STRING.sArg(args,'-canskip') then
         error('no file')
     end
 end
 function FILE.save(data,name,args)
-    if not args then args=''end
-    if STRING.sArg(args,'-d')and fs.getInfo(name)then
+    if not args then args='' end
+    if STRING.sArg(args,'-d') and fs.getInfo(name) then
         error('duplicate')
     end
 
-    if type(data)=='table'then
-        if STRING.sArg(args,'-luaon')then
-            data=TABLE.dump(data)
+    if type(data)=='table' then
+        if STRING.sArg(args,'-luaon') then
+            if STRING.sArg(args,'-expand') then
+                data=TABLE.dump(data)
+            else
+                data=TABLE.dumpDeflate(data)
+            end
             if not data then
                 error('encode error')
             end
@@ -70,15 +77,15 @@ function FILE.save(data,name,args)
 
     local F=fs.newFile(name)
     assert(F:open('w'),'open error')
-    F:write(data)F:flush()F:close()
+    F:write(data) F:flush() F:close()
 end
 function FILE.clear(path)
-    if fs.getRealDirectory(path)==SAVEDIR and fs.getInfo(path).type=='directory'then
-        for _,name in next,fs.getDirectoryItems(path)do
+    if not FILE.isSafe(path) and fs.getInfo(path).type=='directory' then
+        for _,name in next,fs.getDirectoryItems(path) do
             name=path..'/'..name
-            if fs.getRealDirectory(name)==SAVEDIR then
+            if not FILE.isSafe(name) then
                 local t=fs.getInfo(name).type
-                if t=='file'then
+                if t=='file' then
                     fs.remove(name)
                 end
             end
@@ -86,14 +93,14 @@ function FILE.clear(path)
     end
 end
 function FILE.clear_s(path)
-    if path==''or(fs.getRealDirectory(path)==SAVEDIR and fs.getInfo(path).type=='directory')then
-        for _,name in next,fs.getDirectoryItems(path)do
+    if path=='' or (not FILE.isSafe(path) and fs.getInfo(path).type=='directory') then
+        for _,name in next,fs.getDirectoryItems(path) do
             name=path..'/'..name
-            if fs.getRealDirectory(name)==SAVEDIR then
+            if not FILE.isSafe(name) then
                 local t=fs.getInfo(name).type
-                if t=='file'then
+                if t=='file' then
                     fs.remove(name)
-                elseif t=='directory'then
+                elseif t=='directory' then
                     FILE.clear_s(name)
                     fs.remove(name)
                 end
