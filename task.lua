@@ -38,17 +38,17 @@ end
 local trigFrame=0
 function TASK.update(dt)
     trigFrame=trigFrame+dt*60
-    while trigFrame>=1 do
+    for _=1,trigFrame do
         for i=#tasks,1,-1 do
             local T=tasks[i]
             if status(T.thread)=='dead' then
                 rem(tasks,i)
             else
-                assert(resume(T.thread,dt))
+                assert(resume(T.thread,dt/trigFrame))
             end
         end
-        trigFrame=trigFrame-1
     end
+    trigFrame=1
 end
 function TASK.new(code,...)
     local thread=coroutine.create(code)
