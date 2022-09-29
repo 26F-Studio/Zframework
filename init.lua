@@ -299,6 +299,12 @@ end
 -- function love.mousemoved(x,y,dx,dy,touch) love.touchmoved(1,x,y,dx,dy) end
 -- function love.mousereleased(x,y,k) love.touchreleased(1,x,y) end
 
+local globalKey={
+    f8=function()
+        devMode=1
+        MES.new('info',"DEBUG ON",.2)
+    end
+}
 local fnKey={NULL,NULL,NULL,NULL,NULL,NULL,NULL}
 local function noDevkeyPressed(key)
     if key=='f1'then      fnKey[1]()
@@ -337,15 +343,10 @@ local function noDevkeyPressed(key)
 end
 function love.keypressed(key,_,isRep)
     mouseShow=false
-    if devMode and not noDevkeyPressed(key)then
-        return
-    elseif key=='f8'then
-        devMode=1
-        MES.new('info',"DEBUG ON",.2)
-    elseif key=='f11'then
-        SETTING.fullscreen=not SETTING.fullscreen
-        applySettings()
-        saveSettings()
+    if devMode and not noDevkeyPressed(key) then
+        -- Do nothing
+    elseif globalKey[key] then
+        globalKey[key]()
     else
         if SCN.swapping then return end
         if WAIT.state then
@@ -862,30 +863,40 @@ function Z.setCursor(func)drawCursor=func end
 function Z.setVersionText(str)versionText=str end
 
 function Z.setDebugInfo(list)
-    assert(type(list)=='table',"Z.setDebugInfo(list): list must be a table")
+    assert(type(list)=='table',"Z.setDebugInfo(list): list must be table")
     for i=1,#list do
-        assert(type(list[i][1])=='string',"Z.setDebugInfo(list): list[i][1] must be a string")
-        assert(type(list[i][2])=='function',"Z.setDebugInfo(list): list[i][2] must be a function")
+        assert(type(list[i][1])=='string',"Z.setDebugInfo(list): list[i][1] must be string")
+        assert(type(list[i][2])=='function',"Z.setDebugInfo(list): list[i][2] must be function")
     end
     debugInfos=list
 end
 
 --Change F1~F7 events of devmode (F8 mode)
 function Z.setOnFnKeys(list)
-    assert(type(list)=='table',"Z.setOnFnKeys(list): list must be a table")
+    assert(type(list)=='table',"Z.setOnFnKeys(list): list must be table")
     for i=1,7 do fnKey[i]=assert(type(list[i])=='function'and list[i])end
 end
 
+function Z.setOnGlobalKey(key,func)
+    assert(type(key)=='string',"Z.setOnFnKeys(key,func): key must be string")
+    if not func then
+        globalKey[key]=nil
+    else
+        assert(type(func)=='function',"Z.setOnFnKeys(key,func): func must be function")
+        globalKey[key]=func
+    end
+end
+
 function Z.setOnFocus(func)
-    onFocus=assert(type(func)=='function'and func,"Z.setOnFocus(func): func must be a function")
+    onFocus=assert(type(func)=='function'and func,"Z.setOnFocus(func): func must be function")
 end
 
 function Z.setOnResize(func)
-    onResize=assert(type(func)=='function'and func,"Z.setOnResize(func): func must be a function")
+    onResize=assert(type(func)=='function'and func,"Z.setOnResize(func): func must be function")
 end
 
 function Z.setOnQuit(func)
-    onQuit=assert(type(func)=='function'and func,"Z.setOnQuit(func): func must be a function")
+    onQuit=assert(type(func)=='function'and func,"Z.setOnQuit(func): func must be function")
 end
 
 return Z
