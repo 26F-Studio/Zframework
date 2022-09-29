@@ -728,6 +728,9 @@ function love.run()
                     --Draw cursor
                     if mouseShow then drawCursor(time,mx,my)end
                 gc_replaceTransform(SCR.xOy_ul)
+                    if showPowerInfo then
+                        gc.translate(0,27)
+                    end
                     MES_draw()
                 gc_replaceTransform(SCR.origin)
                     --Draw power info.
