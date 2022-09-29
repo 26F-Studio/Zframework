@@ -881,16 +881,14 @@ function inputBox:getText()
     return self.value
 end
 function inputBox:setText(str)
-    if type(str)=='string'then
-        self.value=str
-    end
+    if not str then str="" end
+    assert(type(str)=='string',"Arg #1 must be string")
+    self.value=str
 end
 function inputBox:addText(str)
-    if type(str)=='string'then
-        self.value=self.value..str
-    else
-        MES.new('error',"inputBox "..self.name.." dead, addText("..type(str)..")")
-    end
+    if not str then str="" end
+    assert(type(str)=='string',"Arg #1 must be string")
+    self.value=self.value..str
 end
 function inputBox:clear()
     self.value=""
@@ -1006,7 +1004,9 @@ function textBox:reset()
     --haha nothing here, techmino is so fun!
 end
 function textBox:setTexts(t)
-    self.texts=t
+    assert(type(t)=='table',"Arg #1 must be table")
+    TABLE.clear(self._texts)
+    TABLE.connect(self._texts,t)
     self.scrollPos=0
 end
 function textBox:clear()
@@ -1168,6 +1168,7 @@ function listBox:clear()
     self.scrollPos=0
 end
 function listBox:setList(t)
+    assert(type(t)=='table',"Arg #1 must be table")
     self.list=t
     self.selected=1
     self.scrollPos=0
