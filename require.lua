@@ -3,16 +3,16 @@ local loaded={}
 return function(libName)
     local require=require
     local arch='unknown'
-    if love.system.getOS()=='OS X'then
+    if love.system.getOS()=='OS X' then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
         libname=nil
-    elseif love.system.getOS()=='Android'then
-        if not loaded[libName]then
+    elseif love.system.getOS()=='Android' then
+        if not loaded[libName] then
             local platform=(function()
                 local p=io.popen('uname -m')
                 arch=p:read('*a'):lower()
                 p:close()
-                if arch:find('v8') and not arch:find('v8l') or arch:find('64')then
+                if arch:find('v8') and not arch:find('v8l') or arch:find('64') then
                     return'arm64-v8a'
                 else
                     return'armeabi-v7a'

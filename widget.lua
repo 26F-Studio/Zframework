@@ -50,7 +50,7 @@ local onChange=NULL
 
 local WIDGET={}
 
-function WIDGET.setOnChange(func)onChange=assert(type(func)=='function'and func,"WIDGET.setOnChange(func): func must be function")end
+function WIDGET.setOnChange(func) onChange=assert(type(func)=='function' and func,"WIDGET.setOnChange(func): func must be function") end
 
 local widgetMetatable={
     __tostring=function(self)
@@ -64,9 +64,9 @@ local text={
     alpha=0,
 }
 
-function text:reset()end
+function text:reset() end
 function text:update(dt)
-    if self.hideF and self.hideF()then
+    if self.hideF and self.hideF() then
         if self.alpha>0 then
             self.alpha=max(self.alpha-dt*7.5,0)
         end
@@ -80,27 +80,27 @@ function text:draw()
         gc_setColor(c[1],c[2],c[3],self.alpha)
         local w=self.obj:getWidth()
         local k=min(self.lim/self.obj:getWidth(),1)
-        if self.align=='M'then
+        if self.align=='M' then
             gc_draw(self.obj,self.x,self.y,nil,k,1,w*.5,0)
-        elseif self.align=='L'then
+        elseif self.align=='L' then
             gc_draw(self.obj,self.x,self.y,nil,k,1)
-        elseif self.align=='R'then
+        elseif self.align=='R' then
             gc_draw(self.obj,self.x,self.y,nil,k,1,w,0)
         end
     end
 end
 function WIDGET.newText(D)--name,x,y[,lim][,fText][,color][,font=30][,fType][,align='M'][,hideF][,hide]
     local _={
-        name= D.name or"_",
+        name= D.name or "_",
         x=    D.x,
         y=    D.y,
         lim=  D.lim or 1e99,
 
         fText=D.fText,
-        color=D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color=D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         font= D.font or 30,
         fType=D.fType,
-        align=D.align or'M',
+        align=D.align or 'M',
         hideF=D.hideF,
     }
     for k,v in next,text do _[k]=v end
@@ -113,7 +113,7 @@ local image={
     type='image',
 }
 function image:reset()
-    if type(self.img)=='string'then
+    if type(self.img)=='string' then
         self.img=IMG[self.img]
     end
 end
@@ -123,8 +123,8 @@ function image:draw()
 end
 function WIDGET.newImage(D)--name[,img(name)],x,y[,ang][,k][,hideF][,hide]
     local _={
-        name= D.name or"_",
-        img=  D.img or D.name or"_",
+        name= D.name or "_",
+        img=  D.img or D.name or "_",
         alpha=D.alpha,
         x=    D.x,
         y=    D.y,
@@ -147,7 +147,7 @@ function button:reset()
     self.ATV=0
 end
 function button:setObject(obj)
-    if type(obj)=='string'or type(obj)=='number'then
+    if type(obj)=='string' or type(obj)=='number' then
         self.obj=gc.newText(FONT.get(self.font,self.fType),obj)
     elseif obj then
         self.obj=obj
@@ -167,9 +167,9 @@ end
 function button:update(dt)
     local ATV=self.ATV
     if WIDGET.sel==self then
-        if ATV<8 then self.ATV=min(ATV+dt*60,8)end
+        if ATV<8 then self.ATV=min(ATV+dt*60,8) end
     else
-        if ATV>0 then self.ATV=max(ATV-dt*30,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*30,0) end
     end
 end
 function button:draw()
@@ -194,16 +194,16 @@ function button:draw()
     local ox,oy=obj:getWidth()*.5,obj:getHeight()*.5
     local y0=y+h*.5
     gc_setColor(1,1,1,.2+ATV*.05)
-    if self.align=='M'then
+    if self.align=='M' then
         local x0=x+w*.5
-        local kx=obj:type()=='Text'and min(w/ox/2,1)or 1
+        local kx=obj:type()=='Text' and min(w/ox/2,1) or 1
         gc_draw(obj,x0-1,y0-1,nil,kx,1,ox,oy)
         gc_draw(obj,x0-1,y0+1,nil,kx,1,ox,oy)
         gc_draw(obj,x0+1,y0-1,nil,kx,1,ox,oy)
         gc_draw(obj,x0+1,y0+1,nil,kx,1,ox,oy)
         gc_setColor(r*.55,g*.55,b*.55)
         gc_draw(obj,x0,y0,nil,kx,1,ox,oy)
-    elseif self.align=='L'then
+    elseif self.align=='L' then
         local edge=self.edge
         gc_draw(obj,x+edge-1,y0-1-oy)
         gc_draw(obj,x+edge-1,y0+1-oy)
@@ -211,7 +211,7 @@ function button:draw()
         gc_draw(obj,x+edge+1,y0+1-oy)
         gc_setColor(r*.55,g*.55,b*.55)
         gc_draw(obj,x+edge,y0-oy)
-    elseif self.align=='R'then
+    elseif self.align=='R' then
         local x0=x+w-self.edge-ox*2
         gc_draw(obj,x0-1,y0-1-oy)
         gc_draw(obj,x0-1,y0+1-oy)
@@ -248,7 +248,7 @@ end
 function WIDGET.newButton(D)--name,x,y,w[,h][,fText][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
     if not D.h then D.h=D.w end
     local _={
-        name= D.name or"_",
+        name= D.name or "_",
 
         x=    D.x-D.w*.5,
         y=    D.y-D.h*.5,
@@ -264,10 +264,10 @@ function WIDGET.newButton(D)--name,x,y,w[,h][,fText][,color][,font=30][,fType][,
         },
 
         fText=D.fText,
-        color=D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color=D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         font= D.font or 30,
         fType=D.fType,
-        align=D.align or'M',
+        align=D.align or 'M',
         edge= D.edge or 0,
         code= D.code or NULL,
         hideF=D.hideF,
@@ -275,7 +275,7 @@ function WIDGET.newButton(D)--name,x,y,w[,h][,fText][,color][,font=30][,fType][,
     }
     if D.sound==false then
         _.sound=false
-    elseif type(D.sound)=='string'then
+    elseif type(D.sound)=='string' then
         _.sound=D.sound
     else
         _.sound='button'
@@ -295,7 +295,7 @@ function key:reset()
     self.ATV=0
 end
 function key:setObject(obj)
-    if type(obj)=='string'or type(obj)=='number'then
+    if type(obj)=='string' or type(obj)=='number' then
         self.obj=gc.newText(FONT.get(self.font,self.fType),obj)
     elseif obj then
         self.obj=obj
@@ -314,9 +314,9 @@ end
 function key:update(dt)
     local ATV=self.ATV
     if WIDGET.sel==self then
-        if ATV<4 then self.ATV=min(ATV+dt*60,4)end
+        if ATV<4 then self.ATV=min(ATV+dt*60,4) end
     else
-        if ATV>0 then self.ATV=max(ATV-dt*30,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*30,0) end
     end
 end
 function key:draw()
@@ -329,11 +329,11 @@ function key:draw()
     --Fill
     if self.fShade then
         gc_setColor(r,g,b,ATV*.25)
-        if align=='M'then
+        if align=='M' then
             gc_draw(self.fShade,x+w*.5-self.fShade:getWidth()*.5,y+h*.5-self.fShade:getHeight()*.5)
-        elseif align=='L'then
+        elseif align=='L' then
             gc_draw(self.fShade,x+self.edge,y+h*.5-self.fShade:getHeight()*.5)
-        elseif align=='R'then
+        elseif align=='R' then
             gc_draw(self.fShade,x+w-self.edge-self.fShade:getWidth(),y+h*.5-self.fShade:getHeight()*.5)
         end
     else
@@ -355,12 +355,12 @@ function key:draw()
     local obj=self.obj
     local ox,oy=obj:getWidth()*.5,obj:getHeight()*.5
     gc_setColor(r,g,b)
-    if align=='M'then
-        local kx=obj:type()=='Text'and min(w/ox/2,1)or 1
+    if align=='M' then
+        local kx=obj:type()=='Text' and min(w/ox/2,1) or 1
         gc_draw(obj,x+w*.5,y+h*.5,nil,kx,1,ox,oy)
-    elseif align=='L'then
+    elseif align=='L' then
         gc_draw(obj,x+self.edge,y-oy+h*.5)
-    elseif align=='R'then
+    elseif align=='R' then
         gc_draw(obj,x+w-self.edge-ox*2,y-oy+h*.5)
     end
 end
@@ -383,7 +383,7 @@ end
 function WIDGET.newKey(D)--name,x,y,w[,h][,fText][,fShade][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
     if not D.h then D.h=D.w end
     local _={
-        name=   D.name or"_",
+        name=   D.name or "_",
 
         x=      D.x-D.w*.5,
         y=      D.y-D.h*.5,
@@ -400,10 +400,10 @@ function WIDGET.newKey(D)--name,x,y,w[,h][,fText][,fShade][,color][,font=30][,fT
 
         fText=  D.fText,
         fShade= D.fShade,
-        color=  D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color=  D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         font=   D.font or 30,
         fType=  D.fType,
-        align=  D.align or'M',
+        align=  D.align or 'M',
         edge=   D.edge or 0,
         code=   D.code or NULL,
         hideF=  D.hideF,
@@ -411,7 +411,7 @@ function WIDGET.newKey(D)--name,x,y,w[,h][,fText][,fShade][,color][,font=30][,fT
     }
     if D.sound==false then
         _.sound=false
-    elseif type(D.sound)=='string'then
+    elseif type(D.sound)=='string' then
         _.sound=D.sound
     else
         _.sound='key'
@@ -440,15 +440,15 @@ end
 function switch:update(dt)
     local ATV=self.ATV
     if WIDGET.sel==self then
-        if ATV<8 then self.ATV=min(ATV+dt*60,8)end
+        if ATV<8 then self.ATV=min(ATV+dt*60,8) end
     else
-        if ATV>0 then self.ATV=max(ATV-dt*30,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*30,0) end
     end
     local chk=self.CHK
-    if self:disp()then
-        if chk<6 then self.CHK=min(chk+dt*60,6)end
+    if self:disp() then
+        if chk<6 then self.CHK=min(chk+dt*60,6) end
     else
-        if chk>0 then self.CHK=max(chk-dt*60,0)end
+        if chk>0 then self.CHK=max(chk-dt*60,0) end
     end
 end
 function switch:draw()
@@ -486,12 +486,12 @@ end
 function switch:press()
     self.code()
     if self.sound then
-        SFX.play(self.disp()and'check'or'uncheck')
+        SFX.play(self.disp() and 'check' or 'uncheck')
     end
 end
 function WIDGET.newSwitch(D)--name,x,y[,lim][,fText][,color][,font=30][,fType][,sound=true][,disp][,code][,hideF][,hide]
     local _={
-        name= D.name or"_",
+        name= D.name or "_",
 
         x=    D.x,
         y=    D.y,
@@ -502,7 +502,7 @@ function WIDGET.newSwitch(D)--name,x,y[,lim][,fText][,color][,font=30][,fType][,
         },
 
         fText=D.fText,
-        color=D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color=D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         font= D.font or 30,
         fType=D.fType,
         sound=D.sound~=false,
@@ -551,10 +551,10 @@ function slider:update(dt)
         self.TAT=max(self.TAT-dt*60,0)
     end
     if WIDGET.sel==self then
-        if ATV<6 then self.ATV=min(ATV+dt*60,6)end
+        if ATV<6 then self.ATV=min(ATV+dt*60,6) end
         self.TAT=180
     else
-        if ATV>0 then self.ATV=max(ATV-dt*30,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*30,0) end
     end
     if not self.hide then
         self.pos=approach(self.pos,self.disp(),dt*26)
@@ -624,7 +624,7 @@ function slider:drag(x)
         newVal=newPos*(self.rangeR-self.rangeL)
         newVal=self.rangeL+int(newVal/self.unit+.5)*self.unit
     end
-    if newVal~=self.disp()then
+    if newVal~=self.disp() then
         self.code(newVal)
     end
     if self.change and timer()-self.lastTime>.5 then
@@ -648,17 +648,17 @@ function slider:scroll(n)
     end
 end
 function slider:arrowKey(k)
-    self:scroll((k=='left'or k=='up')and -1 or 1)
+    self:scroll((k=='left' or k=='up') and -1 or 1)
 end
 function WIDGET.newSlider(D)--name,x,y,w[,lim][,fText][,color][,axis][,smooth][,font=30][,fType][,change],disp[,show][,code],hide
     if not D.axis then
         D.axis={0,1,false}
         D.smooth=true
-    elseif not D.axis[3]then
+    elseif not D.axis[3] then
         D.smooth=true
     end
     local _={
-        name=  D.name or"_",
+        name=  D.name or "_",
 
         x=     D.x,
         y=     D.y,
@@ -674,7 +674,7 @@ function WIDGET.newSlider(D)--name,x,y,w[,lim][,fText][,color][,axis][,smooth][,
         },
 
         fText= D.fText,
-        color= D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color= D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         rangeL=D.axis[1],
         rangeR=D.axis[2],
         unit=  D.axis[3],
@@ -689,7 +689,7 @@ function WIDGET.newSlider(D)--name,x,y,w[,lim][,fText][,color][,axis][,smooth][,
         show=  false,
     }
     if D.show then
-        if type(D.show)=='function'then
+        if type(D.show)=='function' then
             _.show=D.show
         else
             _.show=sliderShowFunc[D.show]
@@ -740,9 +740,9 @@ end
 function selector:update(dt)
     local ATV=self.ATV
     if WIDGET.sel==self then
-        if ATV<8 then self.ATV=min(ATV+dt*60,8)end
+        if ATV<8 then self.ATV=min(ATV+dt*60,8) end
     else
-        if ATV>0 then self.ATV=max(ATV-dt*30,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*30,0) end
     end
 end
 function selector:draw()
@@ -831,12 +831,12 @@ function selector:scroll(n)
     end
 end
 function selector:arrowKey(k)
-    self:scroll((k=='left'or k=='up')and -1 or 1)
+    self:scroll((k=='left' or k=='up') and -1 or 1)
 end
 
 function WIDGET.newSelector(D)--name,x,y,w[,fText][,color][,sound=true],list,disp[,code],hide
     local _={
-        name= D.name or"_",
+        name= D.name or "_",
 
         x=    D.x-D.w*.5,
         y=    D.y-30,
@@ -851,7 +851,7 @@ function WIDGET.newSelector(D)--name,x,y,w[,fText][,color][,sound=true],list,dis
         },
 
         fText=D.fText,
-        color=D.color and(COLOR[D.color]or D.color)or COLOR.Z,
+        color=D.color and (COLOR[D.color] or D.color) or COLOR.Z,
         sound=D.sound~=false,
         font= 30,
         list= D.list,
@@ -906,9 +906,9 @@ end
 function inputBox:update(dt)
     local ATV=self.ATV
     if WIDGET.sel==self then
-        if ATV<3 then self.ATV=min(ATV+dt*60,3)end
+        if ATV<3 then self.ATV=min(ATV+dt*60,3) end
     else
-        if ATV>0 then self.ATV=max(ATV-dt*15,0)end
+        if ATV>0 then self.ATV=max(ATV-dt*15,0) end
     end
 end
 function inputBox:draw()
@@ -952,15 +952,15 @@ function inputBox:getInfo()
 end
 function inputBox:keypress(k)
     local t=self.value
-    if #t>0 and EDITING==""then
-        if k=='backspace'then
+    if #t>0 and EDITING=="" then
+        if k=='backspace' then
             local p=#t
             while t:byte(p)>=128 and t:byte(p)<192 do
                 p=p-1
             end
             t=sub(t,1,p-1)
             SFX.play('lock')
-        elseif k=='delete'then
+        elseif k=='delete' then
             t=""
             SFX.play('hold')
         end
@@ -969,7 +969,7 @@ function inputBox:keypress(k)
 end
 function WIDGET.newInputBox(D)--name,x,y,w[,h][,font=30][,fType][,secret][,regex][,limit],hide
     local _={
-        name=  D.name or"_",
+        name=  D.name or "_",
 
         x=     D.x,
         y=     D.y,
@@ -1036,7 +1036,7 @@ function textBox:push(t)
     end
 end
 function textBox:press(x,y)
-    if not(x and y)then return end
+    if not (x and y) then return end
     self:drag(0,0,0,0)
     if not self.fix and x>self.x+self.w-40 and y<self.y+40 then
         if self.sure>0 then
@@ -1051,10 +1051,10 @@ function textBox:drag(_,_,_,dy)
     self.scrollPos=max(0,min(self.scrollPos-dy,(#self.texts-self.capacity)*self.lineH))
 end
 function textBox:scroll(dir)
-    if type(dir)=='string'then
-        if dir=="up"then
+    if type(dir)=='string' then
+        if dir=="up" then
             dir=-1
-        elseif dir=="down"then
+        elseif dir=="down" then
             dir=1
         else
             return
@@ -1063,9 +1063,9 @@ function textBox:scroll(dir)
     self:drag(nil,nil,nil,-dir*self.lineH)
 end
 function textBox:arrowKey(k)
-    if k=='up'then
+    if k=='up' then
         self:scroll(-1)
-    elseif k=='down'then
+    elseif k=='down' then
         self:scroll(-1)
     end
 end
@@ -1108,7 +1108,7 @@ function textBox:draw()
         gc_stencil(_rectangleStencil)
         gc_translate(0,-(scrollPos%lineH))
         local pos=int(scrollPos/lineH)
-        for i=pos+1,min(pos+cap+1,#texts)do
+        for i=pos+1,min(pos+cap+1,#texts) do
             gc_printf(texts[i],10,4,w-16)
             gc_translate(0,lineH)
         end
@@ -1120,7 +1120,7 @@ function textBox:getInfo()
 end
 function WIDGET.newTextBox(D)--name,x,y,w,h[,font=30][,fType][,lineH][,fix],hide
     local _={
-        name= D.name or"_",
+        name= D.name or "_",
 
         resCtr={
             D.x+D.w*.5,D.y+D.h*.5,
@@ -1204,19 +1204,19 @@ end
 function listBox:remove()
     if self.selected then
         rem(self.list,self.selected)
-        if not self.list[self.selected]then
+        if not self.list[self.selected] then
             self:arrowKey('up')
         end
         self:drag(0,0,0,0)
     end
 end
 function listBox:press(x,y)
-    if not(x and y)then return end
+    if not (x and y) then return end
     x,y=x-self.x,y-self.y
-    if not(x and y and x>0 and y>0 and x<=self.w and y<=self.h)then return end
+    if not (x and y and x>0 and y>0 and x<=self.w and y<=self.h) then return end
     self:drag(0,0,0,0)
     y=int((y+self.scrollPos)/self.lineH)+1
-    if self.list[y]then
+    if self.list[y] then
         if self.selected~=y then
             self.selected=y
             SFX.play('selector',.8,0,12)
@@ -1230,12 +1230,12 @@ function listBox:scroll(n)
     self:drag(nil,nil,nil,-n*self.lineH)
 end
 function listBox:arrowKey(dir)
-    if dir=="up"then
+    if dir=="up" then
         self.selected=max(self.selected-1,1)
         if self.selected<int(self.scrollPos/self.lineH)+2 then
             self:drag(nil,nil,nil,self.lineH)
         end
-    elseif dir=="down"then
+    elseif dir=="down" then
         self.selected=min(self.selected+1,#self.list)
         if self.selected>int(self.scrollPos/self.lineH)+self.capacity-1 then
             self:drag(nil,nil,nil,-self.lineH)
@@ -1282,7 +1282,7 @@ function listBox:draw()
             gc_stencil(_rectangleStencil)
             local pos=int(scrollPos/lineH)
             gc_translate(0,-(scrollPos%lineH))
-            for i=pos+1,min(pos+cap+1,#list)do
+            for i=pos+1,min(pos+cap+1,#list) do
                 self.drawF(list[i],i,i==self.selected)
                 gc_translate(0,lineH)
             end
@@ -1294,7 +1294,7 @@ function listBox:getInfo()
 end
 function WIDGET.newListBox(D)--name,x,y,w,h,lineH,drawF[,hideF][,hide]
     local _={
-        name=    D.name or"_",
+        name=    D.name or "_",
 
         resCtr={
             D.x+D.w*.5,D.y+D.h*.5,
@@ -1362,10 +1362,10 @@ function WIDGET.setLang(widgetText)
             for _,W in next,L.widgetList do
                 local t=W.fText or widgetText[S][W.name]
                 if not t and W.mustHaveText then
-                    t=W.name or"##"
+                    t=W.name or "##"
                     W.color=COLOR.dV
                 end
-                if type(t)=='string'and W.font then
+                if type(t)=='string' and W.font then
                     t=gc.newText(FONT.get(W.font),t)
                 end
                 W.obj=t
@@ -1385,20 +1385,20 @@ function WIDGET.isFocus(W)
 end
 function WIDGET.focus(W)
     if WIDGET.sel==W or (W and W.hide) then return end
-    if WIDGET.sel and WIDGET.sel.type=='inputBox'then
+    if WIDGET.sel and WIDGET.sel.type=='inputBox' then
         kb.setTextInput(false)
         EDITING=""
     end
     WIDGET.sel=W
-    if W and W.type=='inputBox'then
+    if W and W.type=='inputBox' then
         local _,y1=xOy:transformPoint(0,W.y+W.h)
         kb.setTextInput(true,0,y1,1,1)
     end
 end
 function WIDGET.unFocus(force)
     local W=WIDGET.sel
-    if W and(force or not W.keepFocus)then
-        if W.type=='inputBox'then
+    if W and (force or not W.keepFocus) then
+        if W.type=='inputBox' then
             kb.setTextInput(false)
             EDITING=""
         end
@@ -1408,7 +1408,7 @@ end
 
 function WIDGET.cursorMove(x,y)
     for _,W in next,WIDGET.active do
-        if not W.hide and W.resCtr and W:isAbove(x,y+WIDGET.scrollPos)then
+        if not W.hide and W.resCtr and W:isAbove(x,y+WIDGET.scrollPos) then
             WIDGET.focus(W)
             return
         end
@@ -1423,7 +1423,7 @@ function WIDGET.press(x,y,k)
         if W.press then
             W:press(x,y and y+WIDGET.scrollPos,k)
         end
-        if W.hide then WIDGET.unFocus()end
+        if W.hide then WIDGET.unFocus() end
     end
 end
 function WIDGET.drag(x,y,dx,dy)
@@ -1444,8 +1444,8 @@ function WIDGET.release(x,y,k)
 end
 function WIDGET.textinput(texts)
     local W=WIDGET.sel
-    if W and W.type=='inputBox'then
-        if(not W.regex or texts:match(W.regex))and(not W.limit or #(WIDGET.sel.value..texts)<=W.limit)then
+    if W and W.type=='inputBox' then
+        if (not W.regex or texts:match(W.regex)) and (not W.limit or #(WIDGET.sel.value..texts)<=W.limit) then
             WIDGET.sel.value=WIDGET.sel.value..texts
             SFX.play('touch')
         else
@@ -1462,7 +1462,7 @@ function WIDGET.update(dt)
                 WIDGET.unFocus(true)
             end
         end
-        if W.update then W:update(dt)end
+        if W.update then W:update(dt) end
     end
 end
 local widgetCanvas
@@ -1484,7 +1484,7 @@ function WIDGET.draw()
     gc_setCanvas({stencil=true},widgetCanvas)
         gc_translate(0,-WIDGET.scrollPos)
         for _,W in next,WIDGET.active do
-            if not W.hide then W:draw()end
+            if not W.hide then W:draw() end
         end
         gc_origin()
         gc_setColor(1,1,1)

@@ -48,7 +48,7 @@ function WS.connect(name,subPath,head,timeout)
     else
         head=""
     end
-    if wsList[name]and wsList[name].thread then
+    if wsList[name] and wsList[name].thread then
         wsList[name].thread:release()
     end
     local ws={
@@ -76,7 +76,7 @@ end
 
 function WS.status(name)
     local ws=wsList[name]
-    return ws.status or'dead'
+    return ws.status or 'dead'
 end
 
 function WS.getTimers(name)
@@ -111,10 +111,10 @@ local OPname={
     [10]='pong',
 }
 function WS.send(name,message,op)
-    if type(message)=='string'then
+    if type(message)=='string' then
         local ws=wsList[name]
-        if ws.real and ws.status=='running'then
-            CHN_push(ws.sendCHN,op and OPcode[op]or 2)--2=binary
+        if ws.real and ws.status=='running' then
+            CHN_push(ws.sendCHN,op and OPcode[op] or 2)--2=binary
             CHN_push(ws.sendCHN,message)
             ws.lastPingTime=timer()
             ws.sendTimer=1
@@ -127,16 +127,16 @@ end
 
 function WS.read(name)
     local ws=wsList[name]
-    if ws.real and ws.status~='connecting'and CHN_getCount(ws.readCHN)>=2 then
+    if ws.real and ws.status~='connecting' and CHN_getCount(ws.readCHN)>=2 then
         local op,message=CHN_pop(ws.readCHN),CHN_pop(ws.readCHN)
         if op==8 then--8=close
             ws.status='dead'
         elseif op==9 then--9=ping
-            WS.send(name,message or"",'pong')
+            WS.send(name,message or "",'pong')
         end
         ws.lastPongTime=timer()
         ws.pongTimer=1
-        return message,OPname[op]or op
+        return message,OPname[op] or op
     end
 end
 
@@ -152,25 +152,25 @@ end
 function WS.update(dt)
     local time=timer()
     for name,ws in next,wsList do
-        if ws.real and ws.status~='dead'then
-            if TRD_isRunning(ws.thread)then
+        if ws.real and ws.status~='dead' then
+            if TRD_isRunning(ws.thread) then
                 if CHN_getCount(ws.triggerCHN)==0 then
                     CHN_push(ws.triggerCHN,0)
                 end
-                if ws.status=='connecting'then
+                if ws.status=='connecting' then
                     local mes=CHN_pop(ws.readCHN)
                     if mes then
-                        if mes=='success'then
+                        if mes=='success' then
                             ws.status='running'
                             ws.lastPingTime=time
                             ws.lastPongTime=time
                             ws.pongTimer=1
                         else
                             ws.status='dead'
-                            MES.new('warn',text.wsFailed..": "..(mes=="timeout"and text.netTimeout or mes))
+                            MES.new('warn',text.wsFailed..": "..(mes=="timeout" and text.netTimeout or mes))
                         end
                     end
-                elseif ws.status=='running'then
+                elseif ws.status=='running' then
                     if time-ws.lastPingTime>ws.pingInterval then
                         WS.send(name,"",'pong')
                     end

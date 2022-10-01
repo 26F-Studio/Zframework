@@ -6,12 +6,12 @@ local GC=setmetatable({},{
     __index=gc,
     __metatable=true
 })
-function GC.mStr(obj,x,y)printf(obj,x-626,y,1252,'center')end--Printf a string with 'center'
-function GC.simpX(obj,x,y)draw(obj,x-obj:getWidth()*.5,y)end--Simply draw an obj with x=obj:getWidth()/2
-function GC.simpY(obj,x,y)draw(obj,x,y-obj:getHeight()*.5)end--Simply draw an obj with y=obj:getWidth()/2
-function GC.X(obj,x,y,a,k)draw(obj,x,y,a,k,nil,obj:getWidth()*.5,0)end--Draw an obj with x=obj:getWidth()/2
-function GC.Y(obj,x,y,a,k)draw(obj,x,y,a,k,nil,0,obj:getHeight()*.5)end--Draw an obj with y=obj:getWidth()/2
-function GC.mDraw(obj,x,y,a,k)draw(obj,x,y,a,k,nil,obj:getWidth()*.5,obj:getHeight()*.5)end--Draw an obj with both middle X & Y
+function GC.mStr(obj,x,y) printf(obj,x-626,y,1252,'center') end--Printf a string with 'center'
+function GC.simpX(obj,x,y) draw(obj,x-obj:getWidth()*.5,y) end--Simply draw an obj with x=obj:getWidth()/2
+function GC.simpY(obj,x,y) draw(obj,x,y-obj:getHeight()*.5) end--Simply draw an obj with y=obj:getWidth()/2
+function GC.X(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,0) end--Draw an obj with x=obj:getWidth()/2
+function GC.Y(obj,x,y,a,k) draw(obj,x,y,a,k,nil,0,obj:getHeight()*.5) end--Draw an obj with y=obj:getWidth()/2
+function GC.mDraw(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,obj:getHeight()*.5) end--Draw an obj with both middle X & Y
 function GC.outDraw(obj,div,x,y,a,k)
     local w,h=obj:getWidth()*.5,obj:getHeight()*.5
     draw(obj,x-div,y-div,a,k,nil,w,h)
@@ -21,9 +21,9 @@ function GC.outDraw(obj,div,x,y,a,k)
 end
 function GC.shadedPrint(str,x,y,mode,d,clr1,clr2)
     local w=1280
-    if mode=='center'then
+    if mode=='center' then
         x=x-w*.5
-    elseif mode=='right'then
+    elseif mode=='right' then
         x=x-w
     end
     if not d then d=1 end
@@ -59,7 +59,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     Y[segments+1]=y+R*sin(ang)
     local halfAng=6.283185307179586/segments/2
     local erasedLen=r*math.tan(halfAng)
-    if mode=='line'then
+    if mode=='line' then
         erasedLen=erasedLen+1--Fix 1px cover
         for i=1,segments do
             --Line
@@ -73,7 +73,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
             local arcCX,arcCY=x+R2*cos(ang),y+R2*sin(ang)
             gc.arc('line','open',arcCX,arcCY,r,ang-halfAng,ang+halfAng)
         end
-    elseif mode=='fill'then
+    elseif mode=='fill' then
         local L={}
         for i=1,segments do
             --Line
@@ -111,8 +111,8 @@ do--function GC.DO(L)
         setLJ="setLineJoin",
 
         print="print",
-        rawFT=function(...)FONT.rawset(...)end,
-        setFT=function(...)FONT.set(...)end,
+        rawFT=function(...)FONT.rawset(...) end,
+        setFT=function(...)FONT.set(...) end,
         mText=GC.mStr,
         mDraw=GC.mDraw,
         mDrawX=GC.X,
@@ -121,26 +121,26 @@ do--function GC.DO(L)
 
         draw="draw",
         line="line",
-        fRect=function(...)gc.rectangle('fill',...)end,
-        dRect=function(...)gc.rectangle('line',...)end,
-        fCirc=function(...)gc.circle('fill',...)end,
-        dCirc=function(...)gc.circle('line',...)end,
-        fElps=function(...)gc.ellipse('fill',...)end,
-        dElps=function(...)gc.ellipse('line',...)end,
-        fPoly=function(...)gc.polygon('fill',...)end,
-        dPoly=function(...)gc.polygon('line',...)end,
+        fRect=function(...)gc.rectangle('fill',...) end,
+        dRect=function(...)gc.rectangle('line',...) end,
+        fCirc=function(...)gc.circle('fill',...) end,
+        dCirc=function(...)gc.circle('line',...) end,
+        fElps=function(...)gc.ellipse('fill',...) end,
+        dElps=function(...)gc.ellipse('line',...) end,
+        fPoly=function(...)gc.polygon('fill',...) end,
+        dPoly=function(...)gc.polygon('line',...) end,
 
-        dPie=function(...)gc.arc('line',...)end,
-        dArc=function(...)gc.arc('line','open',...)end,
-        dBow=function(...)gc.arc('line','closed',...)end,
-        fPie=function(...)gc.arc('fill',...)end,
-        fArc=function(...)gc.arc('fill','open',...)end,
-        fBow=function(...)gc.arc('fill','closed',...)end,
+        dPie=function(...)gc.arc('line',...) end,
+        dArc=function(...)gc.arc('line','open',...) end,
+        dBow=function(...)gc.arc('line','closed',...) end,
+        fPie=function(...)gc.arc('fill',...) end,
+        fArc=function(...)gc.arc('fill','open',...) end,
+        fBow=function(...)gc.arc('fill','closed',...) end,
 
-        fRPol=function(...)GC.regPolygon('fill',...)end,
-        dRPol=function(...)GC.regPolygon('line',...)end,
-        fRRPol=function(...)GC.regRoundPolygon('fill',...)end,
-        dRRPol=function(...)GC.regRoundPolygon('line',...)end,
+        fRPol=function(...)GC.regPolygon('fill',...) end,
+        dRPol=function(...)GC.regPolygon('line',...) end,
+        fRRPol=function(...)GC.regRoundPolygon('fill',...) end,
+        dRRPol=function(...)GC.regRoundPolygon('line',...) end,
     }
     local sizeLimit=gc.getSystemLimits().texturesize
     function GC.DO(L)
@@ -158,13 +158,13 @@ do--function GC.DO(L)
                 gc.setLineWidth(1)
                 for i=3,#L do
                     local cmd=L[i][1]
-                    if type(cmd)=='boolean'and cmd then
+                    if type(cmd)=='boolean' and cmd then
                         table.remove(L[i],1)
                         cmd=L[i][1]
                     end
-                    if type(cmd)=='string'then
+                    if type(cmd)=='string' then
                         local func=cmds[cmd]
-                        if type(func)=='string'then
+                        if type(func)=='string' then
                             func=gc[func]
                         end
                         if func then

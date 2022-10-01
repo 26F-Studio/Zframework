@@ -1,4 +1,4 @@
-NONE={}function NULL()end PAPER=love.graphics.newCanvas(1,1)
+NONE={}function NULL() end PAPER=love.graphics.newCanvas(1,1)
 EDITING=""
 LOADED=false
 
@@ -106,7 +106,7 @@ local errData={}--list, each error create {mes={errMes strings},scene=sceneNameS
 local function drawCursor(_,x,y)
     gc_setColor(1,1,1)
     gc_setLineWidth(2)
-    gc_circle(ms.isDown(1)and'fill'or'line',x,y,6)
+    gc_circle(ms.isDown(1) and 'fill' or 'line',x,y,6)
 end
 local showPowerInfo=true
 local showClickFX=true
@@ -130,14 +130,14 @@ local function updatePowerInfo()
     gc_push('transform')
     gc.origin()
     gc_clear(0,0,0,.25)
-    if state~='unknown'then
+    if state~='unknown' then
         gc_setLineWidth(4)
-        if state=='nobattery'then
+        if state=='nobattery' then
             gc_setColor(1,1,1)
             gc_setLineWidth(2)
             gc_line(74,5,100,22)
         elseif pow then
-            if state=='charging'then gc_setColor(0,1,0)
+            if state=='charging' then gc_setColor(0,1,0)
             elseif pow>50 then       gc_setColor(1,1,1)
             elseif pow>26 then       gc_setColor(1,1,0)
             elseif pow==26 then      gc_setColor(.5,0,1)
@@ -167,20 +167,20 @@ local lastX,lastY=0,0--Last click pos
 local function _updateMousePos(x,y,dx,dy)
     if SCN.swapping or WAIT.state then return end
     dx,dy=dx/SCR.k,dy/SCR.k
-    if SCN.mouseMove then SCN.mouseMove(x,y,dx,dy)end
-    if ms.isDown(1)then
+    if SCN.mouseMove then SCN.mouseMove(x,y,dx,dy) end
+    if ms.isDown(1) then
         WIDGET.drag(x,y,dx,dy)
     else
         WIDGET.cursorMove(x,y)
     end
 end
 local function mouse_update(dt)
-    if not KBisDown('lctrl','rctrl')and KBisDown('up','down','left','right')then
+    if not KBisDown('lctrl','rctrl') and KBisDown('up','down','left','right') then
         local dx,dy=0,0
-        if KBisDown('up')then    dy=dy-cursorSpd end
-        if KBisDown('down')then  dy=dy+cursorSpd end
-        if KBisDown('left')then  dx=dx-cursorSpd end
-        if KBisDown('right')then dx=dx+cursorSpd end
+        if KBisDown('up') then    dy=dy-cursorSpd end
+        if KBisDown('down') then  dy=dy+cursorSpd end
+        if KBisDown('left') then  dx=dx-cursorSpd end
+        if KBisDown('right') then dx=dx+cursorSpd end
         mx=max(min(mx+dx,1280),0)
         my=max(min(my+dy,720),0)
         if my==0 or my==720 then
@@ -226,10 +226,10 @@ function love.mousepressed(x,y,k,touch)
         ))
     end
     if SCN.swapping then return end
-    if SCN.mouseDown then SCN.mouseDown(mx,my,k)end
+    if SCN.mouseDown then SCN.mouseDown(mx,my,k) end
     WIDGET.press(mx,my,k)
     lastX,lastY=mx,my
-    if showClickFX then SYSFX.newTap(3,mx,my)end
+    if showClickFX then SYSFX.newTap(3,mx,my) end
 end
 function love.mousemoved(x,y,dx,dy,touch)
     if touch then return end
@@ -240,11 +240,11 @@ end
 function love.mousereleased(x,y,k,touch)
     if touch or WAIT.state or SCN.swapping then return end
     mx,my=ITP(xOy,x,y)
-    if SCN.mouseUp then SCN.mouseUp(mx,my,k)end
+    if SCN.mouseUp then SCN.mouseUp(mx,my,k) end
     if WIDGET.sel then
         WIDGET.release(mx,my,k)
     else
-        if lastX and SCN.mouseClick and(mx-lastX)^2+(my-lastY)^2<62 then
+        if lastX and SCN.mouseClick and (mx-lastX)^2+(my-lastY)^2<62 then
             SCN.mouseClick(mx,my,k)
         end
     end
@@ -269,15 +269,15 @@ function love.touchpressed(id,x,y)
     end
     x,y=ITP(xOy,x,y)
     lastX,lastY=x,y
-    if SCN.touchDown then SCN.touchDown(x,y,id)end
-    if kb.hasTextInput()then kb.setTextInput(false)end
+    if SCN.touchDown then SCN.touchDown(x,y,id) end
+    if kb.hasTextInput() then kb.setTextInput(false) end
     WIDGET.cursorMove(x,y)
     WIDGET.press(x,y,1)
 end
 function love.touchmoved(id,x,y,dx,dy)
     if WAIT.state or SCN.swapping then return end
     x,y=ITP(xOy,x,y)
-    if SCN.touchMove then SCN.touchMove(x,y,dx/SCR.k,dy/SCR.k,id)end
+    if SCN.touchMove then SCN.touchMove(x,y,dx/SCR.k,dy/SCR.k,id) end
     WIDGET.drag(x,y,dx/SCR.k,dy/SCR.k)
 end
 function love.touchreleased(id,x,y)
@@ -289,10 +289,10 @@ function love.touchreleased(id,x,y)
         WIDGET.unFocus()
         SCN.mainTouchID=false
     end
-    if SCN.touchUp then SCN.touchUp(x,y,id)end
-    if(x-lastX)^2+(y-lastY)^2<62 then
-        if SCN.touchClick then SCN.touchClick(x,y)end
-        if showClickFX then SYSFX.newTap(3,x,y)end
+    if SCN.touchUp then SCN.touchUp(x,y,id) end
+    if (x-lastX)^2+(y-lastY)^2<62 then
+        if SCN.touchClick then SCN.touchClick(x,y) end
+        if showClickFX then SYSFX.newTap(3,x,y) end
     end
 end
 -- function love.mousepressed(x,y,k) love.touchpressed(1,x,y) end
@@ -307,31 +307,31 @@ local globalKey={
 }
 local fnKey={NULL,NULL,NULL,NULL,NULL,NULL,NULL}
 local function noDevkeyPressed(key)
-    if key=='f1'then      fnKey[1]()
-    elseif key=='f2'then  fnKey[2]()
-    elseif key=='f3'then  fnKey[3]()
-    elseif key=='f4'then  fnKey[4]()
-    elseif key=='f5'then  fnKey[5]()
-    elseif key=='f6'then  fnKey[6]()
-    elseif key=='f7'then  fnKey[7]()
-    elseif key=='f8'then  devMode=nil MES.new('info',"DEBUG OFF",.2)
-    elseif key=='f9'then  devMode=1   MES.new('info',"DEBUG 1")
-    elseif key=='f10'then devMode=2   MES.new('info',"DEBUG 2")
-    elseif key=='f11'then devMode=3   MES.new('info',"DEBUG 3")
-    elseif key=='f12'then devMode=4   MES.new('info',"DEBUG 4")
+    if key=='f1' then      fnKey[1]()
+    elseif key=='f2' then  fnKey[2]()
+    elseif key=='f3' then  fnKey[3]()
+    elseif key=='f4' then  fnKey[4]()
+    elseif key=='f5' then  fnKey[5]()
+    elseif key=='f6' then  fnKey[6]()
+    elseif key=='f7' then  fnKey[7]()
+    elseif key=='f8' then  devMode=nil MES.new('info',"DEBUG OFF",.2)
+    elseif key=='f9' then  devMode=1   MES.new('info',"DEBUG 1")
+    elseif key=='f10' then devMode=2   MES.new('info',"DEBUG 2")
+    elseif key=='f11' then devMode=3   MES.new('info',"DEBUG 3")
+    elseif key=='f12' then devMode=4   MES.new('info',"DEBUG 4")
     elseif devMode==2 then
         local W=WIDGET.sel
         if W then
-            if key=='left'then W.x=W.x-10
-            elseif key=='right'then W.x=W.x+10
-            elseif key=='up'then W.y=W.y-10
-            elseif key=='down'then W.y=W.y+10
-            elseif key==','then W.w=W.w-10
-            elseif key=='.'then W.w=W.w+10
-            elseif key=='/'then W.h=W.h-10
-            elseif key=='\''then W.h=W.h+10
-            elseif key=='['then W.font=W.font-5
-            elseif key==']'then W.font=W.font+5
+            if key=='left' then W.x=W.x-10
+            elseif key=='right' then W.x=W.x+10
+            elseif key=='up' then W.y=W.y-10
+            elseif key=='down' then W.y=W.y+10
+            elseif key==',' then W.w=W.w-10
+            elseif key=='.' then W.w=W.w+10
+            elseif key=='/' then W.h=W.h-10
+            elseif key=='\'' then W.h=W.h+10
+            elseif key=='[' then W.font=W.font-5
+            elseif key==']' then W.font=W.font+5
             else return true
             end
         else
@@ -353,19 +353,19 @@ function love.keypressed(key,_,isRep)
             if key=='escape' and WAIT.arg.escapable then WAIT.interrupt() end
             return
         end
-        if EDITING==""and(not SCN.keyDown or SCN.keyDown(key,isRep))then
+        if EDITING=="" and (not SCN.keyDown or SCN.keyDown(key,isRep)) then
             local W=WIDGET.sel
-            if key=='escape'and not isRep then
+            if key=='escape' and not isRep then
                 SCN.back()
-            elseif key=='up'or key=='down'or key=='left'or key=='right'then
+            elseif key=='up' or key=='down' or key=='left' or key=='right' then
                 mouseShow=true
-                if KBisDown('lctrl','rctrl')then
-                    if W and W.arrowKey then W:arrowKey(key)end
+                if KBisDown('lctrl','rctrl') then
+                    if W and W.arrowKey then W:arrowKey(key) end
                 end
-            elseif key=='space'or key=='return'then
+            elseif key=='space' or key=='return' then
                 mouseShow=true
                 if not isRep then
-                    if showClickFX then SYSFX.newTap(3,mx,my)end
+                    if showClickFX then SYSFX.newTap(3,mx,my) end
                     love.mousepressed(mx,my,1)
                     love.mousereleased(mx,my,1)
                 end
@@ -379,7 +379,7 @@ function love.keypressed(key,_,isRep)
 end
 function love.keyreleased(i)
     if WAIT.state or SCN.swapping then return end
-    if SCN.keyUp then SCN.keyUp(i)end
+    if SCN.keyUp then SCN.keyUp(i) end
 end
 
 function love.textedited(texts)
@@ -422,7 +422,7 @@ function love.joystickremoved(JS)
     for i=1,#jsState do
         if jsState[i]._jsObj==JS then
             for j=1,#gamePadKeys do
-                if JS:isGamepadDown(gamePadKeys[j])then
+                if JS:isGamepadDown(gamePadKeys[j]) then
                     love.gamepadreleased(JS,gamePadKeys[j])
                 end
             end
@@ -439,14 +439,14 @@ function love.joystickremoved(JS)
     end
 end
 function love.gamepadaxis(JS,axis,val)
-    if jsState[1]and JS==jsState[1]._jsObj then
+    if jsState[1] and JS==jsState[1]._jsObj then
         local js=jsState[1]
-        if axis=='leftx'or axis=='lefty'or axis=='rightx'or axis=='righty'then
+        if axis=='leftx' or axis=='lefty' or axis=='rightx' or axis=='righty' then
             local newVal=--range: [0,1]
                 val>.4 and 1 or
                 val<-.4 and -1 or
                 0
-            if newVal~=js[axis]then
+            if newVal~=js[axis] then
                 if js[axis]==-1 then
                     love.gamepadreleased(JS,jsAxisEventName[axis][1])
                 elseif js[axis]~=0 then
@@ -459,9 +459,9 @@ function love.gamepadaxis(JS,axis,val)
                 end
                 js[axis]=newVal
             end
-        elseif axis=='triggerleft'or axis=='triggerright'then
+        elseif axis=='triggerleft' or axis=='triggerright' then
             local newVal=val>.3 and 1 or 0--range: [0,1]
-            if newVal~=js[axis]then
+            if newVal~=js[axis] then
                 if newVal==1 then
                     love.gamepadpressed(JS,jsAxisEventName[axis])
                 else
@@ -479,22 +479,22 @@ function love.gamepadpressed(_,key)
         if SCN.gamepadDown then
             cursorCtrl=SCN.gamepadDown(key)
         elseif SCN.keyDown then
-            cursorCtrl=SCN.keyDown(dPadToKey[key]or key)
+            cursorCtrl=SCN.keyDown(dPadToKey[key] or key)
         else
             cursorCtrl=true
         end
         if cursorCtrl then
-            key=dPadToKey[key]or key
+            key=dPadToKey[key] or key
             mouseShow=true
             local W=WIDGET.sel
-            if key=='back'then
+            if key=='back' then
                 SCN.back()
-            elseif key=='up'or key=='down'or key=='left'or key=='right'then
+            elseif key=='up' or key=='down' or key=='left' or key=='right' then
                 mouseShow=true
-                if W and W.arrowKey then W:arrowKey(key)end
-            elseif key=='return'then
+                if W and W.arrowKey then W:arrowKey(key) end
+            elseif key=='return' then
                 mouseShow=true
-                if showClickFX then SYSFX.newTap(3,mx,my)end
+                if showClickFX then SYSFX.newTap(3,mx,my) end
                 love.mousepressed(mx,my,1)
                 love.mousereleased(mx,my,1)
             else
@@ -507,16 +507,16 @@ function love.gamepadpressed(_,key)
 end
 function love.gamepadreleased(_,i)
     if WAIT.state or SCN.swapping then return end
-    if SCN.gamepadUp then SCN.gamepadUp(i)end
+    if SCN.gamepadUp then SCN.gamepadUp(i) end
 end
 
 function love.filedropped(file)
     if WAIT.state or SCN.swapping then return end
-    if SCN.fileDropped then SCN.fileDropped(file)end
+    if SCN.fileDropped then SCN.fileDropped(file) end
 end
 function love.directorydropped(dir)
     if WAIT.state or SCN.swapping then return end
-    if SCN.directoryDropped then SCN.directoryDropped(dir)end
+    if SCN.directoryDropped then SCN.directoryDropped(dir) end
 end
 local autoGCcount=0
 function love.lowmemory()
@@ -531,34 +531,34 @@ local onResize=NULL
 function love.resize(w,h)
     if SCR.w==w and SCR.h==h then return end
     SCR.resize(w,h)
-    if BG.resize then BG.resize(w,h)end
-    if SCN.resize then SCN.resize(w,h)end
+    if BG.resize then BG.resize(w,h) end
+    if SCN.resize then SCN.resize(w,h) end
     WIDGET.resize(w,h)
     FONT.reset()
     onResize(w,h)
 end
 
 local onFocus=NULL
-function love.focus(f)onFocus(f)end
+function love.focus(f) onFocus(f) end
 
 local yield=coroutine.yield
 local function secondLoopThread()
     local mainLoop=love.run()
-    repeat yield()until mainLoop()
+    repeat yield() until mainLoop()
 end
 function love.errorhandler(msg)
-    if type(msg)~='string'then
+    if type(msg)~='string' then
         msg="Unknown error"
-    elseif msg:find("Invalid UTF-8")and text then
+    elseif msg:find("Invalid UTF-8") and text then
         msg=text.tryAnotherBuild
     end
 
     --Generate error message
     local err={"Error:"..msg}
     local c=2
-    for l in debug.traceback("",2):gmatch("(.-)\n")do
+    for l in debug.traceback("",2):gmatch("(.-)\n") do
         if c>2 then
-            if not l:find("boot")then
+            if not l:find("boot") then
                 err[c]=l:gsub("^\t*","")
                 c=c+1
             end
@@ -575,7 +575,7 @@ function love.errorhandler(msg)
 
     if LOADED and #errData<3 then
         BG.set('none')
-        local scn=SCN and SCN.cur or"NULL"
+        local scn=SCN and SCN.cur or "NULL"
         table.insert(errData,{mes=err,scene=scn})
 
         --Write messages to log file
@@ -586,7 +586,7 @@ function love.errorhandler(msg)
         )
 
         --Get screencapture
-        gc.captureScreenshot(function(_)errData[#errData].shot=gc.newImage(_)end)
+        gc.captureScreenshot(function(_) errData[#errData].shot=gc.newImage(_) end)
         gc.present()
 
         --Create a new mainLoop thread to keep game alive
@@ -605,14 +605,14 @@ function love.errorhandler(msg)
 
         local errorMsg
         errorMsg=LOADED and
-            "Too many errors or fatal error occured.\nPlease restart the game."or
+            "Too many errors or fatal error occured.\nPlease restart the game." or
             "An error has occurred during loading.\nError info has been created, and you can send it to the author."
         while true do
             love.event.pump()
-            for E,a,b in love.event.poll()do
-                if E=='quit'or a=='escape'then
+            for E,a,b in love.event.poll() do
+                if E=='quit' or a=='escape' then
                     return true
-                elseif E=='resize'then
+                elseif E=='resize' then
                     SCR.resize(a,b)
                 end
             end
@@ -622,7 +622,7 @@ function love.errorhandler(msg)
             FONT.set(100)gc_print(":(",100,0,0,1.2)
             FONT.set(40)gc.printf(errorMsg,100,160,SCR.w0-100)
             FONT.set(20)
-            gc_print(love.system.getOS().."-"..VERSION.string.."                          scene:"..(SCN and SCN.cur or"NULL"),100,660)
+            gc_print(love.system.getOS().."-"..VERSION.string.."                          scene:"..(SCN and SCN.cur or "NULL"),100,660)
             gc.printf(err[1],100,360,1260-100)
             gc_print("TRACEBACK",100,450)
             for i=4,#err-2 do
@@ -671,9 +671,9 @@ function love.run()
     love.resize(gc.getWidth(),gc.getHeight())
 
     --Scene Launch
-    while #SCN.stack>0 do SCN.pop()end
+    while #SCN.stack>0 do SCN.pop() end
     SCN.push('quit','slowFade')
-    SCN.init(#errData==0 and'load'or'error')
+    SCN.init(#errData==0 and 'load' or 'error')
 
     return function()
         local _
@@ -684,10 +684,10 @@ function love.run()
 
         --EVENT
         PUMP()
-        for N,a,b,c,d,e in POLL()do
-            if love[N]then
+        for N,a,b,c,d,e in POLL() do
+            if love[N] then
                 love[N](a,b,c,d,e)
-            elseif N=='quit'then
+            elseif N=='quit' then
                 onQuit()
                 return a or true
             end
@@ -695,8 +695,8 @@ function love.run()
 
         --UPDATE
         STEP()
-        if mouseShow then mouse_update(dt)end
-        if next(jsState)then gp_update(jsState[1],dt)end
+        if mouseShow then mouse_update(dt) end
+        if next(jsState) then gp_update(jsState[1],dt) end
         VOC.update()
         BG.update(dt)
         TEXT_update(dt)
@@ -706,12 +706,12 @@ function love.run()
         WS_update(dt)
         TASK_update(dt)
         SYSFX_update(dt)
-        if SCN.update then SCN.update(dt)end
-        if SCN.swapping then SCN.swapUpdate(dt)end
+        if SCN.update then SCN.update(dt) end
+        if SCN.swapping then SCN.swapUpdate(dt) end
         WIDGET_update(dt)
 
         --DRAW
-        if not MINI()then
+        if not MINI() then
             FCT=FCT+frameMul
             if FCT>=100 then
                 FCT=FCT-100
@@ -720,13 +720,13 @@ function love.run()
                     gc_setColor(1,1,1)
                     BG.draw()
                 gc_replaceTransform(SCR.xOy)
-                    if SCN.draw then SCN.draw()end
+                    if SCN.draw then SCN.draw() end
                     WIDGET_draw()
                     SYSFX_draw()
                     TEXT_draw()
 
                     --Draw cursor
-                    if mouseShow then drawCursor(time,mx,my)end
+                    if mouseShow then drawCursor(time,mx,my) end
                 gc_replaceTransform(SCR.xOy_ul)
                     if showPowerInfo then
                         gc.translate(0,27)
@@ -793,11 +793,11 @@ function love.run()
                         gc_replaceTransform(SCR.xOy_dr)
                             --Websocket status
                             local status=WS.status('game')
-                            if status=='dead'then
+                            if status=='dead' then
                                 gc_setColor(COLOR.R)
-                            elseif status=='connecting'then
+                            elseif status=='connecting' then
                                 gc_setColor(1,1,1,.5+.3*math.sin(time*6.26))
-                            elseif status=='running'then
+                            elseif status=='running' then
                                 gc_setColor(COLOR.lG)
                             end
                             gc.rectangle('fill',-16,-16,12,12)
@@ -811,7 +811,7 @@ function love.run()
                 gc_present()
 
                 --SPEED UPUPUP!
-                if discardCanvas then gc_discard()end
+                if discardCanvas then gc_discard() end
             end
         end
 
@@ -836,16 +836,16 @@ function love.run()
         end
 
         _=timer()-lastFrame
-        if _<sleepInterval*.9626 then SLEEP(sleepInterval*.9626-_)end
+        if _<sleepInterval*.9626 then SLEEP(sleepInterval*.9626-_) end
         while timer()-lastFrame<sleepInterval do end
     end
 end
 
 local Z={}
 
-function Z.getJsState()return jsState end
+function Z.getJsState() return jsState end
 function Z.getErr(i)
-    if i=='#'then
+    if i=='#' then
         return errData[#errData]
     elseif i then
         return errData[i]
@@ -854,16 +854,16 @@ function Z.getErr(i)
     end
 end
 
-function Z.setPowerInfo(bool)showPowerInfo=bool end
-function Z.setCleanCanvas(bool)discardCanvas=bool end
-function Z.setFrameMul(n)frameMul=n end
-function Z.setMaxFPS(fps)sleepInterval=1/fps end
-function Z.setClickFX(bool)showClickFX=bool end
+function Z.setPowerInfo(bool) showPowerInfo=bool end
+function Z.setCleanCanvas(bool) discardCanvas=bool end
+function Z.setFrameMul(n) frameMul=n end
+function Z.setMaxFPS(fps) sleepInterval=1/fps end
+function Z.setClickFX(bool) showClickFX=bool end
 
 --[Warning] Color and line width is uncertain value, set it in the function.
-function Z.setCursor(func)drawCursor=func end
+function Z.setCursor(func) drawCursor=func end
 
-function Z.setVersionText(str)versionText=str end
+function Z.setVersionText(str) versionText=str end
 
 function Z.setDebugInfo(list)
     assert(type(list)=='table',"Z.setDebugInfo(list): list must be table")
@@ -877,7 +877,7 @@ end
 --Change F1~F7 events of devmode (F8 mode)
 function Z.setOnFnKeys(list)
     assert(type(list)=='table',"Z.setOnFnKeys(list): list must be table")
-    for i=1,7 do fnKey[i]=assert(type(list[i])=='function'and list[i])end
+    for i=1,7 do fnKey[i]=assert(type(list[i])=='function' and list[i]) end
 end
 
 function Z.setOnGlobalKey(key,func)
@@ -891,15 +891,15 @@ function Z.setOnGlobalKey(key,func)
 end
 
 function Z.setOnFocus(func)
-    onFocus=assert(type(func)=='function'and func,"Z.setOnFocus(func): func must be function")
+    onFocus=assert(type(func)=='function' and func,"Z.setOnFocus(func): func must be function")
 end
 
 function Z.setOnResize(func)
-    onResize=assert(type(func)=='function'and func,"Z.setOnResize(func): func must be function")
+    onResize=assert(type(func)=='function' and func,"Z.setOnResize(func): func must be function")
 end
 
 function Z.setOnQuit(func)
-    onQuit=assert(type(func)=='function'and func,"Z.setOnQuit(func): func must be function")
+    onQuit=assert(type(func)=='function' and func,"Z.setOnQuit(func): func must be function")
 end
 
 return Z

@@ -36,7 +36,7 @@ function textFX.stretch(t)
     draw(
         t.text,t.x,t.y,
         nil,
-        t.c<.3 and(.3-t.c)*1.6+1 or 1,1,
+        t.c<.3 and (.3-t.c)*1.6+1 or 1,1,
         t.text:getWidth()*.5,t.text:getHeight()*.5
     )
 end
@@ -46,13 +46,13 @@ function textFX.drive(t)
         nil,
         nil,nil,
         t.text:getWidth()*.5,t.text:getHeight()*.5,
-        t.c<.3 and(.3-t.c)*2 or 0,0
+        t.c<.3 and (.3-t.c)*2 or 0,0
     )
 end
 function textFX.spin(t)
     draw(
         t.text,t.x,t.y,
-        t.c<.3 and(.3-t.c)^2*4 or t.c<.8 and 0 or(t.c-.8)^2*-4,
+        t.c<.3 and (.3-t.c)^2*4 or t.c<.8 and 0 or (t.c-.8)^2*-4,
         nil,nil,
         t.text:getWidth()*.5,t.text:getHeight()*.5
     )
@@ -107,7 +107,7 @@ function TEXT.show(text,x,y,font,style,spd,stop)
         y=y or 0,                                                    --Y
         spd=(spd or 1),                                              --Timing speed(1=last 1 sec)
         stop=stop,                                                   --Stop time(sustained text)
-        draw=assert(textFX[style or'appear'],"no text type:"..style),--Draw method
+        draw=assert(textFX[style or 'appear'],"no text type:"..style),--Draw method
     })
 end
 function TEXT.getText(text,x,y,font,style,spd,stop)--Another version of TEXT.show(), but only return text object, need manual management
@@ -118,7 +118,7 @@ function TEXT.getText(text,x,y,font,style,spd,stop)--Another version of TEXT.sho
         y=y or 0,
         spd=(spd or 1),
         stop=stop,
-        draw=textFX[style or'appear']or error("unavailable type:"..style),
+        draw=textFX[style or 'appear'] or error("unavailable type:"..style),
     }
 end
 function TEXT.update(dt,list)

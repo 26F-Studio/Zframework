@@ -23,7 +23,7 @@ local threadCode=[[
             break
         end
 
-        -- print("\n------SEND------") for k,v in next,arg do print(k,v)end
+        -- print("\n------SEND------") for k,v in next,arg do print(k,v) end
         local data={}
         local _,code,detail=http.request{
             method=arg.method,
@@ -41,7 +41,7 @@ local threadCode=[[
             body=table.concat(data),
             detail=detail,
         }
-        -- print("\n------RECV------") for k,v in next,result do print(k,v)end
+        -- print("\n------RECV------") for k,v in next,result do print(k,v) end
         recvCHN:push(result)
     end
 ]]

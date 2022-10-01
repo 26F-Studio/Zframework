@@ -24,9 +24,9 @@ local function _getTuneHeight(tune)
         if tuneHeight then
             tuneHeight=tuneHeight+(octave-1)*12
             local s=tune:sub(2,2)
-            if s=='s'or s=='#'then
+            if s=='s' or s=='#' then
                 tuneHeight=tuneHeight+1
-            elseif s=='f'or s=='b'then
+            elseif s=='f' or s=='b' then
                 tuneHeight=tuneHeight-1
             end
             return tuneHeight
@@ -38,16 +38,16 @@ local SFX={}
 
 function SFX.init(list)
     assert(type(list)=='table',"Initialize SFX lib with a list of filenames!")
-    for i=1,#list do table.insert(sfxList,list[i])end
+    for i=1,#list do table.insert(sfxList,list[i]) end
 end
 function SFX.load(path)
     local c=0
     local missing=0
     for i=1,#sfxList do
         local fullPath=path..sfxList[i]..'.ogg'
-        if love.filesystem.getInfo(fullPath)then
-            if Sources[sfxList[i]]then
-                for j=1,#Sources[sfxList[i]]do
+        if love.filesystem.getInfo(fullPath) then
+            if Sources[sfxList[i]] then
+                for j=1,#Sources[sfxList[i]] do
                     Sources[sfxList[i]][j]:release()
                 end
             end
@@ -70,11 +70,11 @@ function SFX.loadSample(pack)
     assert(pack.name,"No field: name")
     assert(pack.path,"No field: path")
     local num=1
-    while love.filesystem.getInfo(pack.path..'/'..num..'.ogg')do
+    while love.filesystem.getInfo(pack.path..'/'..num..'.ogg') do
         Sources[pack.name..num]={love.audio.newSource(pack.path..'/'..num..'.ogg','static')}
         num=num+1
     end
-    local base=(_getTuneHeight(pack.base)or 37)-1
+    local base=(_getTuneHeight(pack.base) or 37)-1
     local top=base+num-1
     packSetting[pack.name]={base=base,top=top}
     LOG((num-1).." "..pack.name.." samples loaded")
@@ -84,11 +84,11 @@ function SFX.getCount()
     return #sfxList
 end
 function SFX.setVol(v)
-    assert(type(v)=='number'and v>=0 and v<=1,'Wrong volume')
+    assert(type(v)=='number' and v>=0 and v<=1,'Wrong volume')
     volume=v
 end
 function SFX.setStereo(v)
-    assert(type(v)=='number'and v>=0 and v<=1,'Wrong stereo')
+    assert(type(v)=='number' and v>=0 and v<=1,'Wrong stereo')
     stereo=v
 end
 
@@ -107,12 +107,12 @@ function SFX.playSample(pack,...)--vol-1, sampSet1, vol-2, sampSet2
         local vol
         for i=1,#arg do
             local a=arg[i]
-            if type(a)=='number'and a<=1 then
+            if type(a)=='number' and a<=1 then
                 vol=a
             else
                 local base=packSetting[pack].base
                 local top=packSetting[pack].top
-                local tune=type(a)=='string'and _getTuneHeight(a)or a--Absolute tune in number
+                local tune=type(a)=='string' and _getTuneHeight(a) or a--Absolute tune in number
                 local playTune=tune+rnd(-2,2)
                 if playTune<=base then--Too low notes
                     playTune=base+1
@@ -129,9 +129,9 @@ local function _play(name,vol,pos,pitch)
     local S=Sources[name]--Source list
     if not S then return end
     local n=1
-    while S[n]:isPlaying()do
+    while S[n]:isPlaying() do
         n=n+1
-        if not S[n]then
+        if not S[n] then
             S[n]=S[1]:clone()
             S[n]:seek(0)
             break
@@ -156,9 +156,9 @@ function SFX.play(name,vol,pos,pitch)
 end
 function SFX.reset()
     for _,L in next,Sources do
-        if type(L)=='table'then
+        if type(L)=='table' then
             for i=#L,1,-1 do
-                if not L[i]:isPlaying()then
+                if not L[i]:isPlaying() then
                     rem(L,i)
                 end
             end

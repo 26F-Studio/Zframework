@@ -164,7 +164,7 @@ if print_debug_messages then
    print("Abilities:")
    print("   Lua version:               "..(is_LuaJIT and "LuaJIT "..(is_LuaJIT_21 and "2.1 " or "2.0 ")..(LuaJIT_arch or "")..(ffi and " with FFI" or " without FFI") or _VERSION))
    print("   Integer bitwise operators: "..(Lua_has_int64 and "int64" or Lua_has_int32 and "int32" or "no"))
-   print("   32-bit bitwise library:    "..(library_name or "not found"))
+   print("   32-bit bitwise library:    "..(library_name or " not found"))
 end
 
 -- Selecting the most suitable implementation for given set of abilities

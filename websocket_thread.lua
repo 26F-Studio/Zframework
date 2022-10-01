@@ -40,19 +40,19 @@ do--Connect
     repeat
         res,err=SOCK:receive('*l')
         assert(res,err)
-        if not ctLen and res:find('length')then
+        if not ctLen and res:find('length') then
             ctLen=tonumber(res:match('%d+'))
         end
     until res==''
 
     --Result
     if ctLen then
-        if code=='101'then
+        if code=='101' then
             CHN_push(readCHN,'success')
         else
             res,err=SOCK:receive(ctLen)
             res=JSON.decode(assert(res,err))
-            error((code or"XXX")..":"..(res and res.reason or"Server Error"))
+            error((code or "XXX")..":"..(res and res.reason or "Server Error"))
         end
     end
     SOCK:settimeout(0)
@@ -148,7 +148,7 @@ local readThread=coroutine.wrap(function()
         --React
         if op==8 then--8=close
             CHN_push(readCHN,8)--close
-            if type(res)=='string'then
+            if type(res)=='string' then
                 CHN_push(readCHN,res:sub(3))--[Warning] 2 bytes close code at start so :sub(3)
             else
                 CHN_push(readCHN,"WS closed")
@@ -185,5 +185,5 @@ end
 
 SOCK:close()
 CHN_push(readCHN,8)--close
-CHN_push(readCHN,err or"Disconnected")
+CHN_push(readCHN,err or "Disconnected")
 error()

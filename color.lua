@@ -84,7 +84,7 @@ for k,v in next,{
     D='black',dH='dGray',H='gray',lH='lGray',Z='white',
     X='xGray',lX='lxGray',dX='dxGray',
     --Remain letter: EIKQTUX
-}do
+} do
     COLOR[k]=COLOR[v]
 end
 setmetatable(COLOR,{__index=function(_,k)

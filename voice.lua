@@ -2,19 +2,19 @@ local rnd=math.random
 local volume=1
 local diversion=0
 local VOC={
-    getCount=function()return 0 end,
-    getQueueCount=function()return 0 end,
-    load=function()error("Cannot load before init!")end,
+    getCount=function() return 0 end,
+    getQueueCount=function() return 0 end,
+    load=function() error("Cannot load before init!") end,
     getFreeChannel=NULL,
     play=NULL,
     update=NULL,
 }
 function VOC.setDiversion(n)
-    assert(type(n)=='number'and n>0 and n<12,'Wrong div')
+    assert(type(n)=='number' and n>0 and n<12,'Wrong div')
     diversion=n
 end
 function VOC.setVol(v)
-    assert(type(v)=='number'and v>=0 and v<=1,'Wrong volume')
+    assert(type(v)=='number' and v>=0 and v<=1,'Wrong volume')
     volume=v
 end
 function VOC.init(list)
@@ -24,10 +24,10 @@ function VOC.init(list)
     local bank={}--{vocName1={SRC1s},vocName2={SRC2s},...}
     local Source={}
 
-    local count=#list function VOC.getCount()return count end
+    local count=#list function VOC.getCount() return count end
     local function _loadVoiceFile(path,N,vocName)
         local fullPath=path..vocName..'.ogg'
-        if love.filesystem.getInfo(fullPath)then
+        if love.filesystem.getInfo(fullPath) then
             bank[vocName]={love.audio.newSource(fullPath,'stream')}
             table.insert(Source[N],vocName)
             return true
@@ -37,9 +37,9 @@ function VOC.init(list)
     local function _getVoice(str)
         local L=bank[str]
         local n=1
-        while L[n]:isPlaying()do
+        while L[n]:isPlaying() do
             n=n+1
-            if not L[n]then
+            if not L[n] then
                 L[n]=L[1]:clone()
                 L[n]:seek(0)
                 break
@@ -55,11 +55,11 @@ function VOC.init(list)
             repeat n=n+1 until not _loadVoiceFile(path,list[i],list[i]..'_'..n)
 
             if n==1 then
-                if not _loadVoiceFile(path,list[i],list[i])then
+                if not _loadVoiceFile(path,list[i],list[i]) then
                     LOG("No VOC: "..list[i],.1)
                 end
             end
-            if not Source[list[i]][1]then
+            if not Source[list[i]][1] then
                 Source[list[i]]=nil
             end
         end
@@ -103,7 +103,7 @@ function VOC.init(list)
                     Q[1]:setVolume(volume)
                     Q[1]:setPitch(1.0594630943592953^(diversion*(rnd()*2-1)))
                     Q[1]:play()
-                    Q.s=Q[2]and 2 or 4
+                    Q.s=Q[2] and 2 or 4
                 elseif Q.s==2 then--Playing 1,ready 2
                     if Q[1]:getDuration()-Q[1]:tell()<.08 then
                         Q[2]=_getVoice(Q[2])
@@ -113,14 +113,14 @@ function VOC.init(list)
                         Q.s=3
                     end
                 elseif Q.s==3 then--Playing 12 same time
-                    if not Q[1]:isPlaying()then
+                    if not Q[1]:isPlaying() then
                         for j=1,#Q do
                             Q[j]=Q[j+1]
                         end
-                        Q.s=Q[2]and 2 or 4
+                        Q.s=Q[2] and 2 or 4
                     end
                 elseif Q.s==4 then--Playing last
-                    if not Q[1].isPlaying(Q[1])then
+                    if not Q[1].isPlaying(Q[1]) then
                         Q[1]=nil
                         Q.s=0
                     end

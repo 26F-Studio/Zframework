@@ -17,7 +17,7 @@ end
 
 --"Scan arg", scan if str has the arg (format of str is like "-json -q", arg is like "-q")
 function STRING.sArg(str,switch)
-    if find(str.." ",switch.." ")then
+    if find(str.." ",switch.." ") then
         return true
     end
 end
@@ -32,12 +32,12 @@ do--function STRING.shiftChar(c)
         [',']='<',['.']='>',['/']='?',
     }
     function STRING.shiftChar(c)
-        return shiftMap[c]or upper(c)
+        return shiftMap[c] or upper(c)
     end
 end
 
 function STRING.trim(s)
-    if not s:find("%S")then return""end
+    if not s:find("%S") then return"" end
     s=s:sub((s:find("%S"))):reverse()
     return s:sub((s:find("%S"))):reverse()
 end
@@ -47,13 +47,13 @@ function STRING.split(s,sep,regex)
     local p1,p2=1--start,target
     if regex then
         while p1<=#s do
-            p2=find(s,sep,p1)or #s+1
+            p2=find(s,sep,p1) or #s+1
             L[#L+1]=sub(s,p1,p2-1)
             p1=p2+#sep
         end
     else
         while p1<=#s do
-            p2=find(s,sep,p1,true)or #s+1
+            p2=find(s,sep,p1,true) or #s+1
             L[#L+1]=sub(s,p1,p2-1)
             p1=p2+#sep
         end
@@ -64,7 +64,7 @@ end
 function STRING.simpEmailCheck(e)
     e=STRING.split(e,"@")
     if #e~=2 then return false end
-    if e[1]:sub(-1)=="."or e[2]:sub(-1)=="."then return false end
+    if e[1]:sub(-1)=="." or e[2]:sub(-1)=="." then return false end
     local e1,e2=STRING.split(e[1],"."),STRING.split(e[2],".")
     if #e1*#e2==0 then return false end
     for _,v in next,e1 do if #v==0 then return false end end
@@ -103,7 +103,7 @@ do--function STRING.bigInt(t)
     local units={"","K","M","B","T","Qa","Qt","Sx","Sp","Oc","No"}
     local preUnits={"","U","D","T","Qa","Qt","Sx","Sp","O","N"}
     local secUnits={"Dc","Vg","Tg","Qd","Qi","Se","St","Og","Nn","Ce"}--Ce is next-level unit, but DcCe is not used so used here
-    for _,preU in next,preUnits do for _,secU in next,secUnits do table.insert(units,preU..secU)end end
+    for _,preU in next,preUnits do for _,secU in next,secUnits do table.insert(units,preU..secU) end end
     function STRING.bigInt(t)
         if t<1000 then
             return tostring(t)
@@ -158,12 +158,12 @@ end
 
 function STRING.hexColor(str)--[LOW PERFORMENCE]
     assert(type(str)=='string')
-    if str:sub(1,1)=="#"then str=str:sub(2)end
+    if str:sub(1,1)=="#" then str=str:sub(2) end
     assert(#str<=8)
-    local r=(tonumber(str:sub(1,2),16)or 0)/255
-    local g=(tonumber(str:sub(3,4),16)or 0)/255
-    local b=(tonumber(str:sub(5,6),16)or 0)/255
-    local a=(tonumber(str:sub(7,8),16)or 255)/255
+    local r=(tonumber(str:sub(1,2),16) or 0)/255
+    local g=(tonumber(str:sub(3,4),16) or 0)/255
+    local b=(tonumber(str:sub(5,6),16) or 0)/255
+    local a=(tonumber(str:sub(7,8),16) or 255)/255
     return r,g,b,a
 end
 
@@ -173,7 +173,7 @@ do--function STRING.urlEncode(s)
     function STRING.urlEncode(s)
         local out=""
         for i=1,#s do
-            if s:sub(i,i):match("[a-zA-Z0-9]")then
+            if s:sub(i,i):match("[a-zA-Z0-9]") then
                 out=out..s:sub(i,i)
             else
                 local b=s:byte(i)
@@ -226,7 +226,7 @@ function STRING.digezt(text)--Not powerful hash, just protect the original text
         end
     end
     local result=""
-    for i=1,16 do result=result..char(out[i])end
+    for i=1,16 do result=result..char(out[i]) end
     return result
 end
 

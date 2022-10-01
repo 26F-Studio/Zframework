@@ -49,7 +49,7 @@ FXupdate.line=_normUpdate
 
 local FXdraw={}
 function FXdraw.badge(S)
-    gc_setColor(1,1,1,S.t<.2 and S.t*.6 or S.t<.8 and 1 or(1-S.t)*.6)
+    gc_setColor(1,1,1,S.t<.2 and S.t*.6 or S.t<.8 and 1 or (1-S.t)*.6)
     gc_draw(IMG.badgeIcon,S.x,S.y)
 end
 function FXdraw.attack(S)
@@ -106,7 +106,7 @@ end
 local SYSFX={}
 function SYSFX.update(dt)
     for i=#fx,1,-1 do
-        if fx[i]:update(dt)then
+        if fx[i]:update(dt) then
             rem(fx,i)
         end
     end

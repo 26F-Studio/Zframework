@@ -7,11 +7,11 @@ local TASK={}
 
 -- Locks
 local locks=setmetatable({},{
-    __index=function(self,k)rawset(self,k,-1e99)return -1e99 end,
-    __newindex=function(self,k)rawset(self,k,-1e99)end,
+    __index=function(self,k) rawset(self,k,-1e99)return -1e99 end,
+    __newindex=function(self,k) rawset(self,k,-1e99) end,
 })
 function TASK.lock(name,T)
-    if timer()>=locks[name]then
+    if timer()>=locks[name] then
         locks[name]=timer()+(T or 1e99)
         return true
     else

@@ -4,12 +4,12 @@ local LANG={}
 function LANG.init(defaultLang,langList,publicText,pretreatFunc)
     local function _langFallback(T0,T)
         for k,v in next,T0 do
-            if type(v)=='table'and not v.refuseCopy then--refuseCopy: just copy pointer, not contents
-                if not T[k]then T[k]={}end
-                if type(T[k])=='table'then
+            if type(v)=='table' and not v.refuseCopy then--refuseCopy: just copy pointer, not contents
+                if not T[k] then T[k]={} end
+                if type(T[k])=='table' then
                     _langFallback(v,T[k])
                 end
-            elseif not T[k]then
+            elseif not T[k] then
                 T[k]=v
             end
         end
@@ -37,7 +37,7 @@ function LANG.init(defaultLang,langList,publicText,pretreatFunc)
     end
 
     function LANG.get(l)
-        if not langList[l]then
+        if not langList[l] then
             LOG("Wrong language: "..tostring(l))
             l=defaultLang
         end
@@ -46,12 +46,12 @@ function LANG.init(defaultLang,langList,publicText,pretreatFunc)
 
     function LANG.addScene(name)
         for _,L in next,langList do
-            if L.WidgetText and not L.WidgetText[name]then
+            if L.WidgetText and not L.WidgetText[name] then
                 L.WidgetText[name]={}
             end
         end
     end
 
-    function LANG.init()end
+    function LANG.init() end
 end
 return LANG

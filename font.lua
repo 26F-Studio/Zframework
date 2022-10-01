@@ -4,16 +4,16 @@ local defaultFont,defaultFallBack
 local curFont=false--Current using font object
 
 local FONT={}
-function FONT.setDefault(name)defaultFont=name end
-function FONT.setFallback(name)defaultFallBack=name end
+function FONT.setDefault(name) defaultFont=name end
+function FONT.setFallback(name) defaultFallBack=name end
 function FONT.rawget(s)
-    if not fontCache[s]then
+    if not fontCache[s] then
         fontCache[s]=GC.setNewFont(s,'light',GC.getDPIScale()*SCR.k*2)
     end
     return fontCache[s]
 end
 function FONT.rawset(s)
-    set(fontCache[s]or FONT.rawget(s))
+    set(fontCache[s] or FONT.rawget(s))
 end
 function FONT.load(fonts)
     for name,path in next,fonts do
@@ -46,7 +46,7 @@ function FONT.set(size,name)
 end
 function FONT.reset()
     for name,cache in next,fontCache do
-        if type(cache)=='table'then
+        if type(cache)=='table' then
             for size in next,cache do
                 cache[size]=FONT.get(size,name)
             end

@@ -96,7 +96,7 @@ function SCN.push(tar,style)
     if not SCN.swapping then
         local m=#SCN.stack
         SCN.stack[m+1]=tar or SCN.cur
-        SCN.stack[m+2]=style or'fade'
+        SCN.stack[m+2]=style or 'fade'
     end
 end
 function SCN.pop()
@@ -107,11 +107,11 @@ end
 local swap={
     none={
         duration=0,changeTime=0,
-        draw=function()end
+        draw=function() end
     },
     flash={
         duration=.16,changeTime=.08,
-        draw=function()GC.clear(1,1,1)end
+        draw=function() GC.clear(1,1,1) end
     },
     fade={
         duration=.5,changeTime=.25,
@@ -124,7 +124,7 @@ local swap={
     fade_togame={
         duration=2,changeTime=.5,
         draw=function(t)
-            t=t>.5 and(2-t)/1.5 or t*.5
+            t=t>.5 and (2-t)/1.5 or t*.5
             GC.setColor(0,0,0,t)
             GC.rectangle('fill',0,0,SCR.w,SCR.h)
         end
@@ -166,9 +166,9 @@ local swap={
     },
 }--Scene swapping animations
 function SCN.swapTo(tar,style,...)--Parallel scene swapping, cannot back
-    if scenes[tar]then
+    if scenes[tar] then
         if not SCN.swapping and tar~=SCN.cur then
-            style=style or'fade'
+            style=style or 'fade'
             SCN.swapping=true
             SCN.args={...}
             local S=SCN.stat
@@ -182,7 +182,7 @@ function SCN.swapTo(tar,style,...)--Parallel scene swapping, cannot back
     end
 end
 function SCN.go(tar,style,...)--Normal scene swapping, can back
-    if scenes[tar]then
+    if scenes[tar] then
         SCN.push()
         SCN.swapTo(tar,style,...)
     else
