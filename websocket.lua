@@ -60,7 +60,7 @@ function WS.connect(name,subPath,head,timeout)
         lastPingTime=0,
         lastPongTime=timer(),
         pingInterval=6,
-        status='connecting',--'connecting', 'running', 'dead'
+        status='connecting',-- 'connecting', 'running', 'dead'
         sendTimer=0,
         alertTimer=0,
         pongTimer=0,
@@ -114,7 +114,7 @@ function WS.send(name,message,op)
     if type(message)=='string' then
         local ws=wsList[name]
         if ws.real and ws.status=='running' then
-            CHN_push(ws.sendCHN,op and OPcode[op] or 2)--2=binary
+            CHN_push(ws.sendCHN,op and OPcode[op] or 2)-- 2=binary
             CHN_push(ws.sendCHN,message)
             ws.lastPingTime=timer()
             ws.sendTimer=1
@@ -129,9 +129,9 @@ function WS.read(name)
     local ws=wsList[name]
     if ws.real and ws.status~='connecting' and CHN_getCount(ws.readCHN)>=2 then
         local op,message=CHN_pop(ws.readCHN),CHN_pop(ws.readCHN)
-        if op==8 then--8=close
+        if op==8 then-- 8=close
             ws.status='dead'
-        elseif op==9 then--9=ping
+        elseif op==9 then-- 9=ping
             WS.send(name,message or "",'pong')
         end
         ws.lastPongTime=timer()
@@ -143,7 +143,7 @@ end
 function WS.close(name)
     local ws=wsList[name]
     if ws.real then
-        CHN_push(ws.sendCHN,8)--close
+        CHN_push(ws.sendCHN,8)-- close
         CHN_push(ws.sendCHN,"")
         ws.status='dead'
     end

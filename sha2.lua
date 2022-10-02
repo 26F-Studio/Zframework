@@ -7,54 +7,54 @@
 -- AUTHOR:  Egor Skriptunoff
 -- LICENSE: MIT (the same license as Lua itself)
 -- URL:     https://github.com/Egor-Skriptunoff/pure_lua_SHA
---
+-- $1-
 -- DESCRIPTION:
---    This module contains functions to calculate SHA digest:
---       MD5, SHA-1,
---       SHA-224, SHA-256, SHA-512/224, SHA-512/256, SHA-384, SHA-512,
---       SHA3-224, SHA3-256, SHA3-384, SHA3-512, SHAKE128, SHAKE256,
---       HMAC,
---       BLAKE2b, BLAKE2s, BLAKE2bp, BLAKE2sp, BLAKE2Xb, BLAKE2Xs,
---       BLAKE3, BLAKE3_KDF
---    Written in pure Lua.
---    Compatible with:
---       Lua 5.1, Lua 5.2, Lua 5.3, Lua 5.4, Fengari, LuaJIT 2.0/2.1 (any CPU endianness).
---    Main feature of this module: it was heavily optimized for speed.
---    For every Lua version the module contains particular implementation branch to get benefits from version-specific features.
---       - branch for Lua 5.1 (emulating bitwise operators using look-up table)
---       - branch for Lua 5.2 (using bit32/bit library), suitable for both Lua 5.2 with native "bit32" and Lua 5.1 with external library "bit"
---       - branch for Lua 5.3/5.4 (using native 64-bit bitwise operators)
---       - branch for Lua 5.3/5.4 (using native 32-bit bitwise operators) for Lua built with LUA_INT_TYPE=LUA_INT_INT
---       - branch for LuaJIT without FFI library (useful in a sandboxed environment)
---       - branch for LuaJIT x86 without FFI library (LuaJIT x86 has oddity because of lack of CPU registers)
---       - branch for LuaJIT 2.0 with FFI library (bit.* functions work only with Lua numbers)
---       - branch for LuaJIT 2.1 with FFI library (bit.* functions can work with "int64_t" arguments)
---
---
+--     This module contains functions to calculate SHA digest:
+--        MD5, SHA-1,
+--        SHA-224, SHA-256, SHA-512/224, SHA-512/256, SHA-384, SHA-512,
+--        SHA3-224, SHA3-256, SHA3-384, SHA3-512, SHAKE128, SHAKE256,
+--        HMAC,
+--        BLAKE2b, BLAKE2s, BLAKE2bp, BLAKE2sp, BLAKE2Xb, BLAKE2Xs,
+--        BLAKE3, BLAKE3_KDF
+--     Written in pure Lua.
+--     Compatible with:
+--        Lua 5.1, Lua 5.2, Lua 5.3, Lua 5.4, Fengari, LuaJIT 2.0/2.1 (any CPU endianness).
+--     Main feature of this module: it was heavily optimized for speed.
+--     For every Lua version the module contains particular implementation branch to get benefits from version-specific features.
+--        - branch for Lua 5.1 (emulating bitwise operators using look-up table)
+--        - branch for Lua 5.2 (using bit32/bit library), suitable for both Lua 5.2 with native "bit32" and Lua 5.1 with external library "bit"
+--        - branch for Lua 5.3/5.4 (using native 64-bit bitwise operators)
+--        - branch for Lua 5.3/5.4 (using native 32-bit bitwise operators) for Lua built with LUA_INT_TYPE=LUA_INT_INT
+--        - branch for LuaJIT without FFI library (useful in a sandboxed environment)
+--        - branch for LuaJIT x86 without FFI library (LuaJIT x86 has oddity because of lack of CPU registers)
+--        - branch for LuaJIT 2.0 with FFI library (bit.* functions work only with Lua numbers)
+--        - branch for LuaJIT 2.1 with FFI library (bit.* functions can work with "int64_t" arguments)
+-- $1-
+-- $1-
 -- USAGE:
---    Input data should be provided as a binary string: either as a whole string or as a sequence of substrings (chunk-by-chunk loading, total length < 9*10^15 bytes).
---    Result (SHA digest) is returned in hexadecimal representation as a string of lowercase hex digits.
---    Simplest usage example:
---       local sha = require("sha2")
---       local your_hash = sha.sha256("your string")
---    See file "sha2_test.lua" for more examples.
---
---
+--     Input data should be provided as a binary string: either as a whole string or as a sequence of substrings (chunk-by-chunk loading, total length < 9*10^15 bytes).
+--     Result (SHA digest) is returned in hexadecimal representation as a string of lowercase hex digits.
+--     Simplest usage example:
+--        local sha = require("sha2")
+--        local your_hash = sha.sha256("your string")
+--     See file "sha2_test.lua" for more examples.
+-- $1-
+-- $1-
 -- CHANGELOG:
---  version     date      description
---  -------  ----------   -----------
---    12     2022-02-23   Now works in Luau (but NOT optimized for speed)
---    11     2022-01-09   BLAKE3 added
---    10     2022-01-02   BLAKE2 functions added
---     9     2020-05-10   Now works in OpenWrt's Lua (dialect of Lua 5.1 with "double" + "invisible int32")
---     8     2019-09-03   SHA-3 functions added
---     7     2019-03-17   Added functions to convert to/from base64
---     6     2018-11-12   HMAC added
---     5     2018-11-10   SHA-1 added
---     4     2018-11-03   MD5 added
---     3     2018-11-02   Bug fixed: incorrect hashing of long (2 GByte) data streams on Lua 5.3/5.4 built with "int32" integers
---     2     2018-10-07   Decreased module loading time in Lua 5.1 implementation branch (thanks to Peter Melnichenko for giving a hint)
---     1     2018-10-06   First release (only SHA-2 functions)
+--   version     date      description
+--   ------- ----------   -----------
+--     12     2022-02-23   Now works in Luau (but NOT optimized for speed)
+--     11     2022-01-09   BLAKE3 added
+--     10     2022-01-02   BLAKE2 functions added
+--      9     2020-05-10   Now works in OpenWrt's Lua (dialect of Lua 5.1 with "double" + "invisible int32")
+--      8     2019-09-03   SHA-3 functions added
+--      7     2019-03-17   Added functions to convert to/from base64
+--      6     2018-11-12   HMAC added
+--      5     2018-11-10   SHA-1 added
+--      4     2018-11-03   MD5 added
+--      3     2018-11-02   Bug fixed: incorrect hashing of long (2 GByte) data streams on Lua 5.3/5.4 built with "int32" integers
+--      2     2018-10-07   Decreased module loading time in Lua 5.1 implementation branch (thanks to Peter Melnichenko for giving a hint)
+--      1     2018-10-06   First release (only SHA-2 functions)
 -----------------------------------------------------------------------------
 
 
@@ -89,11 +89,11 @@ local Lua_has_double = x * 5 > 3 and x * 4 < 3 and get_precision(1.0) >= 53
 assert(Lua_has_double, "at least 53-bit floating point numbers are required")
 
 -- Q:
---    SHA2 was designed for FPU-less machines.
---    So, why floating point numbers are needed for this module?
+--     SHA2 was designed for FPU-less machines.
+--     So, why floating point numbers are needed for this module?
 -- A:
---    53-bit "double" numbers are useful to calculate "magic numbers" used in SHA.
---    I prefer to write 50 LOC "magic numbers calculator" instead of storing more than 200 constants explicitly in this source file.
+--     53-bit "double" numbers are useful to calculate "magic numbers" used in SHA.
+--     I prefer to write 50 LOC "magic numbers calculator" instead of storing more than 200 constants explicitly in this source file.
 
 local int_prec, Lua_has_integers = get_precision(1)
 local Lua_has_int64 = Lua_has_integers and int_prec == 64
@@ -101,22 +101,22 @@ local Lua_has_int32 = Lua_has_integers and int_prec == 32
 assert(Lua_has_int64 or Lua_has_int32 or not Lua_has_integers, "Lua integers must be either 32-bit or 64-bit")
 
 -- Q:
---    Does it mean that almost all non-standard configurations are not supported?
+--     Does it mean that almost all non-standard configurations are not supported?
 -- A:
---    Yes.  Sorry, too many problems to support all possible Lua numbers configurations.
---       Lua 5.1/5.2    with "int32"               will not work.
---       Lua 5.1/5.2    with "int64"               will not work.
---       Lua 5.1/5.2    with "int128"              will not work.
---       Lua 5.1/5.2    with "float"               will not work.
---       Lua 5.1/5.2    with "double"              is OK.          (default config for Lua 5.1, Lua 5.2, LuaJIT)
---       Lua 5.3/5.4    with "int32"  + "float"    will not work.
---       Lua 5.3/5.4    with "int64"  + "float"    will not work.
---       Lua 5.3/5.4    with "int128" + "float"    will not work.
---       Lua 5.3/5.4    with "int32"  + "double"   is OK.          (config used by Fengari)
---       Lua 5.3/5.4    with "int64"  + "double"   is OK.          (default config for Lua 5.3, Lua 5.4)
---       Lua 5.3/5.4    with "int128" + "double"   will not work.
---   Using floating point numbers better than "double" instead of "double" is OK (non-IEEE-754 floating point implementation are allowed).
---   Using "int128" instead of "int64" is not OK: "int128" would require different branch of implementation for optimized SHA512.
+--     Yes.  Sorry, too many problems to support all possible Lua numbers configurations.
+--        Lua 5.1/5.2    with "int32"               will not work.
+--        Lua 5.1/5.2    with "int64"               will not work.
+--        Lua 5.1/5.2    with "int128"              will not work.
+--        Lua 5.1/5.2    with "float"               will not work.
+--        Lua 5.1/5.2    with "double"              is OK.          (default config for Lua 5.1, Lua 5.2, LuaJIT)
+--        Lua 5.3/5.4    with "int32"  + "float"    will not work.
+--        Lua 5.3/5.4    with "int64"  + "float"    will not work.
+--        Lua 5.3/5.4    with "int128" + "float"    will not work.
+--        Lua 5.3/5.4    with "int32"  + "double"   is OK.          (config used by Fengari)
+--        Lua 5.3/5.4    with "int64"  + "double"   is OK.          (default config for Lua 5.3, Lua 5.4)
+--        Lua 5.3/5.4    with "int128" + "double"   will not work.
+--    Using floating point numbers better than "double" instead of "double" is OK (non-IEEE-754 floating point implementation are allowed).
+--    Using "int128" instead of "int64" is not OK: "int128" would require different branch of implementation for optimized SHA512.
 
 -- Check for LuaJIT and 32-bit bitwise libraries
 local is_LuaJIT = ({false, [1] = true})[1] and _VERSION ~= "Luau" and (type(jit) ~= "table" or jit.version_num >= 20000)  -- LuaJIT 1.x.x and Luau are treated as vanilla Lua 5.1/5.2
@@ -203,8 +203,8 @@ end
 local AND, OR, XOR, SHL, SHR, ROL, ROR, NOT, NORM, HEX, XOR_BYTE
 -- Only low 32 bits of function arguments matter, high bits are ignored
 -- The result of all functions (except HEX) is an integer inside "correct range":
---    for "bit" library:    (-2^31)..(2^31-1)
---    for "bit32" library:        0..(2^32-1)
+--     for "bit" library:    (-2^31)..(2^31-1)
+--     for "bit32" library:        0..(2^32-1)
 
 if branch == "FFI" or branch == "LJ" or branch == "LIB32" then
 
@@ -4229,10 +4229,10 @@ end
 -- MAGIC NUMBERS CALCULATOR
 --------------------------------------------------------------------------------
 -- Q:
---    Is 53-bit "double" math enough to calculate square roots and cube roots of primes with 64 correct bits after decimal point?
+--     Is 53-bit "double" math enough to calculate square roots and cube roots of primes with 64 correct bits after decimal point?
 -- A:
---    Yes, 53-bit "double" arithmetic is enough.
---    We could obtain first 40 bits by direct calculation of p^(1/3) and next 40 bits by one step of Newton's method.
+--     Yes, 53-bit "double" arithmetic is enough.
+--     We could obtain first 40 bits by direct calculation of p^(1/3) and next 40 bits by one step of Newton's method.
 
 do
    local function mul(src1, src2, factor, result_length)
@@ -4341,7 +4341,7 @@ end
 if branch == "FFI" then
    sha2_K_hi = ffi.new("uint32_t[?]", #sha2_K_hi + 1, 0, unpack(sha2_K_hi))
    sha2_K_lo = ffi.new("int64_t[?]",  #sha2_K_lo + 1, 0, unpack(sha2_K_lo))
-   --md5_K = ffi.new("uint32_t[?]", #md5_K + 1, 0, unpack(md5_K))
+   -- md5_K = ffi.new("uint32_t[?]", #md5_K + 1, 0, unpack(md5_K))
    if hi_factor_keccak == 0 then
       sha3_RC_lo = ffi.new("uint32_t[?]", #sha3_RC_lo + 1, 0, unpack(sha3_RC_lo))
       sha3_RC_hi = ffi.new("uint32_t[?]", #sha3_RC_hi + 1, 0, unpack(sha3_RC_hi))
@@ -4588,8 +4588,8 @@ local function keccak(block_size_in_bytes, digest_size_in_bytes, is_SHAKE, messa
    -- "block_size_in_bytes" is multiple of 8
    if type(digest_size_in_bytes) ~= "number" then
       -- arguments in SHAKE are swapped:
-      --    NIST FIPS 202 defines SHAKE(message,num_bits)
-      --    this module   defines SHAKE(num_bytes,message)
+      --     NIST FIPS 202 defines SHAKE(message,num_bits)
+      --     this module   defines SHAKE(num_bytes,message)
       -- it's easy to forget about this swap, hence the check
       error("Argument 'digest_size_in_bytes' must be a number", 2)
    end
@@ -5364,9 +5364,9 @@ end
 
 local function blake2xs(digest_size_in_bytes, message, key, salt)
    -- digest_size_in_bytes:
-   --    0..65534       = get finite digest as single Lua string
-   --    (-1)           = get infinite digest in "chunk-by-chunk" output mode
-   --    (-2)..(-65534) = get finite digest in "chunk-by-chunk" output mode
+   --     0..65534       = get finite digest as single Lua string
+   --     (-1)           = get infinite digest in "chunk-by-chunk" output mode
+   --     (-2)..(-65534) = get finite digest in "chunk-by-chunk" output mode
    -- message:  binary string to be hashed (or nil for "chunk-by-chunk" input mode)
    -- key:      (optional) binary string up to 32 bytes, by default empty string
    -- salt:     (optional) binary string up to 16 bytes, by default empty string
@@ -5375,9 +5375,9 @@ end
 
 local function blake2xb(digest_size_in_bytes, message, key, salt)
    -- digest_size_in_bytes:
-   --    0..4294967294       = get finite digest as single Lua string
-   --    (-1)                = get infinite digest in "chunk-by-chunk" output mode
-   --    (-2)..(-4294967294) = get finite digest in "chunk-by-chunk" output mode
+   --     0..4294967294       = get finite digest as single Lua string
+   --     (-1)                = get infinite digest in "chunk-by-chunk" output mode
+   --     (-2)..(-4294967294) = get finite digest in "chunk-by-chunk" output mode
    -- message:  binary string to be hashed (or nil for "chunk-by-chunk" input mode)
    -- key:      (optional) binary string up to 64 bytes, by default empty string
    -- salt:     (optional) binary string up to 32 bytes, by default empty string
@@ -5389,9 +5389,9 @@ local function blake3(message, key, digest_size_in_bytes, message_flags, K, retu
    -- message:  binary string to be hashed (or nil for "chunk-by-chunk" input mode)
    -- key:      (optional) binary string up to 32 bytes, by default empty string
    -- digest_size_in_bytes: (optional) by default 32
-   --    0,1,2,3,4,...  = get finite digest as single Lua string
-   --    (-1)           = get infinite digest in "chunk-by-chunk" output mode
-   --    -2,-3,-4,...   = get finite digest in "chunk-by-chunk" output mode
+   --     0,1,2,3,4,...  = get finite digest as single Lua string
+   --     (-1)           = get infinite digest in "chunk-by-chunk" output mode
+   --     -2,-3,-4,...   = get finite digest in "chunk-by-chunk" output mode
    -- The last three parameters "message_flags", "K" and "return_array" are for internal use only, user must omit them (or pass nil)
    key = key or ""
    digest_size_in_bytes = digest_size_in_bytes or 32
@@ -5589,12 +5589,12 @@ end
 
 local function blake3_derive_key(key_material, context_string, derived_key_size_in_bytes)
    -- key_material: (string) your source of entropy to derive a key from (for example, it can be a master password)
-   --               set to nil for feeding the key material in "chunk-by-chunk" input mode
+   --                set to nil for feeding the key material in "chunk-by-chunk" input mode
    -- context_string: (string) unique description of the derived key
    -- digest_size_in_bytes: (optional) by default 32
-   --    0,1,2,3,4,...  = get finite derived key as single Lua string
-   --    (-1)           = get infinite derived key in "chunk-by-chunk" output mode
-   --    -2,-3,-4,...   = get finite derived key in "chunk-by-chunk" output mode
+   --     0,1,2,3,4,...  = get finite derived key as single Lua string
+   --     (-1)           = get infinite derived key in "chunk-by-chunk" output mode
+   --     -2,-3,-4,...   = get finite derived key in "chunk-by-chunk" output mode
    if type(context_string) ~= "string" then
       error("'context_string' parameter must be a Lua string", 2)
    end

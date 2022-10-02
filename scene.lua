@@ -1,23 +1,23 @@
 local scenes={}
 
 local SCN={
-    mainTouchID=nil,     --First touching ID(userdata)
-    cur='NULL',          --Current scene name
-    swapping=false,      --If Swapping
+    mainTouchID=nil,     -- First touching ID(userdata)
+    cur='NULL',          -- Current scene name
+    swapping=false,      -- If Swapping
     stat={
-        tar=false,       --Swapping target
-        style=false,     --Swapping style
-        changeTime=false,--Loading point
-        time=false,      --Full swap time
-        draw=false,      --Swap draw  func
+        tar=false,       -- Swapping target
+        style=false,     -- Swapping style
+        changeTime=false,-- Loading point
+        time=false,      -- Full swap time
+        draw=false,      -- Swap draw  func
     },
-    stack={},--Scene stack
+    stack={},-- Scene stack
     prev=false,
-    args={},--Arguments from previous scene
+    args={},-- Arguments from previous scene
 
     scenes=scenes,
 
-    --Events
+    -- Events
     update=false,
     draw=false,
     mouseClick=false,
@@ -37,7 +37,7 @@ local SCN={
     directoryDropped=false,
     resize=false,
     socketRead=false,
-}--Scene datas, returned
+}-- Scene datas, returned
 
 function SCN.add(name,scene)
     scenes[name]=scene
@@ -50,7 +50,7 @@ function SCN.swapUpdate(dt)
     local S=SCN.stat
     S.time=S.time-dt
     if S.time<S.changeTime and S.time+dt>=S.changeTime then
-        --Scene swapped this frame
+        -- Scene swapped this frame
         SCN.prev=SCN.cur
         SCN.init(S.tar)
         SCN.mainTouchID=nil
@@ -164,8 +164,8 @@ local swap={
             GC.rectangle('fill',0,t*SCR.h,SCR.w,SCR.h)
         end
     },
-}--Scene swapping animations
-function SCN.swapTo(tar,style,...)--Parallel scene swapping, cannot back
+}-- Scene swapping animations
+function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
     if scenes[tar] then
         if not SCN.swapping and tar~=SCN.cur then
             style=style or 'fade'
@@ -181,7 +181,7 @@ function SCN.swapTo(tar,style,...)--Parallel scene swapping, cannot back
         MES.new('warn',"No Scene: "..tar)
     end
 end
-function SCN.go(tar,style,...)--Normal scene swapping, can back
+function SCN.go(tar,style,...)-- Normal scene swapping, can back
     if scenes[tar] then
         SCN.push()
         SCN.swapTo(tar,style,...)
@@ -192,12 +192,12 @@ end
 function SCN.back(...)
     if SCN.swapping then return end
 
-    --Leave scene
+    -- Leave scene
     if SCN.sceneBack then
         SCN.sceneBack()
     end
 
-    --Poll&Back to previous Scene
+    -- Poll&Back to previous Scene
     local m=#SCN.stack
     if m>0 then
         SCN.swapTo(SCN.stack[m-1],SCN.stack[m],...)

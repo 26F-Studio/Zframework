@@ -1,7 +1,7 @@
 local yield=coroutine.yield
 local TEST={}
 
---Wait for the scene swapping animation to finish
+-- Wait for the scene swapping animation to finish
 function TEST.yieldUntilNextScene()
     while SCN.swapping do yield() end
 end

@@ -1,7 +1,7 @@
 local set=GC.setFont
 local fontFiles,fontCache={},{}
 local defaultFont,defaultFallBack
-local curFont=false--Current using font object
+local curFont=false-- Current using font object
 
 local FONT={}
 function FONT.setDefault(name) defaultFont=name end

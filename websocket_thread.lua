@@ -6,7 +6,7 @@ local CHN_push,CHN_pop=triggerCHN.push,triggerCHN.pop
 local SOCK=require'socket'.tcp()
 local JSON=require'Zframework.json'
 
-do--Connect
+do-- Connect
     local host=CHN_demand(sendCHN)
     local port=CHN_demand(sendCHN)
     local path=CHN_demand(sendCHN)
@@ -17,26 +17,26 @@ do--Connect
     local res,err=SOCK:connect(host,port)
     assert(res,err)
 
-    --WebSocket handshake
+    -- WebSocket handshake
     SOCK:send(
         'GET '..path..' HTTP/1.1\r\n'..
         'Host: '..host..':'..port..'\r\n'..
         'Connection: Upgrade\r\n'..
         'Upgrade: websocket\r\n'..
         'Sec-WebSocket-Version: 13\r\n'..
-        'Sec-WebSocket-Key: osT3F7mvlojIvf3/8uIsJQ==\r\n'..--secKey
+        'Sec-WebSocket-Key: osT3F7mvlojIvf3/8uIsJQ==\r\n'..-- secKey
         head..
         '\r\n'
     )
 
-    --First line of HTTP
+    -- First line of HTTP
     res,err=SOCK:receive('*l')
     assert(res,err)
     local code,ctLen
     code=res:find(' ')
     code=res:sub(code+1,code+3)
 
-    --Get body length from headers and remove headers
+    -- Get body length from headers and remove headers
     repeat
         res,err=SOCK:receive('*l')
         assert(res,err)
@@ -45,7 +45,7 @@ do--Connect
         end
     until res==''
 
-    --Result
+    -- Result
     if ctLen then
         if code=='101' then
             CHN_push(readCHN,'success')
@@ -66,11 +66,11 @@ local shl,shr=bit.lshift,bit.rshift
 local mask_key={1,14,5,14}
 local mask_str=char(unpack(mask_key))
 local function _send(op,message)
-    --Message type
+    -- Message type
     SOCK:send(char(bor(op,0x80)))
 
     if message then
-        --Length
+        -- Length
         local length=#message
         if length>65535 then
             SOCK:send(char(bor(127,0x80),0,0,0,0,band(shr(length,24),0xff),band(shr(length,16),0xff),band(shr(length,8),0xff),band(length,0xff)))
@@ -120,16 +120,16 @@ end
 local readThread=coroutine.wrap(function()
     local res,err
     local op,fin
-    local lBuffer=""--Long multi-pack buffer
+    local lBuffer=""-- Long multi-pack buffer
     while true do
-        --Byte 0-1
+        -- Byte 0-1
         res,err=_receive(SOCK,2)
         assert(res,err)
 
         op=band(byte(res,1),0x0f)
         fin=band(byte(res,1),0x80)==0x80
 
-        --Calculating data length
+        -- Calculating data length
         local length=band(byte(res,2),0x7f)
         if length==126 then
             res,err=_receive(SOCK,2)
@@ -145,16 +145,16 @@ local readThread=coroutine.wrap(function()
         res,err=_receive(SOCK,length)
         assert(res,err)
 
-        --React
-        if op==8 then--8=close
-            CHN_push(readCHN,8)--close
+        -- React
+        if op==8 then-- 8=close
+            CHN_push(readCHN,8)-- close
             if type(res)=='string' then
                 CHN_push(readCHN,res:sub(3))--[Warning] 2 bytes close code at start so :sub(3)
             else
                 CHN_push(readCHN,"WS closed")
             end
             return
-        elseif op==0 then--0=continue
+        elseif op==0 then-- 0=continue
             lBuffer=lBuffer..res
             if fin then
                 CHN_push(readCHN,lBuffer)
@@ -175,7 +175,7 @@ end)
 
 local success,err
 
-while true do--Running
+while true do-- Running
     CHN_demand(triggerCHN)
     success,err=pcall(sendThread)
     if not success or err then break end
@@ -184,6 +184,6 @@ while true do--Running
 end
 
 SOCK:close()
-CHN_push(readCHN,8)--close
+CHN_push(readCHN,8)-- close
 CHN_push(readCHN,err or "Disconnected")
 error()

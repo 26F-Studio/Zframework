@@ -1,5 +1,5 @@
 local abs=math.abs
-local function hsv(h,s,v,a)--Color type, Color amount, Light
+local function hsv(h,s,v,a)-- Color type, Color amount, Light
     if s<=0 then return v,v,v,a end
     h=h*6
     local c=v*s
@@ -83,7 +83,7 @@ for k,v in next,{
     dR='dRed',dF='dFire',dO='dOrange',dY='dYellow',dL='dLime',dJ='dJade',dG='dGreen',dA='dAqua',dC='dCyan',dN='dNavy',dS='dSea',dB='dBlue',dV='dViolet',dP='dPurple',dM='dMagenta',dW='dWine',
     D='black',dH='dGray',H='gray',lH='lGray',Z='white',
     X='xGray',lX='lxGray',dX='dxGray',
-    --Remain letter: EIKQTUX
+    -- Remain letter: EIKQTUX
 } do
     COLOR[k]=COLOR[v]
 end
@@ -92,7 +92,7 @@ setmetatable(COLOR,{__index=function(_,k)
 end})
 
 
-do--Random generators
+do-- Random generators
     local rnd=math.random
     local list_norm={'red','fire','orange','yellow','lime','jade','green','aqua','cyan','navy','sea','blue','violet','purple','magenta','wine'}
     local len_list_norm=#list_norm
@@ -113,7 +113,7 @@ do--Random generators
     end
 end
 
-do--Rainbow generators
+do-- Rainbow generators
     local sin=math.sin
     function COLOR.rainbow(phase,a)
         return

@@ -41,7 +41,7 @@ local largerThen=GC.DO{20,20,
     {'line',2,2,19,10,2,18},
 }
 
-local STW,STH--stencil-wid/hei
+local STW,STH-- stencil-wid/hei
 local function _rectangleStencil()
     gc.rectangle('fill',1,1,STW-2,STH-2)
 end
@@ -89,7 +89,7 @@ function text:draw()
         end
     end
 end
-function WIDGET.newText(D)--name,x,y[,lim][,fText][,color][,font=30][,fType][,align='M'][,hideF][,hide]
+function WIDGET.newText(D)-- name,x,y[,lim][,fText][,color][,font=30][,fType][,align='M'][,hideF][,hide]
     local _={
         name= D.name or "_",
         x=    D.x,
@@ -121,7 +121,7 @@ function image:draw()
     gc_setColor(1,1,1,self.alpha)
     gc_draw(self.img,self.x,self.y,self.ang,self.k)
 end
-function WIDGET.newImage(D)--name[,img(name)],x,y[,ang][,k][,hideF][,hide]
+function WIDGET.newImage(D)-- name[,img(name)],x,y[,ang][,k][,hideF][,hide]
     local _={
         name= D.name or "_",
         img=  D.img or D.name or "_",
@@ -141,7 +141,7 @@ end
 local button={
     type='button',
     mustHaveText=true,
-    ATV=0,--Activating time(0~8)
+    ATV=0,-- Activating time(0~8)
 }
 function button:reset()
     self.ATV=0
@@ -178,7 +178,7 @@ function button:draw()
     local c=self.color
     local r,g,b=c[1],c[2],c[3]
 
-    --Button
+    -- Button
     gc_setColor(.15+r*.7,.15+g*.7,.15+b*.7,.9)
     gc_rectangle('fill',x-ATV,y,w+2*ATV,h,4)
     gc_setLineWidth(2)
@@ -189,7 +189,7 @@ function button:draw()
         gc_rectangle('line',x-ATV,y,w+2*ATV,h,3)
     end
 
-    --Drawable
+    -- Drawable
     local obj=self.obj
     local ox,oy=obj:getWidth()*.5,obj:getHeight()*.5
     local y0=y+h*.5
@@ -245,7 +245,7 @@ function button:release(_,_,k)
         SFX.play(self.sound)
     end
 end
-function WIDGET.newButton(D)--name,x,y,w[,h][,fText][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
+function WIDGET.newButton(D)-- name,x,y,w[,h][,fText][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
     if not D.h then D.h=D.w end
     local _={
         name= D.name or "_",
@@ -289,7 +289,7 @@ end
 local key={
     type='key',
     mustHaveText=true,
-    ATV=0,--Activating time(0~4)
+    ATV=0,-- Activating time(0~4)
 }
 function key:reset()
     self.ATV=0
@@ -326,7 +326,7 @@ function key:draw()
     local align=self.align
     local r,g,b=c[1],c[2],c[3]
 
-    --Fill
+    -- Fill
     if self.fShade then
         gc_setColor(r,g,b,ATV*.25)
         if align=='M' then
@@ -337,21 +337,21 @@ function key:draw()
             gc_draw(self.fShade,x+w-self.edge-self.fShade:getWidth(),y+h*.5-self.fShade:getHeight()*.5)
         end
     else
-        --Background
+        -- Background
         gc_setColor(0,0,0,.3)
         gc_rectangle('fill',x,y,w,h,4)
 
-        --Frame
+        -- Frame
         gc_setColor(.2+r*.8,.2+g*.8,.2+b*.8,.7)
         gc_setLineWidth(2)
         gc_rectangle('line',x,y,w,h,3)
 
-        --Shade
+        -- Shade
         gc_setColor(1,1,1,ATV*.05)
         gc_rectangle('fill',x,y,w,h,3)
     end
 
-    --Drawable
+    -- Drawable
     local obj=self.obj
     local ox,oy=obj:getWidth()*.5,obj:getHeight()*.5
     gc_setColor(r,g,b)
@@ -380,7 +380,7 @@ function key:release(_,_,k)
         SFX.play(self.sound)
     end
 end
-function WIDGET.newKey(D)--name,x,y,w[,h][,fText][,fShade][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
+function WIDGET.newKey(D)-- name,x,y,w[,h][,fText][,fShade][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
     if not D.h then D.h=D.w end
     local _={
         name=   D.name or "_",
@@ -424,8 +424,8 @@ end
 local switch={
     type='switch',
     mustHaveText=true,
-    ATV=0,--Activating time(0~8)
-    CHK=0,--Check alpha(0~6)
+    ATV=0,-- Activating time(0~8)
+    CHK=0,-- Check alpha(0~6)
 }
 function switch:reset()
     self.ATV=0
@@ -455,16 +455,16 @@ function switch:draw()
     local x,y=self.x,self.y
     local ATV=self.ATV
 
-    --Background
+    -- Background
     gc_setColor(0,0,0,.3)
     gc_rectangle('fill',x,y-25,50,50,4)
 
-    --Frame
+    -- Frame
     gc_setLineWidth(2)
     gc_setColor(1,1,1,.6+ATV*.1)
     gc_rectangle('line',x,y-25,50,50,3)
 
-    --Checked
+    -- Checked
     if ATV>0 then
         gc_setColor(1,1,1,ATV*.06)
         gc_rectangle('fill',x,y-25,50,50,3)
@@ -475,7 +475,7 @@ function switch:draw()
         gc_line(x+5,y,x+18,y+13,x+45,y-14)
     end
 
-    --Drawable
+    -- Drawable
     local obj=self.obj
     gc_setColor(self.color)
     gc_draw(obj,x-12-ATV,y,nil,min(self.lim/obj:getWidth(),1),1,obj:getWidth(),obj:getHeight()*.5)
@@ -489,7 +489,7 @@ function switch:press()
         SFX.play(self.disp() and 'check' or 'uncheck')
     end
 end
-function WIDGET.newSwitch(D)--name,x,y[,lim][,fText][,color][,font=30][,fType][,sound=true][,disp][,code][,hideF][,hide]
+function WIDGET.newSwitch(D)-- name,x,y[,lim][,fText][,color][,font=30][,fType][,sound=true][,disp][,code][,hideF][,hide]
     local _={
         name= D.name or "_",
 
@@ -518,10 +518,10 @@ end
 
 local slider={
     type='slider',
-    ATV=0,--Activating time(0~8)
-    TAT=0,--Text activating time(0~180)
-    pos=0,--Position shown
-    lastTime=0,--Last value changing time
+    ATV=0,-- Activating time(0~8)
+    TAT=0,-- Text activating time(0~180)
+    pos=0,-- Position shown
+    lastTime=0,-- Last value changing time
 }
 local sliderShowFunc={
     int=function(S)
@@ -567,7 +567,7 @@ function slider:draw()
 
     gc_setColor(1,1,1,.5+ATV*.06)
 
-    --Units
+    -- Units
     if not self.smooth then
         gc_setLineWidth(2)
         for p=self.rangeL,self.rangeR,self.unit do
@@ -576,31 +576,31 @@ function slider:draw()
         end
     end
 
-    --Axis
+    -- Axis
     gc_setLineWidth(4)
     gc_line(x,y,x2,y)
 
-    --Block
+    -- Block
     local cx=x+(x2-x)*(self.pos-self.rangeL)/(self.rangeR-self.rangeL)
     local bx,by,bw,bh=cx-10-ATV*.5,y-16-ATV,20+ATV,32+2*ATV
     gc_setColor(.8,.8,.8)
     gc_rectangle('fill',bx,by,bw,bh,3)
 
-    --Glow
+    -- Glow
     if ATV>0 then
         gc_setLineWidth(2)
         gc_setColor(.97,.97,.97,ATV*.16)
         gc_rectangle('line',bx+1,by+1,bw-2,bh-2,3)
     end
 
-    --Float text
+    -- Float text
     if self.TAT>0 and self.show then
         FONT.set(25)
         gc_setColor(.97,.97,.97,self.TAT/180)
         mStr(self:show(),cx,by-30)
     end
 
-    --Drawable
+    -- Drawable
     local obj=self.obj
     if obj then
         gc_setColor(self.color)
@@ -650,7 +650,7 @@ end
 function slider:arrowKey(k)
     self:scroll((k=='left' or k=='up') and -1 or 1)
 end
-function WIDGET.newSlider(D)--name,x,y,w[,lim][,fText][,color][,axis][,smooth][,font=30][,fType][,change],disp[,show][,code],hide
+function WIDGET.newSlider(D)-- name,x,y,w[,lim][,fText][,color][,axis][,smooth][,font=30][,fType][,change],disp[,show][,code],hide
     if not D.axis then
         D.axis={0,1,false}
         D.smooth=true
@@ -694,7 +694,7 @@ function WIDGET.newSlider(D)--name,x,y,w[,lim][,fText][,color][,axis][,smooth][,
         else
             _.show=sliderShowFunc[D.show]
         end
-    elseif D.show~=false then--Use default if nil
+    elseif D.show~=false then-- Use default if nil
         if _.unit and _.unit%1==0 then
             _.show=sliderShowFunc.int
         else
@@ -709,9 +709,9 @@ end
 local selector={
     type='selector',
     mustHaveText=true,
-    ATV=8,--Activating time(0~4)
-    select=false,--Selected item ID
-    selText=false,--Selected item name
+    ATV=8,-- Activating time(0~4)
+    select=false,-- Selected item ID
+    selText=false,-- Selected item name
 }
 function selector:reset()
     self.ATV=0
@@ -750,16 +750,16 @@ function selector:draw()
     local w=self.w
     local ATV=self.ATV
 
-    --Background
+    -- Background
     gc_setColor(0,0,0,.3)
     gc_rectangle('fill',x,y,w,60,4)
 
-    --Frame
+    -- Frame
     gc_setColor(1,1,1,.6+ATV*.1)
     gc_setLineWidth(2)
     gc_rectangle('line',x,y,w,60,3)
 
-    --Arrow
+    -- Arrow
     gc_setColor(1,1,1,.2+ATV*.1)
     local t=(timer()%.5)^.5
     if self.select>1 then
@@ -778,7 +778,7 @@ function selector:draw()
         end
     end
 
-    --Drawable
+    -- Drawable
     gc_setColor(self.color)
     gc_draw(self.obj,x+w*.5,y-4,nil,min((w-20)/self.obj:getWidth(),1),1,self.obj:getWidth()*.5,0)
     gc_setColor(1,1,1)
@@ -834,7 +834,7 @@ function selector:arrowKey(k)
     self:scroll((k=='left' or k=='up') and -1 or 1)
 end
 
-function WIDGET.newSelector(D)--name,x,y,w[,fText][,color][,sound=true],list,disp[,code],hide
+function WIDGET.newSelector(D)-- name,x,y,w[,fText][,color][,sound=true],list,disp[,code],hide
     local _={
         name= D.name or "_",
 
@@ -868,8 +868,8 @@ end
 local inputBox={
     type='inputBox',
     keepFocus=true,
-    ATV=0,--Activating time(0~4)
-    value="",--Text contained
+    ATV=0,-- Activating time(0~4)
+    value="",-- Text contained
 }
 function inputBox:reset()
     self.ATV=0
@@ -915,20 +915,20 @@ function inputBox:draw()
     local x,y,w,h=self.x,self.y,self.w,self.h
     local ATV=self.ATV
 
-    --Background
+    -- Background
     gc_setColor(0,0,0,.4)
     gc_rectangle('fill',x,y,w,h,4)
 
-    --Highlight
+    -- Highlight
     gc_setColor(1,1,1,ATV*.08*(math.sin(TIME()*4.2)*.2+.8))
     gc_rectangle('fill',x,y,w,h,4)
 
-    --Frame
+    -- Frame
     gc_setColor(1,1,1)
     gc_setLineWidth(3)
     gc_rectangle('line',x,y,w,h,3)
 
-    --Drawable
+    -- Drawable
     local f=self.font
     FONT.set(f,self.fType)
     if self.obj then
@@ -967,7 +967,7 @@ function inputBox:keypress(k)
         self.value=t
     end
 end
-function WIDGET.newInputBox(D)--name,x,y,w[,h][,font=30][,fType][,secret][,regex][,limit],hide
+function WIDGET.newInputBox(D)-- name,x,y,w[,h][,font=30][,fType][,secret][,regex][,limit],hide
     local _={
         name=  D.name or "_",
 
@@ -997,11 +997,11 @@ end
 
 local textBox={
     type='textBox',
-    scrollPos=0,--Scroll-down-distance
-    sure=0,--Sure-timer for clear history
+    scrollPos=0,-- Scroll-down-distance
+    sure=0,-- Sure-timer for clear history
 }
 function textBox:reset()
-    --haha nothing here, techmino is so fun!
+    -- haha nothing here, techmino is so fun!
 end
 function textBox:setTexts(t)
     assert(type(t)=='table',"Arg #1 must be table")
@@ -1031,7 +1031,7 @@ function textBox:update(dt)
 end
 function textBox:push(t)
     ins(self.texts,t)
-    if self.scrollPos==(#self.texts-1-self.capacity)*self.lineH then--minus 1 for the new message
+    if self.scrollPos==(#self.texts-1-self.capacity)*self.lineH then-- minus 1 for the new message
         self.scrollPos=min(self.scrollPos+self.lineH,(#self.texts-self.capacity)*self.lineH)
     end
 end
@@ -1076,28 +1076,28 @@ function textBox:draw()
     local cap=self.capacity
     local lineH=self.lineH
 
-    --Background
+    -- Background
     gc_setColor(0,0,0,.3)
     gc_rectangle('fill',x,y,w,h,4)
 
-    --Frame
+    -- Frame
     gc_setLineWidth(2)
     gc_setColor(WIDGET.sel==self and COLOR.lN or COLOR.Z)
     gc_rectangle('line',x,y,w,h,3)
 
-    --Texts
+    -- Texts
     FONT.set(self.font,self.fType)
     gc_push('transform')
         gc_translate(x,y)
 
-        --Slider
+        -- Slider
         gc_setColor(1,1,1)
         if #texts>cap then
             local len=h*h/(#texts*lineH)
             gc_rectangle('fill',-15,(h-len)*scrollPos/((#texts-cap)*lineH),12,len,3)
         end
 
-        --Clear button
+        -- Clear button
         if not self.fix then
             gc_rectangle('line',w-40,0,40,40,3)
             gc_draw(self.sure==0 and clearIcon or sureIcon,w-40,0)
@@ -1118,7 +1118,7 @@ end
 function textBox:getInfo()
     return("x=%d,y=%d,w=%d,h=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h)
 end
-function WIDGET.newTextBox(D)--name,x,y,w,h[,font=30][,fType][,lineH][,fix],hide
+function WIDGET.newTextBox(D)-- name,x,y,w,h[,font=30][,fType][,lineH][,fix],hide
     local _={
         name= D.name or "_",
 
@@ -1157,11 +1157,11 @@ end
 local listBox={
     type='listBox',
     keepFocus=true,
-    scrollPos=0,--Scroll-down-distance
-    selected=0,--Hidden wheel move value
+    scrollPos=0,-- Scroll-down-distance
+    selected=0,-- Hidden wheel move value
 }
 function listBox:reset()
-    --haha nothing here too, techmino is really fun!
+    -- haha nothing here too, techmino is really fun!
 end
 function listBox:clear()
     self.list={}
@@ -1260,23 +1260,23 @@ function listBox:draw()
     gc_push('transform')
         gc_translate(x,y)
 
-        --Background
+        -- Background
         gc_setColor(0,0,0,.4)
         gc_rectangle('fill',0,0,w,h,4)
 
-        --Frame
+        -- Frame
         gc_setColor(WIDGET.sel==self and COLOR.lN or COLOR.Z)
         gc_setLineWidth(2)
         gc_rectangle('line',0,0,w,h,3)
 
-        --Slider
+        -- Slider
         if #list>cap then
             gc_setColor(1,1,1)
             local len=h*h/(#list*lineH)
             gc_rectangle('fill',-15,(h-len)*scrollPos/((#list-cap)*lineH),12,len,3)
         end
 
-        --List
+        -- List
         gc_setStencilTest('equal',1)
             STW,STH=w,h
             gc_stencil(_rectangleStencil)
@@ -1292,7 +1292,7 @@ end
 function listBox:getInfo()
     return("x=%d,y=%d,w=%d,h=%d"):format(self.x+self.w*.5,self.y+self.h*.5,self.w,self.h)
 end
-function WIDGET.newListBox(D)--name,x,y,w,h,lineH,drawF[,hideF][,hide]
+function WIDGET.newListBox(D)-- name,x,y,w,h,lineH,drawF[,hideF][,hide]
     local _={
         name=    D.name or "_",
 
@@ -1326,10 +1326,10 @@ function WIDGET.newListBox(D)--name,x,y,w,h,lineH,drawF[,hideF][,hide]
     return _
 end
 
-WIDGET.active={}--Table contains all active widgets
-WIDGET.scrollHeight=0--Max drag height, not actual container height!
-WIDGET.scrollPos=0--Current scroll position
-WIDGET.sel=false--Selected widget
+WIDGET.active={}-- Table contains all active widgets
+WIDGET.scrollHeight=0-- Max drag height, not actual container height!
+WIDGET.scrollPos=0-- Current scroll position
+WIDGET.sel=false-- Selected widget
 WIDGET.indexMeta={
     __index=function(L,k)
         for i=1,#L do
@@ -1344,7 +1344,7 @@ function WIDGET.setWidgetList(list)
     WIDGET.active=list or NONE
     WIDGET.cursorMove(SCR.xOy:inverseTransformPoint(love.mouse.getPosition()))
 
-    --Reset all widgets
+    -- Reset all widgets
     if list then
         for i=1,#list do
             list[i]:reset()

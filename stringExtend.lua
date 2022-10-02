@@ -6,7 +6,7 @@ local find,sub,gsub=string.find,string.sub,string.gsub
 local rep,upper=string.rep,string.upper
 local char,byte=string.char,string.byte
 
---"Replace dollars", replace all $n with ...
+-- "Replace dollars", replace all $n with ...
 function STRING.repD(str,...)
     local l={...}
     for i=#l,1,-1 do
@@ -15,14 +15,14 @@ function STRING.repD(str,...)
     return str
 end
 
---"Scan arg", scan if str has the arg (format of str is like "-json -q", arg is like "-q")
+-- "Scan arg", scan if str has the arg (format of str is like "-json -q", arg is like "-q")
 function STRING.sArg(str,switch)
     if find(str.." ",switch.." ") then
         return true
     end
 end
 
-do--function STRING.shiftChar(c)
+do-- function STRING.shiftChar(c)
     local shiftMap={
         ['1']='!',['2']='@',['3']='#',['4']='$',['5']='%',
         ['6']='^',['7']='&',['8']='*',['9']='(',['0']=')',
@@ -44,7 +44,7 @@ end
 
 function STRING.split(s,sep,regex)
     local L={}
-    local p1,p2=1--start,target
+    local p1,p2=1-- start,target
     if regex then
         while p1<=#s do
             p2=find(s,sep,p1) or #s+1
@@ -86,7 +86,7 @@ function STRING.time(t)
     end
 end
 
-function STRING.UTF8(n)--Simple utf8 coding
+function STRING.UTF8(n)-- Simple utf8 coding
     assert(type(n)=='number',"Wrong type ("..type(n)..")")
     assert(n>=0 and n<2^31,"Out of range ("..n..")")
     if n<2^7 then return char(n)
@@ -98,11 +98,11 @@ function STRING.UTF8(n)--Simple utf8 coding
     end
 end
 
-do--function STRING.bigInt(t)
+do-- function STRING.bigInt(t)
     local lg=math.log10
     local units={"","K","M","B","T","Qa","Qt","Sx","Sp","Oc","No"}
     local preUnits={"","U","D","T","Qa","Qt","Sx","Sp","O","N"}
-    local secUnits={"Dc","Vg","Tg","Qd","Qi","Se","St","Og","Nn","Ce"}--Ce is next-level unit, but DcCe is not used so used here
+    local secUnits={"Dc","Vg","Tg","Qd","Qi","Se","St","Og","Nn","Ce"}-- Ce is next-level unit, but DcCe is not used so used here
     for _,preU in next,preUnits do for _,secU in next,secUnits do table.insert(units,preU..secU) end end
     function STRING.bigInt(t)
         if t<1000 then
@@ -116,7 +116,7 @@ do--function STRING.bigInt(t)
     end
 end
 
-do--function STRING.toBin, STRING.toOct, STRING.toHex(n,len)
+do-- function STRING.toBin, STRING.toOct, STRING.toHex(n,len)
     function STRING.toBin(n,len)
         local s=""
         while n>0 do
@@ -167,7 +167,7 @@ function STRING.hexColor(str)--[LOW PERFORMENCE]
     return r,g,b,a
 end
 
-do--function STRING.urlEncode(s)
+do-- function STRING.urlEncode(s)
     local rshift=bit.rshift
     local b16={[0]='0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'}
     function STRING.urlEncode(s)
@@ -210,7 +210,7 @@ function STRING.vcsDecrypt(text,key)
     end
     return result..buffer
 end
-function STRING.digezt(text)--Not powerful hash, just protect the original text
+function STRING.digezt(text)-- Not powerful hash, just protect the original text
     local out={0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}
     local seed=26
     for i=1,#text do

@@ -101,16 +101,16 @@ function TEXT.clear()
 end
 function TEXT.show(text,x,y,font,style,spd,stop)
     ins(texts,{
-        c=0,                                                         --Timer
-        text=GC.newText(FONT.get(int(font/5)*5 or 40),text),         --String
-        x=x or 0,                                                    --X
-        y=y or 0,                                                    --Y
-        spd=(spd or 1),                                              --Timing speed(1=last 1 sec)
-        stop=stop,                                                   --Stop time(sustained text)
-        draw=assert(textFX[style or 'appear'],"no text type:"..style),--Draw method
+        c=0,                                                         -- Timer
+        text=GC.newText(FONT.get(int(font/5)*5 or 40),text),         -- String
+        x=x or 0,                                                    -- X
+        y=y or 0,                                                    -- Y
+        spd=(spd or 1),                                              -- Timing speed(1=last 1 sec)
+        stop=stop,                                                   -- Stop time(sustained text)
+        draw=assert(textFX[style or 'appear'],"no text type:"..style),-- Draw method
     })
 end
-function TEXT.getText(text,x,y,font,style,spd,stop)--Another version of TEXT.show(), but only return text object, need manual management
+function TEXT.getText(text,x,y,font,style,spd,stop)-- Another version of TEXT.show(), but only return text object, need manual management
     return{
         c=0,
         text=GC.newText(FONT.get(int(font/5)*5 or 40),text),

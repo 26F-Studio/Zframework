@@ -133,9 +133,9 @@ function SYSFX.newAttack(rate,x1,y1,x2,y2,wid,r,g,b,a)
         draw=FXdraw.attack,
         t=0,
         rate=rate,
-        x1=x1,y1=y1,--Start pos
-        x2=x2,y2=y2,--End pos
-        wid=wid,--Line width
+        x1=x1,y1=y1,-- Start pos
+        x2=x2,y2=y2,-- End pos
+        wid=wid,-- Line width
         r=r,g=g,b=b,a=a,
     })
 end

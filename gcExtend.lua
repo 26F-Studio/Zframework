@@ -6,12 +6,12 @@ local GC=setmetatable({},{
     __index=gc,
     __metatable=true
 })
-function GC.mStr(obj,x,y) printf(obj,x-626,y,1252,'center') end--Printf a string with 'center'
-function GC.simpX(obj,x,y) draw(obj,x-obj:getWidth()*.5,y) end--Simply draw an obj with x=obj:getWidth()/2
-function GC.simpY(obj,x,y) draw(obj,x,y-obj:getHeight()*.5) end--Simply draw an obj with y=obj:getWidth()/2
-function GC.X(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,0) end--Draw an obj with x=obj:getWidth()/2
-function GC.Y(obj,x,y,a,k) draw(obj,x,y,a,k,nil,0,obj:getHeight()*.5) end--Draw an obj with y=obj:getWidth()/2
-function GC.mDraw(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,obj:getHeight()*.5) end--Draw an obj with both middle X & Y
+function GC.mStr(obj,x,y) printf(obj,x-626,y,1252,'center') end-- Printf a string with 'center'
+function GC.simpX(obj,x,y) draw(obj,x-obj:getWidth()*.5,y) end-- Simply draw an obj with x=obj:getWidth()/2
+function GC.simpY(obj,x,y) draw(obj,x,y-obj:getHeight()*.5) end-- Simply draw an obj with y=obj:getWidth()/2
+function GC.X(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,0) end-- Draw an obj with x=obj:getWidth()/2
+function GC.Y(obj,x,y,a,k) draw(obj,x,y,a,k,nil,0,obj:getHeight()*.5) end-- Draw an obj with y=obj:getWidth()/2
+function GC.mDraw(obj,x,y,a,k) draw(obj,x,y,a,k,nil,obj:getWidth()*.5,obj:getHeight()*.5) end-- Draw an obj with both middle X & Y
 function GC.outDraw(obj,div,x,y,a,k)
     local w,h=obj:getWidth()*.5,obj:getHeight()*.5
     draw(obj,x-div,y-div,a,k,nil,w,h)
@@ -60,14 +60,14 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     local halfAng=6.283185307179586/segments/2
     local erasedLen=r*math.tan(halfAng)
     if mode=='line' then
-        erasedLen=erasedLen+1--Fix 1px cover
+        erasedLen=erasedLen+1-- Fix 1px cover
         for i=1,segments do
-            --Line
+            -- Line
             local x1,y1,x2,y2=X[i],Y[i],X[i+1],Y[i+1]
             local dir=math.atan2(y2-y1,x2-x1)
             gc.line(x1+erasedLen*cos(dir),y1+erasedLen*sin(dir),x2-erasedLen*cos(dir),y2-erasedLen*sin(dir))
 
-            --Arc
+            -- Arc
             ang=ang+angStep
             local R2=R-r/cos(halfAng)
             local arcCX,arcCY=x+R2*cos(ang),y+R2*sin(ang)
@@ -76,7 +76,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     elseif mode=='fill' then
         local L={}
         for i=1,segments do
-            --Line
+            -- Line
             local x1,y1,x2,y2=X[i],Y[i],X[i+1],Y[i+1]
             local dir=math.atan2(y2-y1,x2-x1)
             L[4*i-3]=x1+erasedLen*cos(dir)
@@ -84,7 +84,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
             L[4*i-1]=x2-erasedLen*cos(dir)
             L[4*i]=y2-erasedLen*sin(dir)
 
-            --Arc
+            -- Arc
             ang=ang+angStep
             local R2=R-r/cos(halfAng)
             local arcCX,arcCY=x+R2*cos(ang),y+R2*sin(ang)
@@ -95,7 +95,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
         error("Draw mode should be 'line' or 'fill'")
     end
 end
-do--function GC.DO(L)
+do-- function GC.DO(L)
     local cmds={
         origin="origin",
         move="translate",

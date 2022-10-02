@@ -1,17 +1,17 @@
 local SCR={
-    w0=1280,h0=720, --Default Screen Size
-    x=0,y=0,        --Up-left Coord on screen
-    cx=0,cy=0,      --Center Coord on screen (Center X/Y)
-    ex=0,ey=0,      --Down-right Coord on screen (End X/Y)
-    w=0,h=0,        --Fullscreen w/h for graphic functions
-    W=0,H=0,        --Fullscreen w/h for shader
-    safeX=0,safeY=0,--Safe area
-    safeW=0,safeH=0,--Safe area
-    rad=0,          --Radius
-    k=1,            --Scale size
-    dpi=1,          --DPI from gc.getDPIScale()
+    w0=1280,h0=720, -- Default Screen Size
+    x=0,y=0,        -- Up-left Coord on screen
+    cx=0,cy=0,      -- Center Coord on screen (Center X/Y)
+    ex=0,ey=0,      -- Down-right Coord on screen (End X/Y)
+    w=0,h=0,        -- Fullscreen w/h for graphic functions
+    W=0,H=0,        -- Fullscreen w/h for shader
+    safeX=0,safeY=0,-- Safe area
+    safeW=0,safeH=0,-- Safe area
+    rad=0,          -- Radius
+    k=1,            -- Scale size
+    dpi=1,          -- DPI from gc.getDPIScale()
 
-    --Screen transformation objects
+    -- Screen transformation objects
     origin=love.math.newTransform(),
     xOy=love.math.newTransform(),
     xOy_m=love.math.newTransform(),

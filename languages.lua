@@ -1,10 +1,10 @@
 local LANG={}
---ONLY FIRST CALL MAKE SENSE
---Create LANG.get() and LANG.addScene()
+-- ONLY FIRST CALL MAKE SENSE
+-- Create LANG.get() and LANG.addScene()
 function LANG.init(defaultLang,langList,publicText,pretreatFunc)
     local function _langFallback(T0,T)
         for k,v in next,T0 do
-            if type(v)=='table' and not v.refuseCopy then--refuseCopy: just copy pointer, not contents
+            if type(v)=='table' and not v.refuseCopy then-- refuseCopy: just copy pointer, not contents
                 if not T[k] then T[k]={} end
                 if type(T[k])=='table' then
                     _langFallback(v,T[k])
@@ -15,21 +15,21 @@ function LANG.init(defaultLang,langList,publicText,pretreatFunc)
         end
     end
 
-    --Set public text
+    -- Set public text
     if publicText then
         for _,L in next,langList do
             for key,list in next,publicText do L[key]=list end
         end
     end
 
-    --Fallback to default language
+    -- Fallback to default language
     for name,L in next,langList do
         if name~=defaultLang then
             _langFallback(langList[L.fallback or defaultLang],L)
         end
     end
 
-    --Custom pretreatment for each language
+    -- Custom pretreatment for each language
     if pretreatFunc then
         for _,L in next,langList do
             pretreatFunc(L)

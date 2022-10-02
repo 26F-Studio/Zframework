@@ -2,7 +2,7 @@ NONE={}function NULL() end PAPER=love.graphics.newCanvas(1,1)
 EDITING=""
 LOADED=false
 
---Pure lua modules (basic)
+-- Pure lua modules (basic)
 MATH=       require'Zframework.mathExtend'
 COLOR=      require'Zframework.color'
 TABLE=      require'Zframework.tableExtend'
@@ -11,7 +11,7 @@ PROFILE=    require'Zframework.profile'
 JSON=       require'Zframework.json'
 TEST=       require'Zframework.test'
 
-do--Add pcall & MES for JSON lib
+do-- Add pcall & MES for JSON lib
     local encode,decode=JSON.encode,JSON.decode
     JSON.encode=function(val)
         local a,b=pcall(encode,val)
@@ -31,7 +31,7 @@ do--Add pcall & MES for JSON lib
     end
 end
 
---Pure lua modules (complex)
+-- Pure lua modules (complex)
 LOG=        require'Zframework.log'
 REQUIRE=    require'Zframework.require'
 TASK=       require'Zframework.task'
@@ -60,7 +60,7 @@ do
     end
 end
 
---Love-based modules (basic)
+-- Love-based modules (basic)
 HTTP=       require'Zframework.http'
 WS=         require'Zframework.websocket'
 FILE=       require'Zframework.file'
@@ -68,7 +68,7 @@ WHEELMOV=   require'Zframework.wheelScroll'
 SCR=        require'Zframework.screen'
 SCN=        require'Zframework.scene'
 
---Love-based modules (complex)
+-- Love-based modules (complex)
 GC=         require'Zframework.gcExtend'
 FONT=       require'Zframework.font'
 TEXT=       require'Zframework.text'
@@ -100,8 +100,8 @@ local max,min=math.max,math.min
 
 local devMode
 local mx,my,mouseShow,cursorSpd=640,360,false,0
-local jsState={}--map, joystickID->axisStates: {axisName->axisVal}
-local errData={}--list, each error create {mes={errMes strings},scene=sceneNameStr}
+local jsState={}-- map, joystickID->axisStates: {axisName->axisVal}
+local errData={}-- list, each error create {mes={errMes strings},scene=sceneNameStr}
 
 local function drawCursor(_,x,y)
     gc_setColor(1,1,1)
@@ -163,7 +163,7 @@ local function updatePowerInfo()
     gc.setCanvas()
 end
 -------------------------------------------------------------
-local lastX,lastY=0,0--Last click pos
+local lastX,lastY=0,0-- Last click pos
 local function _updateMousePos(x,y,dx,dy)
     if SCN.swapping or WAIT.state then return end
     dx,dy=dx/SCR.k,dy/SCR.k
@@ -389,8 +389,8 @@ function love.textinput(texts)
     WIDGET.textinput(texts)
 end
 
---analog sticks: -1, 0, 1 for neg, neutral, pos
---triggers: 0 for released, 1 for pressed
+-- analog sticks: -1, 0, 1 for neg, neutral, pos
+-- triggers: 0 for released, 1 for pressed
 local jsAxisEventName={
     leftx={'leftstick_left','leftstick_right'},
     lefty={'leftstick_up','leftstick_down'},
@@ -442,7 +442,7 @@ function love.gamepadaxis(JS,axis,val)
     if jsState[1] and JS==jsState[1]._jsObj then
         local js=jsState[1]
         if axis=='leftx' or axis=='lefty' or axis=='rightx' or axis=='righty' then
-            local newVal=--range: [0,1]
+            local newVal=-- range: [0,1]
                 val>.4 and 1 or
                 val<-.4 and -1 or
                 0
@@ -460,7 +460,7 @@ function love.gamepadaxis(JS,axis,val)
                 js[axis]=newVal
             end
         elseif axis=='triggerleft' or axis=='triggerright' then
-            local newVal=val>.3 and 1 or 0--range: [0,1]
+            local newVal=val>.3 and 1 or 0-- range: [0,1]
             if newVal~=js[axis] then
                 if newVal==1 then
                     love.gamepadpressed(JS,jsAxisEventName[axis])
@@ -553,7 +553,7 @@ function love.errorhandler(msg)
         msg=text.tryAnotherBuild
     end
 
-    --Generate error message
+    -- Generate error message
     local err={"Error:"..msg}
     local c=2
     for l in debug.traceback("",2):gmatch("(.-)\n") do
@@ -569,7 +569,7 @@ function love.errorhandler(msg)
     end
     print(table.concat(err,"\n",1,c-2))
 
-    --Reset something
+    -- Reset something
     love.audio.stop()
     gc.reset()
 
@@ -578,18 +578,18 @@ function love.errorhandler(msg)
         local scn=SCN and SCN.cur or "NULL"
         table.insert(errData,{mes=err,scene=scn})
 
-        --Write messages to log file
+        -- Write messages to log file
         love.filesystem.append('conf/error.log',
             os.date("%Y/%m/%d %A %H:%M:%S\n")..
             #errData.." crash(es) "..love.system.getOS().."-"..VERSION.string.."  scene: "..scn.."\n"..
             table.concat(err,"\n",1,c-2).."\n\n"
         )
 
-        --Get screencapture
+        -- Get screencapture
         gc.captureScreenshot(function(_) errData[#errData].shot=gc.newImage(_) end)
         gc.present()
 
-        --Create a new mainLoop thread to keep game alive
+        -- Create a new mainLoop thread to keep game alive
         local status,resume=coroutine.status,coroutine.resume
         local loopThread=coroutine.create(secondLoopThread)
         local res,threadErr
@@ -636,7 +636,7 @@ function love.errorhandler(msg)
 end
 love.threaderror=nil
 
-love.draw,love.update=nil--remove default draw/update
+love.draw,love.update=nil-- remove default draw/update
 
 local devColor={
     COLOR.Z,
@@ -666,11 +666,11 @@ function love.run()
     local frameTimeList={}
     local lastFrame=timer()
     local lastFreshPow=lastFrame
-    local FCT=0--Framedraw counter, from 0~99
+    local FCT=0-- Framedraw counter, from 0~99
 
     love.resize(gc.getWidth(),gc.getHeight())
 
-    --Scene Launch
+    -- Scene Launch
     while #SCN.stack>0 do SCN.pop() end
     SCN.push('quit','slowFade')
     SCN.init(#errData==0 and 'load' or 'error')
@@ -682,7 +682,7 @@ function love.run()
         local dt=time-lastFrame
         lastFrame=time
 
-        --EVENT
+        -- EVENT
         PUMP()
         for N,a,b,c,d,e in POLL() do
             if love[N] then
@@ -693,7 +693,7 @@ function love.run()
             end
         end
 
-        --UPDATE
+        -- UPDATE
         STEP()
         if mouseShow then mouse_update(dt) end
         if next(jsState) then gp_update(jsState[1],dt) end
@@ -710,7 +710,7 @@ function love.run()
         if SCN.swapping then SCN.swapUpdate(dt) end
         WIDGET_update(dt)
 
-        --DRAW
+        -- DRAW
         if not MINI() then
             FCT=FCT+frameMul
             if FCT>=100 then
@@ -725,7 +725,7 @@ function love.run()
                     SYSFX_draw()
                     TEXT_draw()
 
-                    --Draw cursor
+                    -- Draw cursor
                     if mouseShow then drawCursor(time,mx,my) end
                 gc_replaceTransform(SCR.xOy_ul)
                     if showPowerInfo then
@@ -733,50 +733,50 @@ function love.run()
                     end
                     MES_draw()
                 gc_replaceTransform(SCR.origin)
-                    --Draw power info.
+                    -- Draw power info.
                     if showPowerInfo then
                         gc_setColor(1,1,1)
                         gc_draw(infoCanvas,SCR.safeX,0,0,SCR.k)
                     end
 
-                    --Draw scene swapping animation
+                    -- Draw scene swapping animation
                     if SCN.swapping then
                         gc_setColor(1,1,1)
                         _=SCN.stat
                         _.draw(_.time)
                     end
                 gc_replaceTransform(SCR.xOy_d)
-                    --Draw Version string
+                    -- Draw Version string
                     gc_setColor(.9,.9,.9,.42)
                     FONT.set(20)
                     GC.mStr(versionText,0,-30)
                 gc_replaceTransform(SCR.xOy_dl)
                     local safeX=SCR.safeX/SCR.k
 
-                    --Draw FPS
+                    -- Draw FPS
                     FONT.set(15)
                     gc_setColor(1,1,1)
                     gc_print(FPS(),safeX+5,-20)
 
-                    --Debug info.
+                    -- Debug info.
                     if devMode then
-                        --Debug infos at left-down
+                        -- Debug infos at left-down
                         gc_setColor(devColor[devMode])
 
-                        --Text infos
+                        -- Text infos
                         for i=1,#debugInfos do
                             gc_print(debugInfos[i][1],safeX+5,-20-20*i)
                             gc_print(debugInfos[i][2](),safeX+62.6,-20-20*i)
                         end
 
-                        --Update & draw frame time
+                        -- Update & draw frame time
                         table.insert(frameTimeList,1,dt)table.remove(frameTimeList,126)
                         gc_setColor(1,1,1,.3)
                         for i=1,#frameTimeList do
                             gc.rectangle('fill',150+2*i,-20,2,-frameTimeList[i]*4000)
                         end
 
-                        --Cursor pos disp
+                        -- Cursor pos disp
                         gc_replaceTransform(SCR.origin)
                             local x,y=SCR.xOy:transformPoint(mx,my)
                             gc_setLineWidth(1)
@@ -791,7 +791,7 @@ function love.run()
                             gc_print(t,x+2,y)
 
                         gc_replaceTransform(SCR.xOy_dr)
-                            --Websocket status
+                            -- Websocket status
                             local status=WS.status('game')
                             if status=='dead' then
                                 gc_setColor(COLOR.R)
@@ -810,12 +810,12 @@ function love.run()
                     WAIT.draw()
                 gc_present()
 
-                --SPEED UPUPUP!
+                -- SPEED UPUPUP!
                 if discardCanvas then gc_discard() end
             end
         end
 
-        --Fresh power info.
+        -- Fresh power info.
         if time-lastFreshPow>2.6 then
             if showPowerInfo then
                 updatePowerInfo()
@@ -826,7 +826,7 @@ function love.run()
             end
         end
 
-        --Slow devmode
+        -- Slow devmode
         if devMode then
             if devMode==3 then
                 SLEEP(.1)
@@ -874,7 +874,7 @@ function Z.setDebugInfo(list)
     debugInfos=list
 end
 
---Change F1~F7 events of devmode (F8 mode)
+-- Change F1~F7 events of devmode (F8 mode)
 function Z.setOnFnKeys(list)
     assert(type(list)=='table',"Z.setOnFnKeys(list): list must be table")
     for i=1,7 do fnKey[i]=assert(type(list[i])=='function' and list[i]) end

@@ -101,7 +101,7 @@ function SFX.getNoteName(note)
         return noteName[note%12+1]..octave
     end
 end
-function SFX.playSample(pack,...)--vol-1, sampSet1, vol-2, sampSet2
+function SFX.playSample(pack,...)-- vol-1, sampSet1, vol-2, sampSet2
     if ... then
         local arg={...}
         local vol
@@ -112,11 +112,11 @@ function SFX.playSample(pack,...)--vol-1, sampSet1, vol-2, sampSet2
             else
                 local base=packSetting[pack].base
                 local top=packSetting[pack].top
-                local tune=type(a)=='string' and _getTuneHeight(a) or a--Absolute tune in number
+                local tune=type(a)=='string' and _getTuneHeight(a) or a-- Absolute tune in number
                 local playTune=tune+rnd(-2,2)
-                if playTune<=base then--Too low notes
+                if playTune<=base then-- Too low notes
                     playTune=base+1
-                elseif playTune>top then--Too high notes
+                elseif playTune>top then-- Too high notes
                     playTune=top
                 end
                 SFX.play(pack..playTune-base,vol,nil,tune-playTune)
@@ -126,7 +126,7 @@ function SFX.playSample(pack,...)--vol-1, sampSet1, vol-2, sampSet2
 end
 local function _play(name,vol,pos,pitch)
     if volume==0 or vol==0 then return end
-    local S=Sources[name]--Source list
+    local S=Sources[name]-- Source list
     if not S then return end
     local n=1
     while S[n]:isPlaying() do
@@ -137,7 +137,7 @@ local function _play(name,vol,pos,pitch)
             break
         end
     end
-    S=S[n]--AU_SRC
+    S=S[n]-- AU_SRC
     if S:getChannelCount()==1 then
         if pos then
             pos=MATH.clamp(pos,-1,1)*stereo
@@ -150,7 +150,7 @@ local function _play(name,vol,pos,pitch)
     S:setPitch(pitch and 1.0594630943592953^pitch or 1)
     S:play()
 end
-SFX.fplay=_play--Play sounds without apply module's volume setting
+SFX.fplay=_play-- Play sounds without apply module's volume setting
 function SFX.play(name,vol,pos,pitch)
     _play(name,(vol or 1)*volume,pos,pitch)
 end
