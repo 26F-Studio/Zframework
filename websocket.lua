@@ -8,8 +8,6 @@ local path=''
 
 local type=type
 local timer=love.timer.getTime
-local CHN=love.thread.newChannel()
-local CHN_getCount,CHN_push,CHN_pop=CHN.getCount,CHN.push,CHN.pop
 local TRD=love.thread.newThread("\n")
 local TRD_isRunning=TRD.isRunning
 
@@ -67,11 +65,11 @@ function WS.connect(name,subPath,head,timeout)
     }
     wsList[name]=ws
     ws.thread:start(ws.triggerCHN,ws.sendCHN,ws.readCHN)
-    CHN_push(ws.sendCHN,host)
-    CHN_push(ws.sendCHN,port)
-    CHN_push(ws.sendCHN,path..subPath)
-    CHN_push(ws.sendCHN,head)
-    CHN_push(ws.sendCHN,timeout or 2.6)
+    ws.sendCHN:push(host)
+    ws.sendCHN:push(port)
+    ws.sendCHN:push(path..subPath)
+    ws.sendCHN:push(head)
+    ws.sendCHN:push(timeout or 2.6)
 end
 
 function WS.status(name)
@@ -114,8 +112,8 @@ function WS.send(name,message,op)
     if type(message)=='string' then
         local ws=wsList[name]
         if ws.real and ws.status=='running' then
-            CHN_push(ws.sendCHN,op and OPcode[op] or 2)-- 2=binary
-            CHN_push(ws.sendCHN,message)
+            ws.sendCHN:push(op and OPcode[op] or 2)-- 2=binary
+            ws.sendCHN:push(message)
             ws.lastPingTime=timer()
             ws.sendTimer=1
         end
@@ -127,8 +125,8 @@ end
 
 function WS.read(name)
     local ws=wsList[name]
-    if ws.real and ws.status~='connecting' and CHN_getCount(ws.readCHN)>=2 then
-        local op,message=CHN_pop(ws.readCHN),CHN_pop(ws.readCHN)
+    if ws.real and ws.status~='connecting' and ws.readCHN:getCount()>=2 then
+        local op,message=ws.readCHN:pop(),ws.readCHN:pop()
         if op==8 then-- 8=close
             ws.status='dead'
         elseif op==9 then-- 9=ping
@@ -143,8 +141,8 @@ end
 function WS.close(name)
     local ws=wsList[name]
     if ws.real then
-        CHN_push(ws.sendCHN,8)-- close
-        CHN_push(ws.sendCHN,"")
+        ws.sendCHN:push(8)-- 8=close
+        ws.sendCHN:push("")
         ws.status='dead'
     end
 end
@@ -154,11 +152,11 @@ function WS.update(dt)
     for name,ws in next,wsList do
         if ws.real and ws.status~='dead' then
             if TRD_isRunning(ws.thread) then
-                if CHN_getCount(ws.triggerCHN)==0 then
-                    CHN_push(ws.triggerCHN,0)
+                if ws.triggerCHN:getCount()==0 then
+                    ws.triggerCHN:push(0)
                 end
                 if ws.status=='connecting' then
-                    local mes=CHN_pop(ws.readCHN)
+                    local mes=ws.readCHN:pop()
                     if mes then
                         if mes=='success' then
                             ws.status='running'

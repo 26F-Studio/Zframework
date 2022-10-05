@@ -114,6 +114,7 @@ local discardCanvas=false
 local frameMul=100
 local sleepInterval=1/60
 local onQuit=NULL
+local onBeforeQuit=false
 local versionText=""
 
 local batteryImg=GC.DO{31,20,
@@ -688,8 +689,13 @@ function love.run()
             if love[N] then
                 love[N](a,b,c,d,e)
             elseif N=='quit' then
-                onQuit()
-                return a or true
+                if onBeforeQuit then
+                    onBeforeQuit()
+                    onBeforeQuit=false
+                else
+                    onQuit()
+                    return a or true
+                end
             end
         end
 
@@ -900,6 +906,10 @@ end
 
 function Z.setOnQuit(func)
     onQuit=assert(type(func)=='function' and func,"Z.setOnQuit(func): func must be function")
+end
+
+function Z.setOnBeforeQuit(func)
+    onBeforeQuit=assert(type(func)=='function' and func,"Z.setOnBeforeQuit(func): func must be function")
 end
 
 return Z
