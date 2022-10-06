@@ -165,7 +165,7 @@ function WS.update(dt)
                             ws.pongTimer=1
                         else
                             ws.status='dead'
-                            MES.new('warn',text.wsFailed..": "..(mes=="timeout" and text.netTimeout or mes))
+                            MES.new('warn',text.wsFailed:repD(mes))
                         end
                     end
                 elseif ws.status=='running' then
@@ -183,7 +183,7 @@ function WS.update(dt)
                 ws.status='dead'
                 local err=ws.thread:getError()
                 if err then
-                    MES.new('warn',text.wsClose..err:match(":.-:(.-)\n"))
+                    MES.new('warn',text.wsClose:repD(err:match(":.-:(.-)\n")))
                     WS.alert(name)
                 end
             end
