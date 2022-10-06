@@ -5,7 +5,7 @@ return function(libName)
     local arch='unknown'
     if love.system.getOS()=='OS X' then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
-        libname=nil
+        libName=nil
     elseif love.system.getOS()=='Android' then
         if not loaded[libName] then
             local platform=(function()

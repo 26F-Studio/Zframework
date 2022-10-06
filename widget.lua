@@ -247,7 +247,7 @@ function button:release(_,_,k)
 end
 function WIDGET.newButton(D)-- name,x,y,w[,h][,fText][,color][,font=30][,fType][,sound][,align='M'][,edge=0][,code][,hideF][,hide]
     if not D.h then D.h=D.w end
-    local _={
+    local w={
         name= D.name or "_",
 
         x=    D.x-D.w*.5,
@@ -274,16 +274,16 @@ function WIDGET.newButton(D)-- name,x,y,w[,h][,fText][,color][,font=30][,fType][
         hide= D.hide,
     }
     if D.sound==false then
-        _.sound=false
+        w.sound=false
     elseif type(D.sound)=='string' then
-        _.sound=D.sound
+        w.sound=D.sound
     else
-        _.sound='button'
+        w.sound='button'
     end
 
-    for k,v in next,button do _[k]=v end
-    setmetatable(_,widgetMetatable)
-    return _
+    for k,v in next,button do w[k]=v end
+    setmetatable(w,widgetMetatable)
+    return w
 end
 
 local key={
@@ -920,7 +920,7 @@ function inputBox:draw()
     gc_rectangle('fill',x,y,w,h,4)
 
     -- Highlight
-    gc_setColor(1,1,1,ATV*.08*(math.sin(TIME()*4.2)*.2+.8))
+    gc_setColor(1,1,1,ATV*.08*(math.sin(timer()*4.2)*.2+.8))
     gc_rectangle('fill',x,y,w,h,4)
 
     -- Frame
