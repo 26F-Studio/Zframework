@@ -36,7 +36,6 @@ local SCN={
     fileDropped=false,
     directoryDropped=false,
     resize=false,
-    socketRead=false,
 }-- Scene datas, returned
 
 function SCN.add(name,scene)
@@ -85,7 +84,6 @@ function SCN.init(s)
     SCN.fileDropped=S.fileDropped
     SCN.directoryDropped=S.directoryDropped
     SCN.resize=S.resize
-    SCN.socketRead=S.socketRead
     SCN.update=S.update
     SCN.draw=S.draw
     if S.sceneInit then
