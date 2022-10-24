@@ -2,9 +2,8 @@ local scenes={}
 
 local SCN={
     mainTouchID=nil,     -- First touching ID(userdata)
-    cur='NULL',          -- Current scene name
     swapping=false,      -- If Swapping
-    stat={
+    state={
         tar=false,       -- Swapping target
         style=false,     -- Swapping style
         changeTime=false,-- Loading point
@@ -46,11 +45,10 @@ function SCN.add(name,scene)
 end
 
 function SCN.swapUpdate(dt)
-    local S=SCN.stat
+    local S=SCN.state
     S.time=S.time-dt
     if S.time<S.changeTime and S.time+dt>=S.changeTime then
         -- Scene swapped this frame
-        SCN.prev=SCN.cur
         SCN.init(S.tar)
         SCN.mainTouchID=nil
     end
@@ -62,7 +60,6 @@ function SCN.init(s)
     love.keyboard.setTextInput(false)
 
     local S=scenes[s]
-    SCN.cur=s
 
     WIDGET.setScrollHeight(S.widgetScrollHeight)
     WIDGET.setWidgetList(S.widgetList)
@@ -91,15 +88,14 @@ function SCN.init(s)
     end
 end
 function SCN.push(tar,style)
-    if not SCN.swapping then
-        local m=#SCN.stack
-        SCN.stack[m+1]=tar or SCN.cur
-        SCN.stack[m+2]=style or 'fade'
-    end
+    table.insert(SCN.stack,tar or SCN.stack[#SCN.stack-1])
+    table.insert(SCN.stack,style or 'fade')
+    -- print("-------") for i=1,#SCN.stack,2 do print(SCN.stack[i]) end
 end
 function SCN.pop()
-    local s=SCN.stack
-    s[#s],s[#s-1]=nil
+    table.remove(SCN.stack)
+    table.remove(SCN.stack)
+    -- print("-------") for i=1,#SCN.stack,2 do print(SCN.stack[i]) end
 end
 
 local swap={
@@ -165,11 +161,13 @@ local swap={
 }-- Scene swapping animations
 function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
     if scenes[tar] then
-        if not SCN.swapping and tar~=SCN.cur then
+        if not SCN.swapping and tar~=SCN.stack[#SCN.stack-3] then
             style=style or 'fade'
+            SCN.prev=SCN.stack[#SCN.stack-1]
+            SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack]=tar,style
             SCN.swapping=true
             SCN.args={...}
-            local S=SCN.stat
+            local S=SCN.state
             S.tar,S.style=tar,style
             S.time=swap[style].duration
             S.changeTime=swap[style].changeTime
@@ -181,8 +179,12 @@ function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
 end
 function SCN.go(tar,style,...)-- Normal scene swapping, can back
     if scenes[tar] then
-        SCN.push()
-        SCN.swapTo(tar,style,...)
+        if not SCN.swapping and tar~=SCN.stack[#SCN.stack-3] then
+            local prev=SCN.stack[#SCN.stack-1]
+            SCN.push(tar,style)
+            SCN.swapTo(tar,style,...)
+            SCN.prev=prev
+        end
     else
         MES.new('warn',"No Scene: "..tar)
     end
@@ -196,10 +198,25 @@ function SCN.back(...)
     end
 
     -- Poll&Back to previous Scene
-    local m=#SCN.stack
-    if m>0 then
-        SCN.swapTo(SCN.stack[m-1],SCN.stack[m],...)
-        SCN.stack[m],SCN.stack[m-1]=nil
+    if #SCN.stack>2 then
+        SCN.pop()
+        SCN.swapTo(SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack],...)
+    else
+        SCN.swapTo('quit','slowFade')
     end
+end
+function SCN.backTo(name,...)
+    if SCN.swapping then return end
+
+    -- Leave scene
+    if SCN.sceneBack then
+        SCN.sceneBack()
+    end
+
+    -- Poll&Back to previous Scene
+    while SCN.stack[#SCN.stack-1]~=name and #SCN.stack>2 do
+        SCN.pop()
+    end
+    SCN.swapTo(SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack],...)
 end
 return SCN
