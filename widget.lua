@@ -1005,8 +1005,8 @@ function textBox:reset()
 end
 function textBox:setTexts(t)
     assert(type(t)=='table',"Arg #1 must be table")
-    TABLE.clear(self._texts)
-    TABLE.connect(self._texts,t)
+    TABLE.clear(self.texts)
+    TABLE.connect(self.texts,t)
     self.scrollPos=0
 end
 function textBox:clear()
