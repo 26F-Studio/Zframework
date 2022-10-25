@@ -87,15 +87,11 @@ function SCN.init(s)
         S.sceneInit()
     end
 end
-function SCN.push(tar,style)
-    table.insert(SCN.stack,tar or SCN.stack[#SCN.stack-1])
-    table.insert(SCN.stack,style or 'fade')
-    -- print("-------") for i=1,#SCN.stack,2 do print(SCN.stack[i]) end
+function SCN.push(tar)
+    table.insert(SCN.stack,tar or SCN.stack[#SCN.stack])
 end
 function SCN.pop()
     table.remove(SCN.stack)
-    table.remove(SCN.stack)
-    -- print("-------") for i=1,#SCN.stack,2 do print(SCN.stack[i]) end
 end
 
 local swap={
@@ -161,10 +157,10 @@ local swap={
 }-- Scene swapping animations
 function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
     if scenes[tar] then
-        if not SCN.swapping and tar~=SCN.stack[#SCN.stack-3] then
+        if not SCN.swapping then
             style=style or 'fade'
-            SCN.prev=SCN.stack[#SCN.stack-1]
-            SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack]=tar,style
+            SCN.prev=SCN.stack[#SCN.stack]
+            SCN.stack[#SCN.stack]=tar
             SCN.swapping=true
             SCN.args={...}
             local S=SCN.state
@@ -179,17 +175,15 @@ function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
 end
 function SCN.go(tar,style,...)-- Normal scene swapping, can back
     if scenes[tar] then
-        if not SCN.swapping and tar~=SCN.stack[#SCN.stack-3] then
-            local prev=SCN.stack[#SCN.stack-1]
-            SCN.push(tar,style)
+        if not SCN.swapping then
+            SCN.push(SCN.stack[#SCN.stack] or '_')
             SCN.swapTo(tar,style,...)
-            SCN.prev=prev
         end
     else
         MES.new('warn',"No Scene: "..tar)
     end
 end
-function SCN.back(...)
+function SCN.back(style,...)
     if SCN.swapping then return end
 
     -- Leave scene
@@ -198,14 +192,14 @@ function SCN.back(...)
     end
 
     -- Poll&Back to previous Scene
-    if #SCN.stack>2 then
+    if #SCN.stack>1 then
         SCN.pop()
-        SCN.swapTo(SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack],...)
+        SCN.swapTo(SCN.stack[#SCN.stack],style,...)
     else
         SCN.swapTo('quit','slowFade')
     end
 end
-function SCN.backTo(name,...)
+function SCN.backTo(tar,style,...)
     if SCN.swapping then return end
 
     -- Leave scene
@@ -214,9 +208,13 @@ function SCN.backTo(name,...)
     end
 
     -- Poll&Back to previous Scene
-    while SCN.stack[#SCN.stack-1]~=name and #SCN.stack>2 do
+    while SCN.stack[#SCN.stack]~=tar and #SCN.stack>1 do
         SCN.pop()
     end
-    SCN.swapTo(SCN.stack[#SCN.stack-1],SCN.stack[#SCN.stack],...)
+    SCN.swapTo(SCN.stack[#SCN.stack],style,...)
 end
+function SCN.printStack()
+    for i=0,#SCN.stack+1 do print(SCN.stack[i] or "-------") end
+end
+
 return SCN
