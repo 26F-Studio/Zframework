@@ -170,7 +170,7 @@ function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
             S.draw=swap[style].draw
         end
     else
-        MES.new('warn',"No Scene: "..tar)
+        MES.new('warn',"No Scene: "..tostring(tar))
     end
 end
 function SCN.go(tar,style,...)-- Normal scene swapping, can back

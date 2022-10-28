@@ -576,7 +576,7 @@ function love.errorhandler(msg)
 
     if LOADED and #errData<3 then
         BG.set('none')
-        local scn=SCN and SCN.stack[#SCN.stack-1] or "NULL"
+        local scn=SCN and SCN.stack[#SCN.stack] or "NULL"
         table.insert(errData,{mes=err,scene=scn})
 
         -- Write messages to log file
@@ -623,7 +623,7 @@ function love.errorhandler(msg)
             FONT.set(100)gc_print(":(",100,0,0,1.2)
             FONT.set(40)gc.printf(errorMsg,100,160,SCR.w0-100)
             FONT.set(20)
-            gc_print(love.system.getOS().."-"..VERSION.string.."                          scene:"..(SCN and SCN.stack[#SCN.stack-1] or "NULL"),100,660)
+            gc_print(love.system.getOS().."-"..VERSION.string.."                          scene:"..(SCN and SCN.stack[#SCN.stack] or "NULL_E"),100,660)
             gc.printf(err[1],100,360,1260-100)
             gc_print("TRACEBACK",100,450)
             for i=4,#err-2 do
