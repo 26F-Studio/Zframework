@@ -12,7 +12,7 @@ local SCN={
     },
     stack={},-- Scene stack
     prev=false,
-    current=false,
+    cur=false,
     args={},-- Arguments from previous scene
 
     scenes=scenes,
@@ -50,9 +50,9 @@ function SCN.swapUpdate(dt)
     S.time=S.time-dt
     if S.time<S.changeTime and S.time+dt>=S.changeTime then
         -- Scene swapped this frame
-        SCN.init(S.tar)
         SCN.stack[#SCN.stack]=S.tar
-        SCN.current=S.tar
+        SCN.cur=S.tar
+        SCN.init(S.tar)
         SCN.mainTouchID=nil
     end
     if S.time<0 then
