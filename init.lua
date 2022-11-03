@@ -548,6 +548,7 @@ local function secondLoopThread()
     repeat yield() until mainLoop()
 end
 function love.errorhandler(msg)
+
     if type(msg)~='string' then
         msg="Unknown error"
     elseif msg:find("Invalid UTF-8") and text then
@@ -574,15 +575,15 @@ function love.errorhandler(msg)
     love.audio.stop()
     gc.reset()
 
+    local sceneStack=SCN and table.concat(SCN.stack,"/") or "NULL"
     if LOADED and #errData<3 then
         BG.set('none')
-        local scn=SCN and SCN.stack[#SCN.stack] or "NULL"
-        table.insert(errData,{mes=err,scene=scn})
+        table.insert(errData,{mes=err,scene=sceneStack})
 
         -- Write messages to log file
         love.filesystem.append('conf/error.log',
             os.date("%Y/%m/%d %A %H:%M:%S\n")..
-            #errData.." crash(es) "..love.system.getOS().."-"..VERSION.string.."  scene: "..scn.."\n"..
+            #errData.." crash(es) "..love.system.getOS().."-"..VERSION.string.."  scene: "..sceneStack.."\n"..
             table.concat(err,"\n",1,c-2).."\n\n"
         )
 
@@ -623,7 +624,7 @@ function love.errorhandler(msg)
             FONT.set(100)gc_print(":(",100,0,0,1.2)
             FONT.set(40)gc.printf(errorMsg,100,160,SCR.w0-100)
             FONT.set(20)
-            gc_print(love.system.getOS().."-"..VERSION.string.."                          scene:"..(SCN and SCN.stack[#SCN.stack] or "NULL_E"),100,660)
+            gc_print(love.system.getOS().."-"..VERSION.string.."    scene:"..sceneStack,100,660)
             gc.printf(err[1],100,360,1260-100)
             gc_print("TRACEBACK",100,450)
             for i=4,#err-2 do

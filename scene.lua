@@ -12,6 +12,7 @@ local SCN={
     },
     stack={},-- Scene stack
     prev=false,
+    current=false,
     args={},-- Arguments from previous scene
 
     scenes=scenes,
@@ -50,6 +51,8 @@ function SCN.swapUpdate(dt)
     if S.time<S.changeTime and S.time+dt>=S.changeTime then
         -- Scene swapped this frame
         SCN.init(S.tar)
+        SCN.stack[#SCN.stack]=S.tar
+        SCN.current=S.tar
         SCN.mainTouchID=nil
     end
     if S.time<0 then
@@ -158,9 +161,9 @@ local swap={
 function SCN.swapTo(tar,style,...)-- Parallel scene swapping, cannot back
     if scenes[tar] then
         if not SCN.swapping then
-            style=style or 'fade'
             SCN.prev=SCN.stack[#SCN.stack]
-            SCN.stack[#SCN.stack]=tar
+
+            style=style or 'fade'
             SCN.swapping=true
             SCN.args={...}
             local S=SCN.state
