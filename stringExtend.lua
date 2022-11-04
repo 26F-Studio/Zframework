@@ -37,7 +37,7 @@ do-- function STRING.shiftChar(c)
 end
 
 function STRING.trim(s)
-    if not s:find("%S") then return"" end
+    if not s:find("%S") then return "" end
     s=s:sub((s:find("%S"))):reverse()
     return s:sub((s:find("%S"))):reverse()
 end
@@ -111,7 +111,7 @@ do-- function STRING.bigInt(t)
             local e=int(lg(t)/3)
             return(t/10^(e*3))..units[e+1]
         else
-            return"INF"
+            return "INF"
         end
     end
 end

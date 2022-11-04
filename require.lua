@@ -13,9 +13,9 @@ return function(libName)
                 arch=p:read('*a'):lower()
                 p:close()
                 if arch:find('v8') and not arch:find('v8l') or arch:find('64') then
-                    return'arm64-v8a'
+                    return 'arm64-v8a'
                 else
-                    return'armeabi-v7a'
+                    return 'armeabi-v7a'
                 end
             end)()
             love.filesystem.write(

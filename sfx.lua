@@ -94,7 +94,7 @@ end
 
 function SFX.getNoteName(note)
     if note<1 then
-        return'---'
+        return '---'
     else
         note=note-1
         local octave=int(note/12)+1
