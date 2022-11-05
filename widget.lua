@@ -1031,8 +1031,8 @@ function textBox:update(dt)
 end
 function textBox:push(t)
     ins(self.texts,t)
-    if self.scrollPos==(#self.texts-1-self.capacity)*self.lineH then-- minus 1 for the new message
-        self.scrollPos=min(self.scrollPos+self.lineH,(#self.texts-self.capacity)*self.lineH)
+    if self.scrollPos>(#self.texts-1.5)*self.lineH-self.h then-- minus 1 for the new message
+        self.scrollPos=max(0,min(self.scrollPos+self.lineH,#self.texts*self.lineH-self.h))
     end
 end
 function textBox:press(x,y)
@@ -1048,7 +1048,7 @@ function textBox:press(x,y)
     end
 end
 function textBox:drag(_,_,_,dy)
-    self.scrollPos=max(0,min(self.scrollPos-dy,(#self.texts-self.capacity)*self.lineH))
+    self.scrollPos=max(0,min(self.scrollPos-dy,#self.texts*self.lineH-self.h))
 end
 function textBox:scroll(dir)
     if type(dir)=='string' then
@@ -1071,10 +1071,10 @@ function textBox:arrowKey(k)
 end
 function textBox:draw()
     local x,y,w,h=self.x,self.y,self.w,self.h
-    local texts=self.texts
+    local list=self.texts
     local scrollPos=self.scrollPos
-    local cap=self.capacity
     local lineH=self.lineH
+    local H=#list*lineH
 
     -- Background
     gc_setColor(0,0,0,.3)
@@ -1092,9 +1092,9 @@ function textBox:draw()
 
         -- Slider
         gc_setColor(1,1,1)
-        if #texts>cap then
-            local len=h*h/(#texts*lineH)
-            gc_rectangle('fill',-15,(h-len)*scrollPos/((#texts-cap)*lineH),12,len,3)
+        if #list>self.capacity then
+            local len=h*h/H
+            gc_rectangle('fill',-15,(h-len)*scrollPos/(H-h),12,len,3)
         end
 
         -- Clear button
@@ -1108,8 +1108,10 @@ function textBox:draw()
         gc_stencil(_rectangleStencil)
         gc_translate(0,-(scrollPos%lineH))
         local pos=int(scrollPos/lineH)
-        for i=pos+1,min(pos+cap+1,#texts) do
-            gc_printf(texts[i],10,4,w-16)
+        for i=pos+1,min(pos+self.capacity+1,#list) do
+            if list[i]~=nil then
+                gc_printf(list[i],10,4,w-16)
+            end
             gc_translate(0,lineH)
         end
         gc_setStencilTest()
@@ -1224,7 +1226,7 @@ function listBox:press(x,y)
     end
 end
 function listBox:drag(_,_,_,dy)
-    self.scrollPos=max(0,min(self.scrollPos-dy,(#self.list-self.capacity)*self.lineH))
+    self.scrollPos=max(0,min(self.scrollPos-dy,#self.list*self.lineH-self.h))
 end
 function listBox:scroll(n)
     self:drag(nil,nil,nil,-n*self.lineH)
@@ -1254,8 +1256,8 @@ function listBox:draw()
     local x,y,w,h=self.x,self.y,self.w,self.h
     local list=self.list
     local scrollPos=self.scrollPos
-    local cap=self.capacity
     local lineH=self.lineH
+    local H=#list*lineH
 
     gc_push('transform')
         gc_translate(x,y)
@@ -1270,10 +1272,10 @@ function listBox:draw()
         gc_rectangle('line',0,0,w,h,3)
 
         -- Slider
-        if #list>cap then
+        if #list>self.capacity then
             gc_setColor(1,1,1)
-            local len=h*h/(#list*lineH)
-            gc_rectangle('fill',-15,(h-len)*scrollPos/((#list-cap)*lineH),12,len,3)
+            local len=h*h/H
+            gc_rectangle('fill',-15,(h-len)*scrollPos/(H-h),12,len,3)
         end
 
         -- List
@@ -1282,8 +1284,10 @@ function listBox:draw()
             gc_stencil(_rectangleStencil)
             local pos=int(scrollPos/lineH)
             gc_translate(0,-(scrollPos%lineH))
-            for i=pos+1,min(pos+cap+1,#list) do
-                self.drawF(list[i],i,i==self.selected)
+            for i=pos+1,min(pos+self.capacity+1,#list) do
+                if list[i]~=nil then
+                    self.drawF(list[i],i,i==self.selected)
+                end
                 gc_translate(0,lineH)
             end
         gc_setStencilTest()
