@@ -66,8 +66,8 @@ function SCN.init(s)
 
     WIDGET.setScrollHeight(S.widgetScrollHeight)
     WIDGET.setWidgetList(S.widgetList)
-    SCN.sceneInit=S.sceneInit
-    SCN.sceneBack=S.sceneBack
+    SCN.enter=S.enter
+    SCN.leave=S.leave
     SCN.mouseDown=S.mouseDown
     SCN.mouseMove=S.mouseMove
     SCN.mouseUp=S.mouseUp
@@ -86,8 +86,8 @@ function SCN.init(s)
     SCN.resize=S.resize
     SCN.update=S.update
     SCN.draw=S.draw
-    if S.sceneInit then
-        S.sceneInit()
+    if S.enter then
+        S.enter()
     end
 end
 function SCN.push(tar)
@@ -190,8 +190,8 @@ function SCN.back(style,...)
     if SCN.swapping then return end
 
     -- Leave scene
-    if SCN.sceneBack then
-        SCN.sceneBack()
+    if SCN.leave then
+        SCN.leave()
     end
 
     -- Poll&Back to previous Scene
@@ -206,8 +206,8 @@ function SCN.backTo(tar,style,...)
     if SCN.swapping then return end
 
     -- Leave scene
-    if SCN.sceneBack then
-        SCN.sceneBack()
+    if SCN.leave then
+        SCN.leave()
     end
 
     -- Poll&Back to previous Scene
