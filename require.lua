@@ -29,7 +29,8 @@ return function(libName)
     if success and res then
         return res
     else
-        MES.new('error',"Cannot load "..libName..": "..res)
+        print(res)
+        MES.new('error',"Cannot load "..libName..": "..tostring(res):gsub('[\128-\255]+','??'))
         MES.new('info',"Architecture: "..arch)
     end
 end
