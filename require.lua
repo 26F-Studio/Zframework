@@ -3,11 +3,12 @@ local loaded={}
 return function(libName)
     local require=require
     local arch='unknown'
+    local success,res
     if love.system.getOS()=='OS X' then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
-        libName=nil
-    elseif love.system.getOS()=='Android' then
-        if not loaded[libName] then
+        success,res=pcall(require)
+    else
+        if love.system.getOS()=='Android' and not loaded[libName] then
             local platform=(function()
                 local p=io.popen('uname -m')
                 arch=p:read('*a'):lower()
@@ -24,12 +25,11 @@ return function(libName)
             )
             loaded[libName]=true
         end
+        success,res=pcall(require,libName)
     end
-    local success,res=pcall(require,libName)
     if success and res then
         return res
     else
-        print(res)
         MES.new('error',"Cannot load "..libName..": "..tostring(res):gsub('[\128-\255]+','??'))
         MES.new('info',"Architecture: "..arch)
     end
