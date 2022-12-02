@@ -1,4 +1,4 @@
-package.cpath=package.cpath..';'..love.filesystem.getSaveDirectory()..'/lib/lib?.so;'..'?.dylib'
+package.cpath=package.cpath..';'..love.filesystem.getSaveDirectory()..'/lib/?.so;'..'?.dylib'
 local loaded={}
 return function(libName)
     local require=require
@@ -20,8 +20,8 @@ return function(libName)
                 end
             end)()
             love.filesystem.write(
-                'lib/libCCloader.so',
-                love.filesystem.read('data','libAndroid/'..platform..'/libCCloader.so')
+                'lib/'..libName..'.so',
+                love.filesystem.read('data','libAndroid/'..platform..'/'..libName..'.so')
             )
             loaded[libName]=true
         end
