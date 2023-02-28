@@ -674,7 +674,12 @@ function love.run()
 
     -- Scene Launch
     while #SCN.stack>0 do SCN.pop() end
-    SCN.init(#errData==0 and 'load' or 'error')
+    if #errData>0 then
+        SCN.cur='error'
+        SCN.init('error')
+    else
+        SCN.init('load')
+    end
 
     return function()
         local _
