@@ -145,12 +145,13 @@ do-- function GC.DO(L)
     local sizeLimit=gc.getSystemLimits().texturesize
     function GC.DO(L)
         gc.push()
-            ::REPEAT_tryAgain::
-            local success,canvas=pcall(gc.newCanvas,math.min(L[1],sizeLimit),math.min(L[2],sizeLimit))
-            if not success then
-                sizeLimit=math.floor(sizeLimit*.8)
-                goto REPEAT_tryAgain
-            end
+            local success,canvas
+            repeat
+                success,canvas=pcall(gc.newCanvas,math.min(L[1],sizeLimit),math.min(L[2],sizeLimit))
+                if not success then
+                    sizeLimit=math.floor(sizeLimit*.8)
+                end
+            until success
             gc.setCanvas(canvas)
                 gc.origin()
                 gc.clear(1,1,1,0)
