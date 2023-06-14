@@ -258,6 +258,8 @@ function love.mousereleased(x,y,k,touch)
     end
 end
 function love.wheelmoved(x,y)
+    if math.abs(x)>=100 then x=x/100 end
+    if math.abs(y)>=100 then y=y/100 end
     if WAIT.state or SCN.swapping then return end
     if SCN.wheelMoved then
         SCN.wheelMoved(x,y)
