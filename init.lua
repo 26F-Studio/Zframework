@@ -2,6 +2,9 @@ NONE={}function NULL() end PAPER=love.graphics.newCanvas(1,1)
 EDITING=""
 LOADED=false
 
+-- Polyfill module as LuaJIT fallback
+POLYFILL=   require"Zframework.polyfill"
+
 -- Pure lua modules (basic)
 MATH=       require'Zframework.mathExtend'
 COLOR=      require'Zframework.color'
