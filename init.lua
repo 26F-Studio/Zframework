@@ -2,8 +2,12 @@ NONE={}function NULL() end PAPER=love.graphics.newCanvas(1,1)
 EDITING=""
 LOADED=false
 
--- Polyfill module as LuaJIT fallback
-POLYFILL=   require"Zframework.polyfill"
+-- Bit module
+local success
+success,bit=pcall(require,"bit")
+if not success then
+    bit=require"Zframework.bitop".bit
+end
 
 -- Pure lua modules (basic)
 MATH=       require'Zframework.mathExtend'
