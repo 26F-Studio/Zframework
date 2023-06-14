@@ -41,7 +41,7 @@ TASK=       require'Zframework.task'
 LANG=       require'Zframework.languages'
 HASH=       require'Zframework.sha2'
 do
-    local bxor=require'bit'.bxor
+    local bxor=bit.bxor
     local char=string.char
     local function sxor(s1, s2)
         local b3=""
