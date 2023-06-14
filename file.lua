@@ -1,7 +1,7 @@
 local fs=love.filesystem
 local FILE={}
 function FILE.isSafe(file)
-    return fs.getRealDirectory(file)~=fs.getSaveDirectory()
+    return SYSTEM=='Web' or fs.getRealDirectory(file)~=fs.getSaveDirectory()
 end
 function FILE.load(name,args)
     if not args then args='' end

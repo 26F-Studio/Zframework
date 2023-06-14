@@ -4,11 +4,14 @@ return function(libName)
     local require=require
     local arch='unknown'
     local success,res
-    if love.system.getOS()=='OS X' then
+    if SYSTEM=='Web' then
+        return
+    end
+    if SYSTEM=='OS X' then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
         success,res=pcall(require)
     else
-        if love.system.getOS()=='Android' and not loaded[libName] then
+        if SYSTEM=='Android' and not loaded[libName] then
             local platform=(function()
                 local p=io.popen('uname -m')
                 arch=p:read('*a'):lower()
