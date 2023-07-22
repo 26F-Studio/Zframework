@@ -171,6 +171,40 @@ function TABLE.remDuplicate(org)
     end
 end
 
+--[[
+    Run length encoder. Input must be a list containing non-nil value(s).  
+    Example:  
+    - Input: {1, 1, 2, 2, 2, 1}  
+    - Output: {{1, 2}, {2, 3}, {1, 1}}  
+    - This means: "Two 1's in a row", "Three 2's in a row", "One 1 in a row"
+]]
+function TABLE.RLE(org)
+    local output={}
+    local currentElement=nil
+    local currentCount=0
+
+    for i=1, #org do
+        local element=org[i]
+
+        if  (element==currentElement) or -- normal equality test, then table equality test
+            (type(element)==type(currentElement) and type(currentElement)=='table' and TABLE.compare(element,currentElement)) then
+            currentCount = currentCount + 1
+        else
+            if currentElement then
+                table.insert(output, {currentElement, currentCount})
+            end
+            currentElement = element
+            currentCount = 1
+        end
+    end
+
+    if currentElement then
+        table.insert(output, {currentElement, currentCount})
+    end
+
+    return output
+end
+
 --------------------------------------------------------------
 
 -- Reverse [1~#]
