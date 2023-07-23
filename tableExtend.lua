@@ -244,6 +244,22 @@ function TABLE.find(t,val,start)
     for i=start or 1,#t do if t[i]==val then return i end end
 end
 
+-- Get subset of table, like string.sub
+function TABLE.sub(t,i,j)
+    local length=#t
+    i=i or 1
+    j=j or length
+    if i<1 then i=length+i+1 end
+    if j<1 then j=length+j+1 end
+
+    local subTable={}
+    for k=i,j do
+        table.insert(subTable, t[k])
+    end
+
+    return subTable
+end
+
 -- Replace value in [1~#], like string.gsub
 function TABLE.gsub(t,v_old,v_new,count,start)
     if not start then start=1 end
