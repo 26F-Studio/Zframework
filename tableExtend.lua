@@ -1,6 +1,7 @@
 local rnd=math.random
+local min,max=math.min,math.max
 local find=string.find
-local rem=table.remove
+local ins,rem=table.insert,table.remove
 local next,type=next,type
 local TABLE={}
 
@@ -47,7 +48,7 @@ end
 
 --------------------------------------------------------------
 
--- Get a full copy of a table, depth = how many layers will be recreate, default to inf
+-- Get a full copy of a table, depth=how many layers will be recreate, default to inf
 function TABLE.copy(org,depth)
     if not depth then depth=1e99 end
     local L={}
@@ -180,26 +181,25 @@ end
 ]]
 function TABLE.RLE(org)
     local output={}
-    local currentElement=nil
-    local currentCount=0
+    local cur=nil
+    local count=0
 
-    for i=1, #org do
-        local element=org[i]
+    for i=1,#org do
+        local item=org[i]
 
-        if  (element==currentElement) or -- normal equality test, then table equality test
-            (type(element)==type(currentElement) and type(currentElement)=='table' and TABLE.compare(element,currentElement)) then
-            currentCount = currentCount + 1
+        if item==cur then
+            count=count+1
         else
-            if currentElement then
-                table.insert(output, {currentElement, currentCount})
+            if cur then
+                ins(output,{cur,count})
             end
-            currentElement = element
-            currentCount = 1
+            cur=item
+            count=1
         end
     end
 
-    if currentElement then
-        table.insert(output, {currentElement, currentCount})
+    if cur then
+        ins(output,{cur,count})
     end
 
     return output
@@ -246,17 +246,10 @@ end
 
 -- Get subset of table, like string.sub
 function TABLE.sub(t,i,j)
-    local length=#t
-    i=i or 1
-    j=j or length
-    if i<1 then i=length+i+1 end
-    if j<1 then j=length+j+1 end
-
     local subTable={}
-    for k=i,j do
-        table.insert(subTable, t[k])
+    for k=max(i,1),min(j,#t) do
+        subTable[k-i+1]=t[k]
     end
-
     return subTable
 end
 
