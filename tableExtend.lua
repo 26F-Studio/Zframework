@@ -247,7 +247,7 @@ end
 -- Get subset of table, like string.sub
 function TABLE.sub(t,i,j)
     local subTable={}
-    for k=max(i,1),min(j,#t) do
+    for k=max(i,1),(j and min(j,#t) or #t) do
         subTable[k-i+1]=t[k]
     end
     return subTable
