@@ -1161,6 +1161,8 @@ local listBox={
     keepFocus=true,
     scrollPos=0,-- Scroll-down-distance
     selected=0,-- Hidden wheel move value
+    _pressX=false,
+    _pressY=false,
 }
 function listBox:reset()
     -- haha nothing here too, techmino is really fun!
@@ -1213,19 +1215,29 @@ function listBox:remove()
     end
 end
 function listBox:press(x,y)
+    self._pressX=x
+    self._pressY=y
+end
+function listBox:release(x,y)
     if not (x and y) then return end
-    x,y=x-self.x,y-self.y
-    if not (x and y and x>0 and y>0 and x<=self.w and y<=self.h) then return end
-    self:drag(0,0,0,0)
-    y=int((y+self.scrollPos)/self.lineH)+1
-    if self.list[y] then
-        if self.selected~=y then
-            self.selected=y
-            SFX.play('selector',.8,0,12)
+    if self._pressX then
+        self._pressX,self._pressY=false,false
+        x,y=x-self.x,y-self.y
+        if not (x and y and x>0 and y>0 and x<=self.w and y<=self.h) then return end
+        y=math.floor((y+self.scrollPos)/self.lineH)+1
+        if self.list[y] then
+            if self.selected~=y then
+                self.selected=y
+                self:drag(0,0,0,0)
+                SFX.play('selector',.8,0,12)
+            end
         end
     end
 end
-function listBox:drag(_,_,_,dy)
+function listBox:drag(x,y,_,dy)
+    if self._pressX and MATH.distance(x,y,self._pressX,self._pressY)>10 then
+        self._pressX,self._pressY=false,false
+    end
     self.scrollPos=max(0,min(self.scrollPos-dy,#self.list*self.lineH-self.h))
 end
 function listBox:scroll(n)
