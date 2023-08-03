@@ -173,10 +173,10 @@ function TABLE.remDuplicate(org)
 end
 
 --[[
-    Run length encoder. Input must be a list containing non-nil value(s).  
-    Example:  
-    - Input: {1, 1, 2, 2, 2, 1}  
-    - Output: {{1, 2}, {2, 3}, {1, 1}}  
+    Run length encoder. Input must be a list containing non-nil value(s).
+    Example:
+    - Input: {1, 1, 2, 2, 2, 1}
+    - Output: {{1, 2}, {2, 3}, {1, 1}}
     - This means: "Two 1's in a row", "Three 2's in a row", "One 1 in a row"
 ]]
 function TABLE.RLE(org)
