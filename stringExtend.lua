@@ -72,17 +72,56 @@ function STRING.simpEmailCheck(e)
     return true
 end
 
+local MINUTE=60
+local HOUR=3600
+local DAY=86400
+local YEAR=31536000 -- 365 days
+local function convertSecondsToUnits(t) -- convert seconds to {seconds, minutes, hours, days, years}
+    local years=int(t/YEAR)
+    local remainder=t%YEAR
+    
+    local days=int(remainder/DAY)
+    remainder=remainder%DAY
+
+    local hours=int(remainder/HOUR)
+    remainder=remainder%HOUR
+
+    local minutes=int(remainder/MINUTE)
+    local seconds=remainder%MINUTE
+    return seconds,minutes,hours,days,years
+end
+
 function STRING.time_simp(t)
-    return format("%02d:%02d",int(t/60),int(t%60))
+    return format("%02d:%02d",int(t/MINUTE),int(t%MINUTE))
 end
 
 function STRING.time(t)
-    if t<60 then
-        return format("%.3f″",t)
-    elseif t<3600 then
-        return format("%d′%05.2f″",int(t/60),int(t%60*100)/100)
+    local s,m,h,d,y=convertSecondsToUnits(t)
+    if t<MINUTE then
+        return format("%.3f″",t) -- example: 12.345″
+    elseif t<HOUR then
+        return format("%d′%05.2f″",m,s) -- 1′23.45″
+    elseif t<DAY then
+        return format("%d:%.2d′%04.1f″",h,m,s) -- 12:34′56.7″
+    elseif t<YEAR then
+        return format("%dd %d:%.2d′%.2d″",d,h,m,s) -- 123d 12:34′56″
     else
-        return format("%d:%.2d′%05.2f″",int(t/3600),int(t/60%60),int(t%60*100)/100)
+        return format("%dy %dd %d:%.2d′",y,d,h,m) -- 1y 234d 12:34′
+    end
+end
+
+function STRING.time_ext(t)
+    local s,m,h,d,y=convertSecondsToUnits(t)
+    if t<MINUTE then
+        return format("%.5f″",t) -- 12.34567″
+    elseif t<HOUR then
+        return format("%d′%06.3f″",m,s) -- 1′23.456″
+    elseif t<DAY then
+        return format("%d:%.2d′%05.2f″",h,m,s) -- 12:34′56.78″
+    elseif t<YEAR then
+        return format("%dd %d:%.2d′%04.1f″",d,h,m,s) -- 123d 12:34′56.7″
+    else
+        return format("%dy %dd %d:%.2d′%.2d″",y,d,h,m,s) -- 1y 234d 12:34′56″
     end
 end
 
