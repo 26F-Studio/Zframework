@@ -36,6 +36,20 @@ do-- function STRING.shiftChar(c)
     end
 end
 
+local upperData,lowerData
+function STRING.upperUTF8(str)
+    for _,pair in next,upperData do
+        str=str:gsub(pair[1],pair[2])
+    end
+    return str
+end
+function STRING.lowerUTF8(str)
+    for _,pair in next,lowerData do
+        str=str:gsub(pair[1],pair[2])
+    end
+    return str
+end
+
 function STRING.trim(s)
     if not s:find("%S") then return "" end
     s=s:sub((s:find("%S"))):reverse()
@@ -307,5 +321,26 @@ end
 function STRING.unpackTable(t)
     return JSON.decode(STRING.unpackText(t))
 end
+
+repeat
+    local f=io.open('Zframework/upcaser.txt','r')
+    if not f then break end
+    upperData=STRING.split(gsub(f:read('a'),'\n',','),',')
+    for i=1,#upperData do
+        local pair=STRING.split(upperData[i],'=')
+        -- upperData[pair[1]]=pair[2]
+        upperData[i]=pair
+    end
+    f:close()
+    f=io.open('Zframework/lowcaser.txt','r')
+    if not f then break end
+    lowerData=STRING.split(gsub(f:read('a'),'\n',','),',')
+    for i=1,#lowerData do
+        local pair=STRING.split(lowerData[i],'=')
+        -- lowerData[pair[1]]=pair[2]
+        lowerData[i]=pair
+    end
+    f:close()
+until true
 
 return STRING
