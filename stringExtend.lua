@@ -1,7 +1,7 @@
 local data=love.data
 local STRING={}
 local assert,tostring,tonumber=assert,tostring,tonumber
-local int,format=math.floor,string.format
+local floorint,format=math.floor,string.format
 local find,sub,gsub=string.find,string.sub,string.gsub
 local rep,upper=string.rep,string.upper
 local char,byte=string.char,string.byte
@@ -91,22 +91,22 @@ local HOUR=3600
 local DAY=86400
 local YEAR=31536000 -- 365 days
 local function convertSecondsToUnits(t) -- convert seconds to {seconds, minutes, hours, days, years}
-    local years=int(t/YEAR)
+    local years=floorint(t/YEAR)
     local remainder=t%YEAR
-    
-    local days=int(remainder/DAY)
+
+    local days=floorint(remainder/DAY)
     remainder=remainder%DAY
 
-    local hours=int(remainder/HOUR)
+    local hours=floorint(remainder/HOUR)
     remainder=remainder%HOUR
 
-    local minutes=int(remainder/MINUTE)
+    local minutes=floorint(remainder/MINUTE)
     local seconds=remainder%MINUTE
     return seconds,minutes,hours,days,years
 end
 
 function STRING.time_simp(t)
-    return format("%02d:%02d",int(t/MINUTE),int(t%MINUTE))
+    return format("%02d:%02d",floorint(t/MINUTE),floorint(t%MINUTE))
 end
 
 function STRING.time(t)
@@ -143,11 +143,11 @@ function STRING.UTF8(n)-- Simple utf8 coding
     assert(type(n)=='number',"Wrong type ("..type(n)..")")
     assert(n>=0 and n<2^31,"Out of range ("..n..")")
     if n<2^7 then return char(n)
-    elseif n<2^11 then return char(192+int(n/2^06),128+n%2^6)
-    elseif n<2^16 then return char(224+int(n/2^12),128+int(n/2^06)%2^6,128+n%2^6)
-    elseif n<2^21 then return char(240+int(n/2^18),128+int(n/2^12)%2^6,128+int(n/2^06)%2^6,128+n%2^6)
-    elseif n<2^26 then return char(248+int(n/2^24),128+int(n/2^18)%2^6,128+int(n/2^12)%2^6,128+int(n/2^06)%2^6,128+n%2^6)
-    elseif n<2^31 then return char(252+int(n/2^30),128+int(n/2^24)%2^6,128+int(n/2^18)%2^6,128+int(n/2^12)%2^6,128+int(n/2^06)%2^6,128+n%2^6)
+    elseif n<2^11 then return char(192+floorint(n/2^06),128+n%2^6)
+    elseif n<2^16 then return char(224+floorint(n/2^12),128+floorint(n/2^06)%2^6,128+n%2^6)
+    elseif n<2^21 then return char(240+floorint(n/2^18),128+floorint(n/2^12)%2^6,128+floorint(n/2^06)%2^6,128+n%2^6)
+    elseif n<2^26 then return char(248+floorint(n/2^24),128+floorint(n/2^18)%2^6,128+floorint(n/2^12)%2^6,128+floorint(n/2^06)%2^6,128+n%2^6)
+    elseif n<2^31 then return char(252+floorint(n/2^30),128+floorint(n/2^24)%2^6,128+floorint(n/2^18)%2^6,128+floorint(n/2^12)%2^6,128+floorint(n/2^06)%2^6,128+n%2^6)
     end
 end
 
@@ -161,7 +161,7 @@ do-- function STRING.bigInt(t)
         if t<1000 then
             return tostring(t)
         elseif t~=1e999 then
-            local e=int(lg(t)/3)
+            local e=floorint(lg(t)/3)
             return(t/10^(e*3))..units[e+1]
         else
             return "INF"
@@ -174,7 +174,7 @@ do-- function STRING.toBin, STRING.toOct, STRING.toHex(n,len)
         local s=""
         while n>0 do
             s=(n%2)..s
-            n=int(n/2)
+            n=floorint(n/2)
         end
         if len then
             return rep("0",len-#s)..s
@@ -186,7 +186,7 @@ do-- function STRING.toBin, STRING.toOct, STRING.toHex(n,len)
         local s=""
         while n>0 do
             s=(n%8)..s
-            n=int(n/8)
+            n=floorint(n/8)
         end
         if len then
             return rep("0",len-#s)..s
@@ -199,7 +199,7 @@ do-- function STRING.toBin, STRING.toOct, STRING.toHex(n,len)
         local s=""
         while n>0 do
             s=b16[n%16]..s
-            n=int(n/16)
+            n=floorint(n/16)
         end
         if len then
             return rep("0",len-#s)..s

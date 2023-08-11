@@ -13,7 +13,7 @@ local kb=love.keyboard
 local timer=love.timer.getTime
 
 local next=next
-local int,ceil=math.floor,math.ceil
+local floor,ceil=math.floor,math.ceil
 local max,min=math.max,math.min
 local sub,ins,rem=string.sub,table.insert,table.remove
 local xOy=SCR.xOy
@@ -528,10 +528,10 @@ local sliderShowFunc={
         return S.disp()
     end,
     float=function(S)
-        return int(S.disp()*100+.5)*.01
+        return floor(S.disp()*100+.5)*.01
     end,
     percent=function(S)
-        return int(S.disp()*100+.5).."%"
+        return floor(S.disp()*100+.5).."%"
     end,
 }
 function slider:reset()
@@ -622,7 +622,7 @@ function slider:drag(x)
         newVal=(1-newPos)*self.rangeL+newPos*self.rangeR
     else
         newVal=newPos*(self.rangeR-self.rangeL)
-        newVal=self.rangeL+int(newVal/self.unit+.5)*self.unit
+        newVal=self.rangeL+floor(newVal/self.unit+.5)*self.unit
     end
     if newVal~=self.disp() then
         self.code(newVal)
@@ -982,7 +982,7 @@ function WIDGET.newInputBox(D)-- name,x,y,w[,h][,font=30][,fType][,secret][,rege
             D.x+D.w*.8,D.y,
         },
 
-        font=  D.font or int(D.h/7-1)*5,
+        font=  D.font or floor(D.h/7-1)*5,
         fType= D.fType,
         secret=D.secret==true,
         regex= D.regex,
@@ -1107,7 +1107,7 @@ function textBox:draw()
         STW,STH=w,h
         gc_stencil(_rectangleStencil)
         gc_translate(0,-(scrollPos%lineH))
-        local pos=int(scrollPos/lineH)
+        local pos=floor(scrollPos/lineH)
         for i=pos+1,min(pos+self.capacity+1,#list) do
             if list[i]~=nil then
                 gc_printf(list[i],10,4,w-16)
@@ -1246,21 +1246,21 @@ end
 function listBox:arrowKey(dir)
     if dir=="up" then
         self.selected=max(self.selected-1,1)
-        if self.selected<int(self.scrollPos/self.lineH)+2 then
+        if self.selected<floor(self.scrollPos/self.lineH)+2 then
             self:drag(nil,nil,nil,self.lineH)
         end
     elseif dir=="down" then
         self.selected=min(self.selected+1,#self.list)
-        if self.selected>int(self.scrollPos/self.lineH)+self.capacity-1 then
+        if self.selected>floor(self.scrollPos/self.lineH)+self.capacity-1 then
             self:drag(nil,nil,nil,-self.lineH)
         end
     end
 end
 function listBox:select(i)
     self.selected=i
-    if self.selected<int(self.scrollPos/self.lineH)+2 then
+    if self.selected<floor(self.scrollPos/self.lineH)+2 then
         self:drag(nil,nil,nil,1e99)
-    elseif self.selected>int(self.scrollPos/self.lineH)+self.capacity-1 then
+    elseif self.selected>floor(self.scrollPos/self.lineH)+self.capacity-1 then
         self:drag(nil,nil,nil,-1e99)
     end
 end
@@ -1294,7 +1294,7 @@ function listBox:draw()
         gc_setStencilTest('equal',1)
             STW,STH=w,h
             gc_stencil(_rectangleStencil)
-            local pos=int(scrollPos/lineH)
+            local pos=floor(scrollPos/lineH)
             gc_translate(0,-(scrollPos%lineH))
             for i=pos+1,min(pos+self.capacity+1,#list) do
                 if list[i]~=nil then

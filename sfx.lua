@@ -1,5 +1,5 @@
 local type,rem=type,table.remove
-local int,rnd=math.floor,math.random
+local floor,rnd=math.floor,math.random
 
 local sfxList={}
 local packSetting={}
@@ -97,7 +97,7 @@ function SFX.getNoteName(note)
         return '---'
     else
         note=note-1
-        local octave=int(note/12)+1
+        local octave=floor(note/12)+1
         return noteName[note%12+1]..octave
     end
 end
