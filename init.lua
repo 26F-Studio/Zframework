@@ -105,7 +105,7 @@ local ITP=xOy.inverseTransformPoint
 
 local max,min=math.max,math.min
 
-local devMode
+local debugMode
 local mx,my,mouseShow,cursorSpd=640,360,false,0
 local jsState={}-- map, joystickID->axisStates: {axisName->axisVal}
 local errData={}-- list, each error create {mes={errMes strings},scene=sceneNameStr}
@@ -225,7 +225,7 @@ function love.mousepressed(x,y,k,touch)
     if touch or WAIT.state then return end
     mouseShow=true
     mx,my=ITP(xOy,x,y)
-    if devMode==1 then
+    if debugMode==1 then
         print(("(%d,%d)<-%d,%d ~~(%d,%d)<-%d,%d"):format(
             mx,my,
             mx-lastX,my-lastY,
@@ -311,12 +311,12 @@ end
 
 local globalKey={
     f8=function()
-        devMode=1
+        debugMode=1
         MES.new('info',"DEBUG ON",.2)
     end
 }
 local fnKey={NULL,NULL,NULL,NULL,NULL,NULL,NULL}
-local function noDevkeyPressed(key)
+local function debugKeyPressed(key)
     if key=='f1' then      fnKey[1]()
     elseif key=='f2' then  fnKey[2]()
     elseif key=='f3' then  fnKey[3]()
@@ -324,12 +324,12 @@ local function noDevkeyPressed(key)
     elseif key=='f5' then  fnKey[5]()
     elseif key=='f6' then  fnKey[6]()
     elseif key=='f7' then  fnKey[7]()
-    elseif key=='f8' then  devMode=nil MES.new('info',"DEBUG OFF",.2)
-    elseif key=='f9' then  devMode=1   MES.new('info',"DEBUG 1")
-    elseif key=='f10' then devMode=2   MES.new('info',"DEBUG 2")
-    elseif key=='f11' then devMode=3   MES.new('info',"DEBUG 3")
-    elseif key=='f12' then devMode=4   MES.new('info',"DEBUG 4")
-    elseif devMode==2 then
+    elseif key=='f8' then  debugMode=nil MES.new('info',"DEBUG OFF",.2)
+    elseif key=='f9' then  debugMode=1   MES.new('info',"DEBUG 1")
+    elseif key=='f10' then debugMode=2   MES.new('info',"DEBUG 2")
+    elseif key=='f11' then debugMode=3   MES.new('info',"DEBUG 3")
+    elseif key=='f12' then debugMode=4   MES.new('info',"DEBUG 4")
+    elseif debugMode==2 then
         local W=WIDGET.sel
         if W then
             if key=='left' then W.x=W.x-10
@@ -342,18 +342,19 @@ local function noDevkeyPressed(key)
             elseif key=='\'' then W.h=W.h+10
             elseif key=='[' then W.font=W.font-5
             elseif key==']' then W.font=W.font+5
-            else return true
+            else return
             end
         else
-            return true
+            return
         end
     else
-        return true
+        return
     end
+    return true
 end
 function love.keypressed(key,_,isRep)
     mouseShow=false
-    if devMode and not noDevkeyPressed(key) then
+    if debugMode and debugKeyPressed(key) then
         -- Do nothing
     elseif globalKey[key] then
         globalKey[key]()
@@ -649,7 +650,7 @@ love.threaderror=nil
 
 love.draw,love.update=nil-- remove default draw/update
 
-local devColor={
+local debugColor={
     COLOR.Z,
     COLOR.lM,
     COLOR.lG,
@@ -779,9 +780,9 @@ function love.run()
                     gc_print(FPS(),safeX+5,-20)
 
                     -- Debug info.
-                    if devMode then
+                    if debugMode then
                         -- Debug infos at left-down
-                        gc_setColor(devColor[devMode])
+                        gc_setColor(debugColor[debugMode])
 
                         -- Text infos
                         for i=1,#debugInfos do
@@ -846,11 +847,11 @@ function love.run()
             end
         end
 
-        -- Slow devmode
-        if devMode then
-            if devMode==3 then
+        -- Slow debugmode
+        if debugMode then
+            if debugMode==3 then
                 SLEEP(.1)
-            elseif devMode==4 then
+            elseif debugMode==4 then
                 SLEEP(.5)
             end
         end
@@ -894,7 +895,7 @@ function Z.setDebugInfo(list)
     debugInfos=list
 end
 
--- Change F1~F7 events of devmode (F8 mode)
+-- Change F1~F7 events of debugmode (F8 mode)
 function Z.setOnFnKeys(list)
     assert(type(list)=='table',"Z.setOnFnKeys(list): list must be table")
     for i=1,7 do fnKey[i]=assert(type(list[i])=='function' and list[i]) end
