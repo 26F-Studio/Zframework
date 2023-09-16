@@ -105,8 +105,30 @@ local function convertSecondsToUnits(t) -- convert seconds to {seconds, minutes,
     return seconds,minutes,hours,days,years
 end
 
+-- MM:SS
 function STRING.time_simp(t)
     return format("%02d:%02d",floorint(t/MINUTE),floorint(t%MINUTE))
+end
+
+local timeLetters={' y',' d',' h',' m',' s',' ms'}
+-- Display 2 largest units of time.
+function STRING.time_short(t)
+    -- Early returns to prevent nil values
+    if t<0 then return '-'..STRING.time_short(-t) end -- negative time
+    if t<1 then return math.floor(t*1000)..timeLetters[6] end -- 123 ms
+    if t<MINUTE then return math.floor(t)..timeLetters[5]..' '..math.floor((t%1)*1000)..timeLetters[6] end -- 12s 345ms
+
+    local timeUnits=TABLE.reverse({convertSecondsToUnits(t)})
+
+    -- floor seconds
+    timeUnits[#timeUnits]=floorint(timeUnits[#timeUnits])
+
+    local outputStr=''
+    for i=1,#timeUnits do
+        if timeUnits>0 then
+            return timeUnits[i]..timeLetters[i]..' '..timeUnits[i+1]..timeLetters[i+1]
+        end
+    end
 end
 
 function STRING.time(t)
@@ -151,7 +173,7 @@ function STRING.UTF8(n)-- Simple utf8 coding
     end
 end
 
-do-- function STRING.bigInt(t)
+do-- functions to shorted big numbers
     local lg=math.log10
     local units={"","K","M","B","T","Qa","Qt","Sx","Sp","Oc","No"}
     local preUnits={"","U","D","T","Qa","Qt","Sx","Sp","O","N"}
@@ -166,6 +188,52 @@ do-- function STRING.bigInt(t)
         else
             return "INF"
         end
+    end
+
+    local MIN_SI=-30 -- current lowest order of magnitude for SI units (quecto-; 10^-30)
+    local MAX_SI=30 -- current highest order of magnitude for SI units (quetta-; 10^30)
+    local SI_SHORT={
+        [-30]='q',[-27]='r',[-24]='y',[-21]='z',[-18]='a',[-15]='f',[-12]='p',
+        [-9]='n',[-6]='μ',[-3]='m',[0]='',[3]='k',[6]='M',[9]='G',
+        [12]='T',[15]='P',[18]='E',[21]='Z',[24]='Y',[27]='R',[30]='Q'
+    }
+    local SI_LONG={
+        [-30]='quecto',[-27]='ronto',[-24]='yocto',[-21]='zepto',[-18]='atto',[-15]='femto',[-12]='pico',
+        [-9]='nano',[-6]='micro',[-3]='milli',[0]='',[3]='kilo',[6]='mega',[9]='giga',
+        [12]='tera',[15]='peta',[18]='exa',[21]='zetta',[24]='yotta',[27]='ronna',[30]='quetta'
+    }
+    --[[
+        Converts a number into SI notation with letter prefixes.
+        NOTE: Only power-of-thousand prefixes; no deci-/centi-.
+        Arguments:
+        - num: The number to be converted to SI notation.
+        - unit: [optional] The unit to be concatenated at the end.
+        Example: STRING.SI(10^-9,"m") --> "1 nm"
+    ]]
+    function STRING.SI(num, unit)
+        unit=unit or ''
+        local order=MATH.clamp(3*math.floor(math.log10(num)/3),MIN_SI,MAX_SI)
+        local prefix=SI_SHORT[order]
+        local scaledNum=num/10^order
+        local formattedNum=string.format('%.3f', scaledNum):gsub('%.?0+$','')
+        return formattedNum.." "..prefix..unit
+    end
+
+    --[[
+        Converts a number into SI notation with word prefixes.
+        NOTE: Only power-of-thousand prefixes; no deci-/centi-.
+        Arguments:
+        - num: The number to be converted to SI notation.
+        - unit: [optional] The unit to be concatenated at the end.
+        Example: STRING.SI(10^9,"hertz") --> "1 megahertz"
+    ]]
+    function STRING.SILong(num, unit)
+        unit=unit or ''
+        local order=MATH.clamp(3*math.floor(math.log10(num)/3),MIN_SI,MAX_SI)
+        local prefix=SI_LONG[order]
+        local scaledNum=num/10^order
+        local formattedNum=string.format('%.3f', scaledNum):gsub('%.?0+$','')
+        return formattedNum.." "..prefix..unit
     end
 end
 
