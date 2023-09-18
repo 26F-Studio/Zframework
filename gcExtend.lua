@@ -38,7 +38,7 @@ end
 function GC.regPolygon(mode,x,y,R,segments,phase)
     local l={}
     local ang=phase or 0
-    local angStep=MATH.tau/segments
+    local angStep=6.283185307179586/segments
     for i=1,segments do
         l[2*i-1]=x+R*cos(ang)
         l[2*i]=y+R*sin(ang)
@@ -49,7 +49,7 @@ end
 function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     local X,Y={},{}
     local ang=phase or 0
-    local angStep=MATH.tau/segments
+    local angStep=6.283185307179586/segments
     for i=1,segments do
         X[i]=x+R*cos(ang)
         Y[i]=y+R*sin(ang)
@@ -57,7 +57,7 @@ function GC.regRoundPolygon(mode,x,y,R,segments,r,phase)
     end
     X[segments+1]=x+R*cos(ang)
     Y[segments+1]=y+R*sin(ang)
-    local halfAng=MATH.tau/segments/2
+    local halfAng=6.283185307179586/segments/2
     local erasedLen=r*math.tan(halfAng)
     if mode=='line' then
         erasedLen=erasedLen+1-- Fix 1px cover
