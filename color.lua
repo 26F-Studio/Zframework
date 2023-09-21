@@ -1,7 +1,9 @@
 local abs=math.abs
-local function hsv(h,s,v,a)-- Color type, Color amount, Light
+
+-- Converts from HSV to RGB color. All arguments should be between 0 and 1, inclusively.
+local function HSVToRGB(h,s,v,a)
     if s<=0 then return v,v,v,a end
-    h=h*6
+    h=h%1*6
     local c=v*s
     local x=abs((h-1)%2-1)*c
     if h<1     then return v,x+v-c,v-c,a
@@ -13,69 +15,86 @@ local function hsv(h,s,v,a)-- Color type, Color amount, Light
     end
 end
 
+local function RGBToHSV(r,g,b,a)
+    local max=math.max(r,g,b) -- = value
+    local min=math.min(r,g,b)
+    local chroma=max-min
+    local hue=(
+        max==min and 0 or
+        max==r and (g-b)/chroma%6/6 or
+        max==g and (2+(b-r)/chroma)/6 or
+        (4+(r-g)/chroma)/6
+    )
+    local saturation=max==0 and 0 or chroma/max
+    return hue,saturation,max,a
+end
+
 local COLOR={
-    hsv=hsv,
+    hsv=HSVToRGB, -- backwards compatibility
+    HSVToRGB=HSVToRGB,
+    RGBToHSV=RGBToHSV,
 
-    red=        {hsv(0.00, 0.89, 0.91)},
-    fire=       {hsv(0.04, 0.93, 0.94)},
-    orange=     {hsv(0.09, 0.99, 0.96)},
-    yellow=     {hsv(0.15, 0.82, 0.90)},
-    lime=       {hsv(0.20, 0.89, 0.88)},
-    jade=       {hsv(0.25, 1.00, 0.82)},
-    green=      {hsv(0.33, 1.00, 0.81)},
-    aqua=       {hsv(0.47, 1.00, 0.76)},
-    cyan=       {hsv(0.53, 1.00, 0.88)},
-    navy=       {hsv(0.56, 1.00, 1.00)},
-    sea=        {hsv(0.61, 1.00, 1.00)},
-    blue=       {hsv(0.64, 1.00, 0.95)},
-    violet=     {hsv(0.74, 1.00, 0.91)},
-    purple=     {hsv(0.80, 1.00, 0.81)},
-    magenta=    {hsv(0.86, 1.00, 0.78)},
-    wine=       {hsv(0.92, 0.98, 0.91)},
 
-    lRed=       {hsv(0.00, 0.38, 0.93)},
-    lFire=      {hsv(0.04, 0.45, 0.91)},
-    lOrange=    {hsv(0.10, 0.53, 0.92)},
-    lYellow=    {hsv(0.14, 0.61, 0.95)},
-    lLime=      {hsv(0.20, 0.66, 0.92)},
-    lJade=      {hsv(0.26, 0.56, 0.90)},
-    lGreen=     {hsv(0.34, 0.49, 0.89)},
-    lAqua=      {hsv(0.47, 0.59, 0.86)},
-    lCyan=      {hsv(0.51, 0.77, 0.88)},
-    lNavy=      {hsv(0.54, 0.80, 0.95)},
-    lSea=       {hsv(0.57, 0.72, 0.97)},
-    lBlue=      {hsv(0.64, 0.44, 0.96)},
-    lViolet=    {hsv(0.72, 0.47, 0.95)},
-    lPurple=    {hsv(0.80, 0.62, 0.89)},
-    lMagenta=   {hsv(0.86, 0.61, 0.89)},
-    lWine=      {hsv(0.93, 0.57, 0.92)},
+    red=        {HSVToRGB(0.00, 0.89, 0.91)},
+    fire=       {HSVToRGB(0.04, 0.93, 0.94)},
+    orange=     {HSVToRGB(0.09, 0.99, 0.96)},
+    yellow=     {HSVToRGB(0.15, 0.82, 0.90)},
+    lime=       {HSVToRGB(0.20, 0.89, 0.88)},
+    jade=       {HSVToRGB(0.25, 1.00, 0.82)},
+    green=      {HSVToRGB(0.33, 1.00, 0.81)},
+    aqua=       {HSVToRGB(0.47, 1.00, 0.76)},
+    cyan=       {HSVToRGB(0.53, 1.00, 0.88)},
+    navy=       {HSVToRGB(0.56, 1.00, 1.00)},
+    sea=        {HSVToRGB(0.61, 1.00, 1.00)},
+    blue=       {HSVToRGB(0.64, 1.00, 0.95)},
+    violet=     {HSVToRGB(0.74, 1.00, 0.91)},
+    purple=     {HSVToRGB(0.80, 1.00, 0.81)},
+    magenta=    {HSVToRGB(0.86, 1.00, 0.78)},
+    wine=       {HSVToRGB(0.92, 0.98, 0.91)},
 
-    dRed=       {hsv(0.00, 0.80, 0.48)},
-    dFire=      {hsv(0.04, 0.80, 0.34)},
-    dOrange=    {hsv(0.07, 0.80, 0.39)},
-    dYellow=    {hsv(0.12, 0.80, 0.37)},
-    dLime=      {hsv(0.20, 0.80, 0.26)},
-    dJade=      {hsv(0.29, 0.80, 0.27)},
-    dGreen=     {hsv(0.33, 0.80, 0.26)},
-    dAqua=      {hsv(0.46, 0.80, 0.24)},
-    dCyan=      {hsv(0.50, 0.80, 0.30)},
-    dNavy=      {hsv(0.58, 0.80, 0.42)},
-    dSea=       {hsv(0.64, 0.80, 0.40)},
-    dBlue=      {hsv(0.67, 0.80, 0.34)},
-    dViolet=    {hsv(0.71, 0.80, 0.35)},
-    dPurple=    {hsv(0.76, 0.80, 0.32)},
-    dMagenta=   {hsv(0.87, 0.80, 0.28)},
-    dWine=      {hsv(0.92, 0.80, 0.28)},
+    lRed=       {HSVToRGB(0.00, 0.38, 0.93)},
+    lFire=      {HSVToRGB(0.04, 0.45, 0.91)},
+    lOrange=    {HSVToRGB(0.10, 0.53, 0.92)},
+    lYellow=    {HSVToRGB(0.14, 0.61, 0.95)},
+    lLime=      {HSVToRGB(0.20, 0.66, 0.92)},
+    lJade=      {HSVToRGB(0.26, 0.56, 0.90)},
+    lGreen=     {HSVToRGB(0.34, 0.49, 0.89)},
+    lAqua=      {HSVToRGB(0.47, 0.59, 0.86)},
+    lCyan=      {HSVToRGB(0.51, 0.77, 0.88)},
+    lNavy=      {HSVToRGB(0.54, 0.80, 0.95)},
+    lSea=       {HSVToRGB(0.57, 0.72, 0.97)},
+    lBlue=      {HSVToRGB(0.64, 0.44, 0.96)},
+    lViolet=    {HSVToRGB(0.72, 0.47, 0.95)},
+    lPurple=    {HSVToRGB(0.80, 0.62, 0.89)},
+    lMagenta=   {HSVToRGB(0.86, 0.61, 0.89)},
+    lWine=      {HSVToRGB(0.93, 0.57, 0.92)},
 
-    black=      {hsv(0.04, 0.04, 0.14)},
-    dGray=      {hsv(0.02, 0.05, 0.44)},
-    gray=       {hsv(0.02, 0.05, 0.65)},
-    lGray=      {hsv(0.02, 0.06, 0.86)},
-    white=      {hsv(0.01, 0.02, 0.99)},
+    dRed=       {HSVToRGB(0.00, 0.80, 0.48)},
+    dFire=      {HSVToRGB(0.04, 0.80, 0.34)},
+    dOrange=    {HSVToRGB(0.07, 0.80, 0.39)},
+    dYellow=    {HSVToRGB(0.12, 0.80, 0.37)},
+    dLime=      {HSVToRGB(0.20, 0.80, 0.26)},
+    dJade=      {HSVToRGB(0.29, 0.80, 0.27)},
+    dGreen=     {HSVToRGB(0.33, 0.80, 0.26)},
+    dAqua=      {HSVToRGB(0.46, 0.80, 0.24)},
+    dCyan=      {HSVToRGB(0.50, 0.80, 0.30)},
+    dNavy=      {HSVToRGB(0.58, 0.80, 0.42)},
+    dSea=       {HSVToRGB(0.64, 0.80, 0.40)},
+    dBlue=      {HSVToRGB(0.67, 0.80, 0.34)},
+    dViolet=    {HSVToRGB(0.71, 0.80, 0.35)},
+    dPurple=    {HSVToRGB(0.76, 0.80, 0.32)},
+    dMagenta=   {HSVToRGB(0.87, 0.80, 0.28)},
+    dWine=      {HSVToRGB(0.92, 0.80, 0.28)},
 
-    xGray=      {hsv(0.00, 0.00, 0.35,.8)},
-    lxGray=     {hsv(0.00, 0.00, 0.62,.8)},
-    dxGray=     {hsv(0.00, 0.00, 0.16,.8)},
+    black=      {HSVToRGB(0.04, 0.04, 0.14)},
+    dGray=      {HSVToRGB(0.02, 0.05, 0.44)},
+    gray=       {HSVToRGB(0.02, 0.05, 0.65)},
+    lGray=      {HSVToRGB(0.02, 0.06, 0.86)},
+    white=      {HSVToRGB(0.01, 0.02, 0.99)},
+
+    xGray=      {HSVToRGB(0.00, 0.00, 0.35,.8)},
+    lxGray=     {HSVToRGB(0.00, 0.00, 0.62,.8)},
+    dxGray=     {HSVToRGB(0.00, 0.00, 0.16,.8)},
 }
 for k,v in next,{
     R='red', F='fire', O='orange', Y='yellow', L='lime', J='jade', G='green', A='aqua', C='cyan', N='navy', S='sea', B='blue', V='violet', P='purple', M='magenta', W='wine',
@@ -114,35 +133,82 @@ do-- Random generators
 end
 
 do-- Rainbow generators
+    local twoThirdsOfPi=2*math.pi/3
     local sin=math.sin
-    function COLOR.rainbow(phase,a)
+    function COLOR.rainbow(phase,alpha)
         return
             sin(phase)*.4+.6,
-            sin(phase+2.0944)*.4+.6,
-            sin(phase-2.0944)*.4+.6,
-            a
+            sin(phase+twoThirdsOfPi)*.4+.6,
+            sin(phase-twoThirdsOfPi)*.4+.6,
+            alpha
     end
-    function COLOR.rainbow_light(phase,a)
+    function COLOR.rainbow_light(phase,alpha)
         return
             sin(phase)*.2+.7,
-            sin(phase+2.0944)*.2+.7,
-            sin(phase-2.0944)*.2+.7,
-            a
+            sin(phase+twoThirdsOfPi)*.2+.7,
+            sin(phase-twoThirdsOfPi)*.2+.7,
+            alpha
     end
-    function COLOR.rainbow_dark(phase,a)
+    function COLOR.rainbow_dark(phase,alpha)
         return
             sin(phase)*.2+.4,
-            sin(phase+2.0944)*.2+.4,
-            sin(phase-2.0944)*.2+.4,
-            a
+            sin(phase+twoThirdsOfPi)*.2+.4,
+            sin(phase-twoThirdsOfPi)*.2+.4,
+            alpha
     end
-    function COLOR.rainbow_gray(phase,a)
+    function COLOR.rainbow_gray(phase,alpha)
         return
             sin(phase)*.16+.5,
-            sin(phase+2.0944)*.16+.5,
-            sin(phase-2.0944)*.16+.5,
-            a
+            sin(phase+twoThirdsOfPi)*.16+.5,
+            sin(phase-twoThirdsOfPi)*.16+.5,
+            alpha
     end
 end
+
+--[[
+    Returns either color1 or color2 based on time.
+    Args:
+        - color1, color2: colors to switch between
+        - period: the length of time in a cycle in seconds. ("wavelength")
+        - percentage [optional]: percentage of time in the color1 phase (default: 50%)
+]]
+function COLOR.flicker(color1,color2,period,percentage)
+    percentage=percentage or .5
+    return TIME()%period>percentage*period and color1 or color2
+end
+
+do -- Color interpolation https://www.alanzucconi.com/2016/01/06/colour-interpolation/
+    local lerp=MATH.mix
+    function COLOR.interpolateRGB(rgba1,rgba2,t)
+        return
+            lerp(rgba1[1],rgba2[1],t),
+            lerp(rgba1[2],rgba2[2],t),
+            lerp(rgba1[3],rgba2[3],t),
+            ((rgba1[4] and rgba2[4]) and lerp(rgba1[4],rgba1[4],t) or nil)
+    end
+
+    function COLOR.interpolateHSV(hsv1,hsv2,t)
+        local hue1,hue2=hsv1[1],hsv2[1]
+        if hue1>hue2 then
+            hue1,hue2=hue2,hue1
+            t=1-t
+        end
+
+        local hueDiff=hue2-hue1
+        local finalHue=.0
+        if hueDiff>.5 then
+            hue1=hue1+1
+            finalHue=(hue1+t*(hue2-hue1))%1;
+        else
+            finalHue=hue1+t*hueDiff
+        end
+
+        return finalHue,
+            lerp(hsv1[2],hsv2[2],t),
+            lerp(hsv1[3],hsv2[3],t),
+            ((hsv1[4] and hsv2[4]) and lerp(hsv1[4],hsv1[4],t) or nil)
+    end
+end
+
 
 return COLOR
