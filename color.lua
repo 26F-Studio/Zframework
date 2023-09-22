@@ -102,7 +102,7 @@ for k,v in next,{
     dR='dRed',dF='dFire',dO='dOrange',dY='dYellow',dL='dLime',dJ='dJade',dG='dGreen',dA='dAqua',dC='dCyan',dN='dNavy',dS='dSea',dB='dBlue',dV='dViolet',dP='dPurple',dM='dMagenta',dW='dWine',
     D='black',dH='dGray',H='gray',lH='lGray',Z='white',
     X='xGray',lX='lxGray',dX='dxGray',
-    -- Remain letter: EIKQTUX
+    -- Remain letter: EIKQTU
 } do
     COLOR[k]=COLOR[v]
 end
