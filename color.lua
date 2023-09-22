@@ -165,18 +165,6 @@ do-- Rainbow generators
     end
 end
 
---[[
-    Returns either color1 or color2 based on time.
-    Args:
-        - color1, color2: colors to switch between
-        - period: the length of time in a cycle in seconds. ("wavelength")
-        - percentage [optional]: percentage of time in the color1 phase (default: 50%)
-]]
-function COLOR.flicker(color1,color2,period,percentage)
-    percentage=percentage or .5
-    return TIME()%period>percentage*period and color1 or color2
-end
-
 do -- Color interpolation https://www.alanzucconi.com/2016/01/06/colour-interpolation/
     local lerp=MATH.mix
     function COLOR.interpolateRGB(rgba1,rgba2,t)
@@ -210,5 +198,38 @@ do -- Color interpolation https://www.alanzucconi.com/2016/01/06/colour-interpol
     end
 end
 
+--[[
+    Returns either color1 or color2 based on time.
+    Args:
+        - color1, color2: colors to switch between
+        - period: the length of time in a cycle in seconds. ("wavelength")
+        - percentage [optional]: percentage of time in the color1 phase (default: 50%)
+]]
+function COLOR.flicker(color1,color2,period,percentage)
+    percentage=percentage or .5
+    return TIME()%period>percentage*period and color1 or color2
+end
+
+local lerpRGB,lerpHSV=COLOR.interpolateRGB,COLOR.interpolateHSV
+local tau=MATH.tau
+--[[
+    Oscillates between color1 and color2 over time in a sinusoidal fashion.
+    Args:
+        - color1, color2: colors to switch between.
+            [FORMAT IS BASED ON TYPE, WHICH DEFAULTS TO HSV]
+            Use COLOR.HSVtoRGB() and/or COLOR.RGBtoHSV to convert between color formats.
+        - period: the length of time in a cycle in seconds. (wavelength)
+        - type [optional]: the type of interpolation, defaulting to 'hsv'.
+            Supported values: nil, 'hsv', 'rgb'
+]]
+function COLOR.sine(color1,color2,period,type)
+    type=type or 'hsv'
+    local t=math.sin(tau*TIME()/period)
+    if type=='hsv' then
+        return lerpHSV(color1, color2, t)
+    elseif type=='rgb' then
+        return lerpRGB(color1, color2, t)
+    end
+end
 
 return COLOR
