@@ -5,6 +5,7 @@ local ins,rem=table.insert,table.remove
 local next,type=next,type
 local TABLE={}
 
+-----------------------[Making Tables]------------------------
 -- Get a new filled table
 function TABLE.new(val,count)
     local L={}
@@ -28,6 +29,20 @@ function TABLE.shift(org,depth)
     return L
 end
 
+-- Get a full copy of a table, depth=how many layers will be recreate, default to inf
+function TABLE.copy(org,depth)
+    if not depth then depth=1e99 end
+    local L={}
+    for k,v in next,org do
+        if type(v)=='table' and depth>0 then
+            L[k]=TABLE.copy(v,depth-1)
+        else
+            L[k]=v
+        end
+    end
+    return L
+end
+
 -- Connect [1~#] elements of new to the end of org
 function TABLE.connect(org,new)
     local l0=#org
@@ -46,21 +61,7 @@ function TABLE.combine(L1,L2)
     return l
 end
 
---------------------------------------------------------------
-
--- Get a full copy of a table, depth=how many layers will be recreate, default to inf
-function TABLE.copy(org,depth)
-    if not depth then depth=1e99 end
-    local L={}
-    for k,v in next,org do
-        if type(v)=='table' and depth>0 then
-            L[k]=TABLE.copy(v,depth-1)
-        else
-            L[k]=v
-        end
-    end
-    return L
-end
+----------------------[Modifying Tables]----------------------
 
 -- For all things in new, push to old
 function TABLE.cover(new,old)
@@ -119,7 +120,7 @@ function TABLE.complete(new,old)
     end
 end
 
---------------------------------------------------------------
+-------------------[Removing Table Values]--------------------
 
 -- Pop & return random [1~#] of table
 function TABLE.popRandom(t)
@@ -146,7 +147,7 @@ function TABLE.clear(G)
     end
 end
 
---------------------------------------------------------------
+--------------------[Handling duplicates]---------------------
 
 -- Remove duplicated value of [1~#]
 function TABLE.trimDuplicate(org)
@@ -205,7 +206,7 @@ function TABLE.RLE(org)
     return output
 end
 
---------------------------------------------------------------
+----------------------[Reversing Tables]----------------------
 
 -- Reverse [1~#]
 function TABLE.reverse(org)
@@ -215,7 +216,7 @@ function TABLE.reverse(org)
     end
 end
 
---------------------------------------------------------------
+----------------------[Table Comparison]----------------------
 
 -- Check if tow list have same elements
 function TABLE.compare(a,b)
@@ -237,7 +238,7 @@ function TABLE.equal(a,b)
     return true
 end
 
---------------------------------------------------------------
+----------------------[Table Operations]----------------------
 
 -- Find value in [1~#], like string.find
 function TABLE.find(t,val,start)
@@ -293,13 +294,32 @@ function TABLE.reIndex(org)
     end
 end
 
+-- Return table where keys and values are swapped (useful for hashmap)
+function TABLE.kvSwap(t)
+    local output={}
+    for k,v in next,t do output[v]=k end
+    return output
+end
+
+--[[
+    Extracts a value from each sub-table in table.
+    Example input: ({{name='A'},{name='B'},{name='C'}}, 'name')
+    Output: {'A','B'}
+]]
+function TABLE.extract(t,keyName)
+    local output={}
+    for k,v in next,t do output[k]=v[keyName] end
+    return output
+end
+
 -- Get element count of table
 function TABLE.getSize(t)
     local size=0
     for _ in next,t do size=size+1 end
     return size
 end
---------------------------------------------------------------
+
+-----------------------[Table Rotation]-----------------------
 
 -- Copy a rotated matrix table
 function TABLE.rotate(cb,dir)
@@ -329,7 +349,7 @@ function TABLE.rotate(cb,dir)
     return icb
 end
 
---------------------------------------------------------------
+----------------------[Table Functions]-----------------------
 
 -- Return a function that return a value of table
 function TABLE.func_getVal(t,k)
@@ -346,7 +366,7 @@ function TABLE.func_setVal(t,k)
     return function(v) t[k]=v end
 end
 
---------------------------------------------------------------
+-------------------------[Table Dump]-------------------------
 
 -- Dump a simple lua table (no whitespaces)
 do-- function TABLE.dumpDeflate(L,t)
