@@ -1235,7 +1235,7 @@ function listBox:release(x,y)
     end
 end
 function listBox:drag(x,y,_,dy)
-    if self._pressX and MATH.distance(x,y,self._pressX,self._pressY)>10 then
+    if x and y and self._pressX and MATH.distance(x,y,self._pressX,self._pressY)>10 then
         self._pressX,self._pressY=false,false
     end
     self.scrollPos=max(0,min(self.scrollPos-dy,#self.list*self.lineH-self.h))
