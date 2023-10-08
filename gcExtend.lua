@@ -109,6 +109,7 @@ do-- function GC.DO(L)
         setLW="setLineWidth",
         setLS="setLineStyle",
         setLJ="setLineJoin",
+        setBM="setBlendMode",
 
         print="print",
         rawFT=function(...)FONT.rawset(...) end,
@@ -164,7 +165,7 @@ do-- function GC.DO(L)
                         cmd=L[i][1]
                     end
                     if type(cmd)=='string' then
-                        local func=cmds[cmd]
+                        local func=cmds[cmd] or gc[cmd]
                         if type(func)=='string' then
                             func=gc[func]
                         end
