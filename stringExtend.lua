@@ -5,6 +5,7 @@ local floorint,format=math.floor,string.format
 local find,sub,gsub=string.find,string.sub,string.gsub
 local rep,upper=string.rep,string.upper
 local char,byte=string.char,string.byte
+local fsread=love.filesystem.read
 
 -- "Replace dollars", replace all $n with ...
 function STRING.repD(str,...)
@@ -390,25 +391,24 @@ function STRING.unpackTable(t)
     return JSON.decode(STRING.unpackText(t))
 end
 
-repeat
-    local f=io.open('Zframework/upcaser.txt','r')
-    if not f then break end
-    upperData=STRING.split(gsub(f:read('a'),'\n',','),',')
+do --function STRING.upper/lowerUTF8
+    local utf8u=fsread('Zframework/upcaser.txt')
+    local utf8l=fsread('Zframework/lowcaser.txt')
+
+    upperData=STRING.split(gsub(utf8u,'\n',','),',')
     for i=1,#upperData do
         local pair=STRING.split(upperData[i],'=')
         -- upperData[pair[1]]=pair[2]
         upperData[i]=pair
     end
-    f:close()
-    f=io.open('Zframework/lowcaser.txt','r')
-    if not f then break end
-    lowerData=STRING.split(gsub(f:read('a'),'\n',','),',')
+
+
+    lowerData=STRING.split(gsub(utf8l,'\n',','),',')
     for i=1,#lowerData do
         local pair=STRING.split(lowerData[i],'=')
-        -- lowerData[pair[1]]=pair[2]
+     -- lowerData[pair[1]]=pair[2]
         lowerData[i]=pair
     end
-    f:close()
-until true
+end
 
 return STRING
