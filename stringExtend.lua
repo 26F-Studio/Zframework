@@ -402,11 +402,10 @@ do --function STRING.upper/lowerUTF8
         upperData[i]=pair
     end
 
-
     lowerData=STRING.split(gsub(utf8l,'\n',','),',')
     for i=1,#lowerData do
         local pair=STRING.split(lowerData[i],'=')
-     -- lowerData[pair[1]]=pair[2]
+        -- lowerData[pair[1]]=pair[2]
         lowerData[i]=pair
     end
 end
