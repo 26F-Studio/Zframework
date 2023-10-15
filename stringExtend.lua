@@ -408,6 +408,8 @@ do --function STRING.upper/lowerUTF8
         -- lowerData[pair[1]]=pair[2]
         lowerData[i]=pair
     end
+
+    utf8u,utf8l=nil
 end
 
 return STRING
