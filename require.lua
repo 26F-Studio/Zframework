@@ -22,10 +22,10 @@ return function(libName)
                     return 'armeabi-v7a'
                 end
             end)()
-            love.filesystem.write(
-                'lib/'..libName..'.so',
-                love.filesystem.read('data','libAndroid/'..platform..'/'..libName..'.so')
-            )
+            local data=love.filesystem.read('data','libAndroid/'..platform..'/'..libName..'.so')
+            if data then
+                love.filesystem.write('lib/'..libName..'.so',data)
+            end
             loaded[libName]=true
         end
         success,res=pcall(require,libName)
