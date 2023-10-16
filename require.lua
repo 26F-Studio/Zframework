@@ -1,5 +1,6 @@
 package.cpath=package.cpath..';'..love.filesystem.getSaveDirectory()..'/lib/?.so;'..'?.dylib'
 local loaded={}
+local errorCount={}
 return function(libName)
     local require=require
     local arch='unknown'
@@ -33,7 +34,14 @@ return function(libName)
     if success and res then
         return res
     else
-        MES.new('error',"Cannot load "..libName..": "..tostring(res):gsub('[\128-\255]+','??'))
-        MES.new('info',"Architecture: "..arch)
+        if not next(errorCount) then
+            MES.new('info',"Architecture: "..arch)
+        end
+        errorCount[libName]=(errorCount[libName] or 0)+1
+        if errorCount[libName]==1 then
+            MES.new('error',"Cannot load "..libName..": "..tostring(res):gsub('[\128-\255]+','??'))
+        else
+            MES.new('error',("Cannot load %s (x%d)"):format(libName,errorCount[libName]))
+        end
     end
 end
