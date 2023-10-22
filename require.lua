@@ -8,7 +8,7 @@ return function(libName)
     if SYSTEM=='Web' then
         return
     end
-    if SYSTEM=='OS X' then
+    if SYSTEM=='macOS' then
         require=package.loadlib(libName..'.dylib','luaopen_'..libName)
         success,res=pcall(require)
     else
