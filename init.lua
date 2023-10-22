@@ -1,6 +1,8 @@
 NONE={}function NULL() end PAPER=love.graphics.newCanvas(1,1)
 EDITING=""
 LOADED=false
+SYSTEM=love.system.getOS()
+if SYSTEM=='OS X' then SYSTEM='macOS' end
 
 -- Bit module
 local success
