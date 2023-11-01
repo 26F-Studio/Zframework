@@ -1,6 +1,7 @@
 local rnd=math.random
 local volume=1
 local diversion=0
+local voiceQueue={free=0}
 local VOC={
     getCount=function() return 0 end,
     getQueueCount=function() return 0 end,
@@ -16,11 +17,19 @@ end
 function VOC.setVol(v)
     assert(type(v)=='number' and v>=0 and v<=1,'Wrong volume')
     volume=v
+    for i=1,#voiceQueue do
+        local Q=voiceQueue[i]
+        for j=1,#Q do
+            local s=Q[j]
+            if type(s)=='userdata' then
+                s:setVolume(volume)
+            end
+        end
+    end
 end
 function VOC.init(list)
     VOC.init=nil
     local rem=table.remove
-    local voiceQueue={free=0}
     local bank={}-- {vocName1={SRC1s},vocName2={SRC2s},...}
     local Source={}
 
@@ -66,6 +75,9 @@ function VOC.init(list)
 
         function VOC.getQueueCount()
             return #voiceQueue
+        end
+        function VOC.getQueueLength(chn)
+            return voiceQueue[chn] and #voiceQueue[chn]
         end
         function VOC.getFreeChannel()
             local l=#voiceQueue
