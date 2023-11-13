@@ -1001,7 +1001,8 @@ local textBox={
     sure=0,-- Sure-timer for clear history
 }
 function textBox:reset()
-    -- haha nothing here, techmino is so fun!
+    self.lineH=self.font*7/5
+    self.capacity=ceil((self.h-10)/self.lineH)
 end
 function textBox:setTexts(t)
     assert(type(t)=='table',"Arg #1 must be table")
@@ -1142,14 +1143,14 @@ function WIDGET.newTextBox(D)-- name,x,y,w,h[,font=30][,fType][,lineH][,fix],hid
         h=    D.h,
 
         font= D.font or 30,
+        lineH=D.lineH,
+        capacity=nil,
         fType=D.fType,
         fix=  D.fix,
         texts={},
         hideF=D.hideF,
         hide= D.hide,
     }
-    _.lineH=D.lineH or _.font*7/5
-    _.capacity=ceil((D.h-10)/_.lineH)
 
     for k,v in next,textBox do _[k]=v end
     setmetatable(_,widgetMetatable)
